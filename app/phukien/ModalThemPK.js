@@ -7,6 +7,42 @@ function ModalThemPK(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const { fetchPhukien } = usePhukien();
+    const [image, setImage] = useState(null); // Trường lưu trữ file ảnh
+
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file); // Đọc file và chuyển sang Base64
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    };
+    const handleImageUpload = async (file) => {
+        try {
+            const base64File = await convertToBase64(file);
+            const formData = new FormData();
+            formData.append("file", file);
+            console.log(file);
+
+            const response = await fetch("/api/cloudinary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ base64File }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                return data.url; // URL ảnh từ Cloudinary
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.error("Image Upload Error:", error);
+            alert("Không thể tải ảnh lên!");
+            return null;
+        }
+    };
+
 
     const handleSubmit = async () => {
         if (!name || !price) {
@@ -16,20 +52,29 @@ function ModalThemPK(props) {
 
         setLoading(true); // Bắt đầu trạng thái loading
         try {
+            // Upload ảnh
+            const imageUrl = await handleImageUpload(image);
+            if (!imageUrl) {
+                setLoading(false);
+                return;
+            }
+
+
             const response = await fetch("/api/phukien", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name, price }),
+                body: JSON.stringify({ name, price, imageUrl: imageUrl }),
             });
 
             const result = await response.json();
             if (response.ok) {
-              
+
                 fetchPhukien();
                 setName("");
                 setPrice("");
+                setImage(null);
                 setIsModalOpen(false);
             } else {
                 alert(`Có lỗi xảy ra: ${result.error}`);
@@ -106,6 +151,19 @@ function ModalThemPK(props) {
                                     onChange={(e) => setPrice(e.target.value)}
                                 />
                             </div>
+
+                            <div className="mb-3">
+                                <label htmlFor="accessoryImage" className="form-label">
+                                    Ảnh phụ kiện
+                                </label>
+                                <input
+                                    type="file"
+                                    className="form-control"
+                                    id="accessoryImage"
+                                    onChange={(e) => setImage(e.target.files[0])}
+                                />
+                            </div>
+
                         </div>
                         <div className="modal-footer">
                             <button

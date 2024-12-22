@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ModalThemPK from "./ModalThemPK";
-
+import Image from "next/image";
 import { usePhukien } from "../context/PhukienContext";
 
 export default function ProductList() {
@@ -41,14 +41,14 @@ export default function ProductList() {
     <div>
       <ModalThemPK />
       <h1>Danh sách sản phẩm</h1>
-      
-      {/* <ul>
-        {products.map((product) => (
-          <li key={product._id}>
-            {product.name} - {product.price} VNĐ
-          </li>
-        ))}
-      </ul> */}
+      {
+        phukien.map((item, key) =>
+          <div className="" key={key}>
+            <div className="">{item.name}</div>
+            <div className="">{item.price}</div>
+            {item.imageUrl ? <Image priority  src={item.imageUrl} alt="My GIF" width={500} height={300} /> : <></>}
+          </div>)
+      }
     </div>
   );
 }
