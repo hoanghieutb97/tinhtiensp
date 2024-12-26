@@ -7,7 +7,7 @@ function ModalThemPK(props) {
     const [note, setNote] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { fetchPhukien } = usePhukien();
+    const { fetchVatlieu } = usePhukien();
     const [image, setImage] = useState(null); // Trường lưu trữ file ảnh
 
     const convertToBase64 = (file) => {
@@ -61,7 +61,7 @@ function ModalThemPK(props) {
             }
 
 
-            const response = await fetch("/api/phukien", {
+            const response = await fetch("/api/vatlieu", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -72,7 +72,7 @@ function ModalThemPK(props) {
             const result = await response.json();
             if (response.ok) {
 
-                fetchPhukien();
+                fetchVatlieu();
                 setName("");
                 setPrice("");
                 setNote("");
@@ -93,12 +93,12 @@ function ModalThemPK(props) {
         <div className="container mt-4">
             {/* Button mở modal */}
             <button
-                className="btn btn-primary"
+                className="btn btn-danger"
                 onClick={() => setIsModalOpen(true)}
                 data-bs-toggle="modal"
                 data-bs-target="#addAccessoryModal"
             >
-                Thêm phụ kiện
+                Thêm Vật liệu
             </button>
 
             {/* Modal */}

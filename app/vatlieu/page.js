@@ -9,8 +9,8 @@ import { usePhukien } from "../context/PhukienContext";
 export default function ProductList() {
   // const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { phukien } = usePhukien();
-  console.log(phukien);
+  const { vatLieu } = usePhukien();
+  console.log(vatLieu);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -43,7 +43,7 @@ export default function ProductList() {
       <div className="container">
         <div className="row">
           {
-            phukien.map((item, key) =>
+            vatLieu.map((item, key) =>
               <div className="pkhh col-2" key={key}>
                 <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
                 <div className="tenpk">  Giá tiền: <span className="hhhg">{item.price}</span></div>
