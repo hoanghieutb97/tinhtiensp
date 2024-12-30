@@ -28,6 +28,8 @@ export const PhukienProvider = ({ children }) => {
         
         try {
             const response = await fetch("/api/vatlieu", { cache: "no-store" });
+            
+            
             const data = await response.json();
 
 

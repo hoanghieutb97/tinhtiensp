@@ -24,6 +24,8 @@ export async function POST(req) {
 
 
 export async function GET() {
+  
+  
     try {
       await client.connect();
       const db = client.db("test"); // Tên database
