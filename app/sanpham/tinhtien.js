@@ -11,9 +11,18 @@ export function macdinh(lop, giaVatLieu) {
 export function tinhTienVatLieu(lop, giaVatLieu) {
     let tongtien = 0;
     for (let i = 0; i < lop.length; i++) {
-        let gia = giaVatLieu.filter(item => item.name == lop[i].chatLieu)[0].price;
+        let tenChatLieu = lop[i].chatLieu;
+        if (tenChatLieu.startsWith("custom")) {
+            tenChatLieu = tenChatLieu.replace(/^custom/, "").trim();
+            return Math.floor(giaVatLieu.filter(item => item.name == tenChatLieu)[0].price);
+        }
+        console.log(tenChatLieu);
+
+        let gia = giaVatLieu.filter(item => item.name == tenChatLieu)[0].price;
+        console.log(gia);
+
         gia = +gia;
-        let type = lop[i].chatLieu.slice(0, 2).toLowerCase();
+        let type = tenChatLieu.slice(0, 2).toLowerCase();
         let dongia = 0
         if (type == "mi") {
             gia = gia / 3
@@ -170,7 +179,7 @@ export function tinhTienDIen(lop, giaVatLieu) {
     let tienIn = tinhTienIn(lop, giaVatLieu);
     let tienCat = tinhTienCat(lop, giaVatLieu);
 
-    let tongtien = (tienIn + tienCat) / 3;
+    let tongtien = (tienIn + tienCat) / 5;
 
     return tongtien
 }
@@ -321,14 +330,16 @@ export function tinhTienXop(lop, giaVatLieu, thongSoTong) {
 }
 
 export function tinhTienMangBoc(lop, giaVatLieu, thongSoTong) {
-    
-    let maxW = + thongSoTong.chieuDoc;
-    let maxH = +thongSoTong.chieuNgang;
+    let activeXop = thongSoTong.xop;
+
 
     let giaVL = (giaVatLieu.length != 0) ? Math.floor(giaVatLieu.filter(item => item.name == activeXop)[0].price) : 0;
     console.log(giaVL);
 
     let tongtien = 0;
+    let giaXopM2 = 0.5;
+
+    tongtien = Math.floor(2.5 * giaXopM2 * ((+ thongSoTong.chieuDoc) + (+thongSoTong.chieuNgang)));
 
     return tongtien
 }

@@ -9,11 +9,12 @@ const PhukienContext = createContext();
 export const PhukienProvider = ({ children }) => {
     const [phukien, setPhukien] = useState([]);
     const [vatLieu, setVatLieu] = useState([]);
-
+    const [loading, setLoading] = useState(true); // Thêm trạng thái loading
     var fetchPhukien = async () => {
         console.log("fetchPhukien................");
-        
+
         try {
+            setLoading(true); // Bắt đầu trạng thái loading
             const response = await fetch("/api/phukien", { cache: "no-store" });
             const data = await response.json();
 
@@ -22,20 +23,26 @@ export const PhukienProvider = ({ children }) => {
         } catch (error) {
             console.error("Error fetching phukien:", error);
         }
+        finally {
+            setLoading(false); // Kết thúc trạng thái loading
+        }
     };
     var fetchVatlieu = async () => {
         console.log("fetchVatlieun................");
-        
+
         try {
+            setLoading(true); // Bắt đầu trạng thái loading
             const response = await fetch("/api/vatlieu", { cache: "no-store" });
-            
-            
+
+
             const data = await response.json();
 
 
             setVatLieu(data?.data || []);
         } catch (error) {
             console.error("Error fetching vatlieu:", error);
+        } finally {
+            setLoading(false); // Kết thúc trạng thái loading
         }
     };
     useEffect(() => {
@@ -45,7 +52,7 @@ export const PhukienProvider = ({ children }) => {
 
 
     return (
-        <PhukienContext.Provider value={{ phukien, fetchPhukien,vatLieu,fetchVatlieu }}>{children}</PhukienContext.Provider>
+        <PhukienContext.Provider value={{ loading, phukien, fetchPhukien, vatLieu, fetchVatlieu }}>{children}</PhukienContext.Provider>
     );
 };
 

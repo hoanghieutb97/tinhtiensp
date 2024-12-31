@@ -1,12 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
+import SelectChatLieuLop from "./selectChatLieuLop"
 export default function LayerThemVL(props) {
-    const [selectedChatLieu, setSelectedChatLieu] = useState('');
-    const handleChatLieuNgoai = (e) => {
-        setCustomChatLieuNgoai(e.target.value);
-    };
+    const [isCustomOpen, setIsCustomOpen] = useState(false);
+
 
     function xoaLayer() {
         props.xoaLayer(props.stt)
@@ -15,25 +13,39 @@ export default function LayerThemVL(props) {
 
 
     function changeThongtinLop(name, value) {
-        if (value == "true") value = true;
-        if (value == "false") value = false;
-        let item = props.item;
-        
+        if (name == "chatLieu" && value == "custom") {
+            setIsCustomOpen(true); // Mở cửa sổ component tùy chỉnh
+        }
+        else {
+            if (value == "true") value = true;
+            if (value == "false") value = false;
+            let item = props.item;
 
-        item[name] = value
-        props.changeLopCL(item, props.stt);
 
+            item[name] = value
+            props.changeLopCL(item, props.stt);
+
+        }
 
 
     }
+    function setChatLieuNgoai(item) {
+        let name = item.name;
+        console.log(name);
+        console.log(props.item.chatLieu);
+        if (name != undefined)
+            changeThongtinLop("chatLieu", "custom" + name)
 
+        setIsCustomOpen(false);
+    }
+    console.log(props.item.chatLieu);
 
     return (
         <>
             <div className='ggg'>
                 <div>{/* vật liệu */}
                     <label htmlFor="material">Chọn vật liệu:</label>
-                    <select id="material" name="material" onChange={(e) => changeThongtinLop("chatLieu", e.target.value)} value={props.item.chatLieu}>
+                    <select id="material" name="material" onChange={(e) => changeThongtinLop("chatLieu", e.target.value)} value={((props.item.chatLieu?.startsWith("custom")) ? "custom" : props.item.chatLieu)}>
                         <option value="mica2mm">Mica 2mm</option>
                         <option value="mica3mm">Mica 3mm</option>
                         <option value="mica4mm">Mica 4mm</option>
@@ -41,16 +53,11 @@ export default function LayerThemVL(props) {
                         <option value="mica15mm">Mica 15mm</option>
                         <option value="go3mm">Gỗ 3mm</option>
                         <option value="go5mm">Gỗ 5mm</option>
-                        <option value="custom">Phôi sẵn (Tùy chỉnh)</option>
+
+                        <option value="custom">Phôi sẵn:{props.item.chatLieu.replace(/^custom/, "").trim()}</option>
                     </select>
-                    {selectedChatLieu === 'custom' && (
-                        <input
-                            type="text"
-                            placeholder="Nhập vật liệu tùy chỉnh"
-                            value={props.item.chatLieu}
-                            onChange={handleChatLieuNgoai}
-                        />
-                    )}
+                    {/* Hiển thị Component tùy chỉnh khi isCustomOpen === true */}
+                    {isCustomOpen && <SelectChatLieuLop onClose={setChatLieuNgoai} />}
                 </div>
 
                 {/* Chiều dài */}
