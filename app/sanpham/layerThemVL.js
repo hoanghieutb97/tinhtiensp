@@ -31,14 +31,13 @@ export default function LayerThemVL(props) {
     }
     function setChatLieuNgoai(item) {
         let name = item.name;
-        console.log(name);
-        console.log(props.item.chatLieu);
+ 
         if (name != undefined)
             changeThongtinLop("chatLieu", "custom" + name)
 
         setIsCustomOpen(false);
     }
-    console.log(props.item.chatLieu);
+
 
     return (
         <>

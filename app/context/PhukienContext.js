@@ -16,6 +16,8 @@ export const PhukienProvider = ({ children }) => {
         try {
             setLoading(true); // Bắt đầu trạng thái loading
             const response = await fetch("/api/phukien", { cache: "no-store" });
+
+
             const data = await response.json();
 
 
@@ -50,9 +52,11 @@ export const PhukienProvider = ({ children }) => {
         fetchVatlieu();
     }, []);
 
-
+    function setLoadingALL(params) {
+        setLoading(params)
+    }
     return (
-        <PhukienContext.Provider value={{ loading, phukien, fetchPhukien, vatLieu, fetchVatlieu }}>{children}</PhukienContext.Provider>
+        <PhukienContext.Provider value={{ loading, phukien, fetchPhukien, vatLieu, fetchVatlieu, setLoadingALL }}>{children}</PhukienContext.Provider>
     );
 };
 
