@@ -42,7 +42,7 @@ function page(props) {
         return <AllLoading />;
     }
     return (
-        <div>
+        <div className='vdsdvs'>
             {handleAddSP ? <ThemSanPham dongCTN={dongCTN} fetchSanPham={fetchSanPham} /> : ""}
             <button className="btn btn-primary" onClick={() => sethandleAddSP(true)}>
                 them

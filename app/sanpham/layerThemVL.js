@@ -1,7 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import SelectChatLieuLop from "./selectChatLieuLop"
+import SelectChatLieuLop from "./selectChatLieuLop";
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
 export default function LayerThemVL(props) {
     const [isCustomOpen, setIsCustomOpen] = useState(false);
 
@@ -31,7 +40,7 @@ export default function LayerThemVL(props) {
     }
     function setChatLieuNgoai(item) {
         let name = item.name;
- 
+
         if (name != undefined)
             changeThongtinLop("chatLieu", "custom" + name)
 
@@ -43,124 +52,121 @@ export default function LayerThemVL(props) {
         <>
             <div className='ggg'>
                 <div>{/* vật liệu */}
-                    <label htmlFor="material">Chọn vật liệu:</label>
-                    <select id="material" name="material" onChange={(e) => changeThongtinLop("chatLieu", e.target.value)} value={((props.item.chatLieu?.startsWith("custom")) ? "custom" : props.item.chatLieu)}>
-                        <option value="mica2mm">Mica 2mm</option>
-                        <option value="mica3mm">Mica 3mm</option>
-                        <option value="mica4mm">Mica 4mm</option>
-                        <option value="mica5mm">Mica 5mm</option>
-                        <option value="mica15mm">Mica 15mm</option>
-                        <option value="go3mm">Gỗ 3mm</option>
-                        <option value="go5mm">Gỗ 5mm</option>
-
-                        <option value="custom">Phôi sẵn:{props.item.chatLieu.replace(/^custom/, "").trim()}</option>
-                    </select>
-                    {/* Hiển thị Component tùy chỉnh khi isCustomOpen === true */}
+                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                        <InputLabel id="demo-simple-select-standard-label">Chất Liệu</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            onChange={(e) => changeThongtinLop("chatLieu", e.target.value)} value={((props.item.chatLieu?.startsWith("custom")) ? "custom" : props.item.chatLieu)}
+                            label="Chất Liệu"
+                        >
+                            <MenuItem value="mica2mm">Mica 2mm</MenuItem>
+                            <MenuItem value="mica3mm">Mica 3mm</MenuItem>
+                            <MenuItem value="mica4mm">Mica 4mm</MenuItem>
+                            <MenuItem value="mica5mm">Mica 5mm</MenuItem>
+                            <MenuItem value="mica15mm">Mica 15mm</MenuItem>
+                            <MenuItem value="go3mm">Gỗ 3mm</MenuItem>
+                            <MenuItem value="go5mm">Gỗ 5mm</MenuItem>
+                            <MenuItem value="custom">Phôi sẵn:{props.item.chatLieu.replace(/^custom/, "").trim()}</MenuItem>
+                        </Select>
+                    </FormControl>
                     {isCustomOpen && <SelectChatLieuLop onClose={setChatLieuNgoai} />}
+
+
                 </div>
 
                 {/* Chiều dài */}
-
                 <div className="kvsvlsvlffs">
-                    <label htmlFor="chieudai" className="kvsvfflsvlffs">
-                        Chiều dài:
-                    </label>
-                    <input
-                        id="chieudai"
-                        type="number"
-                        value={props.item.chieuDai || ''}
-                        onChange={(e) => changeThongtinLop("chieuDai", e.target.value)}
-                        placeholder="Nhập chiều dài"
-                        className="kvdsvvffvvlsvlffs"
-
-                    />
+                    <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                        <TextField id="outlined-basic" label="Chiều ngang" variant="outlined" type="number" size="small"
+                            value={props.item.chieuDai || ''}
+                            onChange={(e) => changeThongtinLop("chieuDai", e.target.value)}
+                            placeholder="Nhập số"
+                            slotProps={{ input: { endAdornment: <InputAdornment position="end">inch</InputAdornment>, }, }}
+                        />
+                    </Box>
                 </div>
 
                 {/* chiều rộng */}
                 <div className="kvsvlsvlffs">
-                    <label htmlFor="chieurong" className="kvsvfflsvlffs">
-                        Chiều rộng:
-                    </label>
-                    <input
-                        id="chieurong"
-                        type="number"
-                        value={props.item.chieuRong || ''}
-                        onChange={(e) => changeThongtinLop("chieuRong", e.target.value)}
-                        placeholder="Nhập chiều rộng"
-                        className="kvdsvvffvvlsvlffs"
-
-                    />
+                    <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                        <TextField id="outlined-basic" label="Chiều dọc" variant="outlined" type="number" size="small"
+                            value={props.item.chieuRong || ''}
+                            onChange={(e) => changeThongtinLop("chieuRong", e.target.value)}
+                            placeholder="Nhập số"
+                            slotProps={{ input: { endAdornment: <InputAdornment position="end">inch</InputAdornment>, }, }}
+                        />
+                    </Box>
                 </div>
+
+
 
 
 
                 {/* số mặt */}
-                <div className="kvsvlsvls">
-                    <label htmlFor="numFaces" className="kvsvvfflsvlffs">
-                        Số mặt in:
-                    </label>
-                    <select
-                        id="numFaces"
-                        name="numFaces"
-                        value={props.item.soMatIn}
-                        onChange={(e) => changeThongtinLop("soMatIn", e.target.value)}
-                        className="kvsvvffvvlsvlffs"
-                    >
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value={false}>không in</option>
-                    </select>
+                <div>{/* vật liệu */}
+                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                        <InputLabel id="demo-simple-select-standard-label">Số mặt in</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            onChange={(e) => changeThongtinLop("soMatIn", e.target.value)}
+                            value={props.item.soMatIn}
+                            label="Số  mặt in"
+                        >
+                            <MenuItem value="1">1</MenuItem>
+                            <MenuItem value="2">2</MenuItem>
+                            <MenuItem value={false}>không in</MenuItem>
+
+                        </Select>
+                    </FormControl>
                 </div>
+
+
 
 
                 {/* có cắt không */}
-                <div className="kvsvlsvls">
-                    <label htmlFor="numFaces" className="kvsvvfflsvlffs">
-                        Có cắt không
-                    </label>
-                    <select
-                        id="numFaces"
-                        name="numFaces"
-                        value={props.item.catStatus}
-                        onChange={(e) => changeThongtinLop("catStatus", e.target.value)}
-                        className="kvsvvffvvlsvlffs"
-                    >
-                        <option value={true}>có</option>
-                        <option value={false}>không</option>
-
-                    </select>
+                <div>
+                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                        <InputLabel id="demo-simple-select-standard-label">Cut Laze</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            value={props.item.catStatus}
+                            onChange={(e) => changeThongtinLop("catStatus", e.target.value)}
+                            label="Cut Laze"
+                        >
+                            <MenuItem value={true}>có</MenuItem>
+                            <MenuItem value={false}>không</MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
+
+
+
 
 
                 {/* có khắc không */}
-                <div className="kvsvlsvls">
-                    <label htmlFor="numFaces" className="kvsvvfflsvlffs">
-                        Có khắc không
-                    </label>
-                    <select
-                        id="numFaces"
-                        name="numFaces"
-                        value={props.item.khacStatus}
-                        onChange={(e) => changeThongtinLop("khacStatus", e.target.value)}
-                        className="kvsvvffvvlsvlffs"
-                    >
-                        <option value={true}>có</option>
-                        <option value={false}>không</option>
-
-                    </select>
+                <div>
+                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                        <InputLabel id="demo-simple-select-standard-label">Khắc</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            value={props.item.khacStatus}
+                            onChange={(e) => changeThongtinLop("khacStatus", e.target.value)}
+                            label="Khắc"
+                        >
+                            <MenuItem value={true}>có</MenuItem>
+                            <MenuItem value={false}>không</MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
 
 
-                <button
-                    className="btn btn-primary"
-                    onClick={xoaLayer}
-                >
+                <Button onClick={xoaLayer} variant="outlined" startIcon={<DeleteIcon />}>
                     Xóa
-                </button>
-
-
-
-
+                </Button>
             </div>
         </>
 

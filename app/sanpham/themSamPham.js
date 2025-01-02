@@ -1,16 +1,22 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import LayerThemVL from "./layerThemVL";
-
 import { tinhTienVatLieu, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "./tinhtien";
 import { usePhukien } from "../context/PhukienContext";
-
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Button from '@mui/material/Button';
+import SendIcon from '@mui/icons-material/Send';
+import { Typography, IconButton } from "@mui/material";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 export default function ThemSanPham(props) {
     let typeCPN = props.typeCPN;
-
     let ItemSua = props.data;
-
     const initialStateVL = {
         tienVatLieu: 0, // có thể chọn ngoài
         tienMuc: 0,
@@ -27,8 +33,6 @@ export default function ThemSanPham(props) {
         tienKeoDan: 0,
         tienXop: 0,
         tienMangBoc: 0,
-
-
     }
     const defaultThongSoTong = {
         doCao: 0,
@@ -56,20 +60,20 @@ export default function ThemSanPham(props) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result;
-                console.log('Base64 String:', base64String); // Log chuỗi Base64
+
                 // Lưu Base64 vào state hoặc xử lý tiếp
                 setThongSoTong({ ...thongSoTong, anh: base64String }); // Cần định nghĩa setBase64Image trước
             };
             reader.readAsDataURL(file); // Đọc file dưới dạng Data URL (Base64)
         }
+        else {
+            setImage(null)
+            console.log("ko chon duoc anh");
+
+        }
     };
-
-
     const handleImageUpload = async () => {
-
         try {
-
-
             const response = await fetch("/api/cloudinary", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -141,7 +145,7 @@ export default function ThemSanPham(props) {
                 updateData: DataPost
             };
 
-        
+
 
             const response = await fetch("/api/sanpham", {
                 method: "PUT",
@@ -161,10 +165,7 @@ export default function ThemSanPham(props) {
         }
 
     };
-
     useEffect(() => {
-
-
         if (lop.length > 0)
             setTienVL({
                 ...tienVL,
@@ -181,11 +182,6 @@ export default function ThemSanPham(props) {
                 tienThungDongHang: Math.floor(tinhTienThungDongHang(lop, vatLieu, thongSoTong)),
                 tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
                 tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong))
-
-
-
-
-
             })
         else setTienVL({
             ...initialStateVL,
@@ -195,18 +191,10 @@ export default function ThemSanPham(props) {
             tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
             tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong))
         });
-
-
-
-
     }, [lop, thongSoTong]);
-
-
-
     function tongTien() {
         return Object.values(tienVL).reduce((sum, value) => sum + value, 0);
     }
-
     function handleAddLayer(params) {
         var item = {
             chatLieu: "mica3mm",
@@ -226,7 +214,6 @@ export default function ThemSanPham(props) {
     function xoaLayer(key) {
         setlop((prevLop) => prevLop.filter((_, index) => index !== key));
     }
-
     const handleChangeThongSoTong = (type, value) => {
         let val = value;
 
@@ -239,187 +226,206 @@ export default function ThemSanPham(props) {
         }));
     };
 
-
     return (
 
 
         <div className="themspsss">
-            <button className="btn btn-primary" onClick={handleAddLayer}  >   Thêm lớp chất liệu  </button>
-            <button className="btn btn-danger" onClick={props.dongCTN}  >   X  </button>
-            {lop.map((item, key) => <LayerThemVL key={key} item={item} changeLopCL={changeLopCL} stt={key} xoaLayer={xoaLayer} />)}
+            <Button variant="contained" onClick={props.dongCTN} className="btn btn-danger btvrrr"  >X </Button>
             <div className="container">
 
-                <div className="row">
-
-                    <div className="col-2">
-                        <div className="mb-3">
-                            <label htmlFor="heightInput" className="form-label">
-                                Chiều Ngang hộp:(cm)
-                            </label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                id="heightInput"
-                                placeholder="in"
-                                value={thongSoTong.chieuNgang}
-                                onChange={(e) => handleChangeThongSoTong("chieuNgang", e.target.value)}
-                            />
-                        </div>
+                <div className="row mt-2 mb-3 glrsjngsl">
+                    <div className="col-12">
+                        <Button variant="contained" onClick={handleAddLayer} >Thêm lớp chất liệu </Button>
                     </div>
-                    <div className="col-2">
-                        <div className="mb-3">
-                            <label htmlFor="heightInput" className="form-label">
-                                Chiều Dọc hộp:(cm)
-                            </label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                id="heightInput"
-                                placeholder="in"
-                                value={thongSoTong.chieuDoc}
-                                onChange={(e) => handleChangeThongSoTong("chieuDoc", e.target.value)}
-                            />
-                        </div>
-                    </div>
-                    <div className="col-2">
-                        <div className="mb-3">
-                            <label htmlFor="heightInput" className="form-label">
-                                Nhập độ cao:(cm)
-                            </label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                id="heightInput"
-                                placeholder="in"
-                                value={thongSoTong.doCao}
-                                onChange={(e) => handleChangeThongSoTong("doCao", e.target.value)}
-                            />
-                        </div>
+                    <div className="col-12">
+                        {lop.map((item, key) => <LayerThemVL key={key} item={item} changeLopCL={changeLopCL} stt={key} xoaLayer={xoaLayer} />)}
                     </div>
                 </div>
 
-                <div className="row">
-                    <div className="col-6">
-                        <div className="kvsvlsvlffs">
-                            <label htmlFor="chieurong" className="kvsvfflsvlffs">
-                                Product:
-                            </label>
-                            <input
-                                id="Product"
-                                type="text"
-                                value={thongSoTong.product || ''}
-                                onChange={(e) => handleChangeThongSoTong("product", e.target.value)}
-                                placeholder="Nhập Product"
-                                className="kvdsvvffvvlsvlffs"
 
-                            />
+
+                <div className="container">
+                    <div className="row">
+                        <div className="col-3">
+
+                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                                <TextField id="outlined-basic" label="Chiều Ngang Hộp" variant="outlined" type="number" size="small"
+                                    value={thongSoTong.chieuNgang}
+                                    onChange={(e) => handleChangeThongSoTong("chieuNgang", e.target.value)}
+                                    placeholder="Nhập số"
+                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">cm</InputAdornment>, }, }}
+                                />
+                            </Box>
+
+
                         </div>
-                        <div className="kvsvlsvlffs">
-                            <label htmlFor="chieurong" className="kvsvfflsvlffs">
-                                Variant:
-                            </label>
-                            <input
-                                id="Variant"
-                                type="text"
-                                value={thongSoTong.variant || ''}
-                                onChange={(e) => handleChangeThongSoTong("variant", e.target.value)}
-                                placeholder="Nhập Variant"
-                                className="kvdsvvffvvlsvlffs"
+                        <div className="col-3">
+                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                                <TextField id="outlined-basic" label="Chiều Dọc Hộp" variant="outlined" type="number" size="small"
+                                    value={thongSoTong.chieuDoc}
+                                    onChange={(e) => handleChangeThongSoTong("chieuDoc", e.target.value)}
+                                    placeholder="Nhập số"
+                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">cm</InputAdornment>, }, }}
+                                />
+                            </Box>
 
-                            />
                         </div>
-                        <div className="kvsvlsvlffs">
-                            <label htmlFor="chieurong" className="kvsvfflsvlffs">
-                                note:
-                            </label>
-                            <input
-                                id="note"
-                                type="text"
-                                value={thongSoTong.note || ''}
-                                onChange={(e) => handleChangeThongSoTong("note", e.target.value)}
-                                placeholder="Nhập note"
-                                className="kvdsvvffvvlsvlffs"
-
-                            />
+                        <div className="col-3">
+                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                                <TextField id="outlined-basic" label="Chiều Cao Hộp" variant="outlined" type="number" size="small"
+                                    value={thongSoTong.doCao}
+                                    onChange={(e) => handleChangeThongSoTong("doCao", e.target.value)}
+                                    placeholder="Nhập số"
+                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">cm</InputAdornment>, }, }}
+                                />
+                            </Box>
                         </div>
                     </div>
-                    <div className="col-6">
-                        <div className="kvsvlsvls">
-                            <label htmlFor="numFaces" className="kvsvvfflsvlffs">
-                                chọn type
-                            </label>
-                            <select
-                                id="numFaces"
-                                name="numFaces"
-                                value={thongSoTong.type}
-                                onChange={(e) => handleChangeThongSoTong("type", e.target.value)}
-                                className="kvsvvffvvlsvlffs"
-                            >
-                                <option value="demo">demo</option>
-                                <option value="publish">publish</option>
 
-                            </select>
-                        </div>
-                    </div>
-                    <div className="col-6">
-                        <div className="kvsvlsvls">
-                            <label htmlFor="numFaces" className="kvsvvfflsvlffs">
-                                chọn xốp
-                            </label>
-                            <select
-                                id="numFaces"
-                                name="numFaces"
-                                value={thongSoTong.xop}
-                                onChange={(e) => handleChangeThongSoTong("xop", e.target.value)}
-                                className="kvsvvffvvlsvlffs"
-                            >
-                                <option value="xopmong">xốp 0.5mm</option>
-                                <option value="xop3mm">xốp 3mm</option>
-                                <option value="xop5mm">xốp 5mm</option>
-                                <option value="xop10mm">xốp 10mm</option>
-                                <option value="xop20mm">xốp 20mm</option>
-                                <option value="xopno">xốp nổ</option>
-
-
-                            </select>
-                        </div>
-                    </div>
-                    <div className="col-6">
-                        <div>
-                            <h3>Tải lên ảnh:</h3>
-                            <input type="file" accept="image/*" onChange={handleChonAnh} />
-                            {image && (
-                                <div style={{ marginTop: '20px' }}>
-                                    <p>Ảnh đã tải lên:</p>
-                                    <img src={image} alt="Uploaded" style={{ maxWidth: '100%', height: 'auto', border: '1px solid #ddd' }} />
+                    <div className="row">
+                        <div className="col-6">
+                            <div className="row">
+                                <div className="col-12">
+                                    <TextField
+                                        label="Product"
+                                        variant="standard"
+                                        color="warning"
+                                        focused
+                                        value={thongSoTong.product || ''}
+                                        onChange={(e) => handleChangeThongSoTong("product", e.target.value)}
+                                        placeholder="Nhập Product Name"
+                                    />
                                 </div>
-                            )}
+                                <div className="col-12">
+                                    <TextField
+                                        label="Variant"
+                                        variant="standard"
+                                        color="warning"
+                                        focused
+                                        value={thongSoTong.variant || ''}
+                                        onChange={(e) => handleChangeThongSoTong("variant", e.target.value)}
+                                        placeholder="Nhập Variant Name"
+
+                                    />
+                                </div>
+                                <div className="col-12">
+                                    <TextField
+                                        label="note"
+                                        variant="standard"
+
+                                        focused
+                                        value={thongSoTong.note || ''}
+                                        onChange={(e) => handleChangeThongSoTong("note", e.target.value)}
+                                        placeholder="Nhập note"
+
+                                    />
+                                </div>
+
+                                <div className="col-12">
+                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                        <InputLabel id="demo-simple-select-standard-label">Chất Liệu</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-standard-label"
+                                            id="demo-simple-select-standard"
+                                            value={thongSoTong.xop}
+                                            onChange={(e) => handleChangeThongSoTong("xop", e.target.value)}
+                                            label="Chọn Loại Xôp"
+                                        >
+                                            <MenuItem value="xopmong">xốp 0.5mm</MenuItem>
+                                            <MenuItem value="xop3mm">xốp 3mm</MenuItem>
+                                            <MenuItem value="xop5mm">xốp 5mm</MenuItem>
+                                            <MenuItem value="xop10mm">xốp 10mm</MenuItem>
+                                            <MenuItem value="xop20mm">xốp 20mm</MenuItem>
+                                            <MenuItem value="xopno">xốp nổ</MenuItem>
+
+
+                                        </Select>
+                                    </FormControl>
+                                </div>
+
+                                <div className="col-12">
+                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                        <InputLabel id="demo-simple-select-standard-label">Loại thẻ</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-standard-label"
+                                            id="demo-simple-select-standard"
+                                            value={thongSoTong.type}
+                                            onChange={(e) => handleChangeThongSoTong("type", e.target.value)}
+                                            label="Loại thẻ"
+                                        >
+                                            <MenuItem value="demo">demo</MenuItem>
+                                            <MenuItem value="publish">publish</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className="col-12">
+                                    <Box>
+                                        <Typography variant="h6" gutterBottom>
+                                            Tải lên ảnh:
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            component="label"
+                                            startIcon={<PhotoCamera />}
+                                            color="primary"
+                                        >
+                                            Chọn ảnh
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleChonAnh}
+                                                hidden
+                                            />
+                                        </Button>
+
+                                        {image && (
+                                            <div className="anhtailen">
+                                                <img src={image} alt="Uploaded" className='amttt' />
+                                            </div>
+
+                                        )}
+                                    </Box>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+
+
+                        <div className="col-6">
+                            <div>
+
+                                <div className="thoingtintien">
+                                    {Object.entries(tienVL).map(([key, value], index) => (
+                                        <div key={index} className="thongtina">
+                                            <span>{key.replace(/([A-Z])/g, " $1")}: </span>
+                                            <span className="giatiensp">{isNaN(value) ? "0" : value}</span>
+                                        </div>
+                                    ))}
+                                    <div className="tongtien">
+                                        Tổng Tiền:    {tongTien()}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
 
-            <div className="thoingtintien">
-                {Object.entries(tienVL).map(([key, value], index) => (
-                    <div key={index} className="thongtina">
-                        <span>{key.replace(/([A-Z])/g, " $1")}: </span>
-                        <span className="giatiensp">{isNaN(value) ? "0" : value}</span>
+
+
+                <div className="container">
+                    <div className="row">
+                        <Button variant="contained" endIcon={<SendIcon />}>
+                            Send
+                        </Button>
+
                     </div>
-                ))}
-                <div className="tongtien">
-                    Tổng Tiền:    {tongTien()}
                 </div>
             </div>
 
-
-            <div className="container">
-                <div className="row">
-                    <button className="btn btn-danger" onClick={themSanPham} >
-                        Tạo
-                    </button>
-                </div>
-            </div>
         </div>
 
 

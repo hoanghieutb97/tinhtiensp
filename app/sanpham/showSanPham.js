@@ -44,6 +44,7 @@ function ShowSanPham(props) {
     // Kết quả
     let listSP_XL = groupByProduct(props.listSP);
 
+    console.log(listSP_XL);
 
 
     return (
@@ -54,6 +55,7 @@ function ShowSanPham(props) {
                 {listSP_XL.map((item, key) => <div className="col-2 motproduct11" key={key} onClick={() => handleClickProduct(item)}>
                     <div className="divtongsp">
                         <p className="hhh">product: {item.productName}</p>
+                        <p className="hhh">Số lượng: {item.data.length}</p>
                         <div className="divanh">
                             <Image priority src={item.image} alt="My GIF" width={500} height={300} className="anhpksp" />
                         </div>
