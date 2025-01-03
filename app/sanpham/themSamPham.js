@@ -45,7 +45,7 @@ export default function ThemSanPham(props) {
         note: "",
         type: "demo"
     }
-    const { vatLieu } = usePhukien();
+    const { vatLieu, getItemsByQuery } = usePhukien();
     const [lop, setlop] = useState((typeCPN != "editProduct") ? [] : ItemSua.lop);
 
     const [tienVL, setTienVL] = useState(initialStateVL);
@@ -93,13 +93,19 @@ export default function ThemSanPham(props) {
         }
     };
     const themSanPham = async () => {
-        if (typeCPN != "editProduct") {
-            var DataPost = {
-                thongSoTong: thongSoTong,
-                lop: lop,
-                tienVL: tienVL
+        let DataPost = {
+            thongSoTong: thongSoTong,
+            lop: lop,
+            tienVL: tienVL,
+            name: thongSoTong.product,
+            namecode: thongSoTong.product.normalize("NFD") // Chuyển các ký tự có dấu thành dạng kết hợp (e.g., 'Hiếu' -> 'Hiếu')
+                .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
+                .replace(/[^a-zA-Z]/g, "") // Giữ lại các ký tự a-z, A-Z
+                .toLowerCase()
 
-            }
+        }
+        if (typeCPN != "editProduct") {
+
 
 
             try {
@@ -134,12 +140,7 @@ export default function ThemSanPham(props) {
             }
         }
         else if (typeCPN == "editProduct") {
-            var DataPost = {
-                thongSoTong: thongSoTong,
-                lop: lop,
-                tienVL: tienVL
 
-            }
             let DataPut = {
                 id: ItemSua._id, // ID tài liệu bạn muốn sửa
                 updateData: DataPost
@@ -163,6 +164,8 @@ export default function ThemSanPham(props) {
                 console.error("Cập nhật thất bại:", result.error);
             }
         }
+        getItemsByQuery("/sanpham", "");
+        props.dongCTN();
 
     };
     useEffect(() => {
@@ -418,7 +421,7 @@ export default function ThemSanPham(props) {
 
                 <div className="container">
                     <div className="row">
-                        <Button variant="contained" endIcon={<SendIcon />}>
+                        <Button variant="contained" endIcon={<SendIcon />} onClick={themSanPham}>
                             Send
                         </Button>
 

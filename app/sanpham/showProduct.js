@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Image from "next/image";
 import ThemSanPham from './themSamPham';
+import Button from '@mui/material/Button';
 
 function ShowProduct(props) {
     let listItems = props.activeProduct.data;
@@ -25,21 +26,24 @@ function ShowProduct(props) {
                 <div className="container">
                     <div className="row">
                         <div className="col-12 ">
-                            <button className="btn btn-primary" onClick={props.closeProduct}> X </button>
+                            <Button variant="contained" onClick={props.closeProduct} className="btn btn-danger btvrrr"  >X </Button>
+
                         </div>
 
                         <div className="col-12">
                             <div className="row">
                                 {listItems.map((item, key) => <div className="col-2 motproduct11" key={key} >
                                     <div className="divtongsp">
-                                        <p className="hhh">product: {item.thongSoTong.product}</p>
-                                        <p className="hhh">variant: {item.thongSoTong.variant}</p>
-                                        <p className="hhh">note: {item.thongSoTong.note}</p>
+                                        <p className="hhh"><span className="thththth">product: </span> {item.thongSoTong.product}</p>
+                                        <p className="hhh"><span className="thththth">variant: </span> {item.thongSoTong.variant}</p>
+                                        <p className="hhh"><span className="thththth">note: </span> {item.thongSoTong.note}</p>
                                         <div className="divanh">
                                             <Image priority src={item.thongSoTong.anh} alt="My GIF" width={500} height={300} className="anhpksp" />
                                         </div>
+                                        <div className="ctnbtnsp">
+                                            <button className="btn btn-primary bthgg" onClick={() => handleSuaSP(item)}> Sửa sản phẩm </button>
+                                        </div>
 
-                                        <button className="btn btn-primary" onClick={() => handleSuaSP(item)}> Sửa sản phẩm </button>
 
                                     </div>
                                 </div>)}

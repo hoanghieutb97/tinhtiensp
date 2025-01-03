@@ -1,8 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese');
-
-* {
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese'); * {
   margin: 0;
   padding: 0;
+}
+
+.ctnbtnsp {
+  display: flex;
+  margin-top: 10px;
+}
+
+.bthgg {
+  margin: auto;
+}
+
+span.thththth {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+p.hhh {
+  margin: 0;
+  font-size: 0.9rem;
 }
 
 .bdfbfd {
@@ -50,7 +67,7 @@ img.amttt {
 
 .divanh {
   width: 100%;
-  HEIGHT: 300px;
+  HEIGHT: 200px;
 }
 
 .pkhh {

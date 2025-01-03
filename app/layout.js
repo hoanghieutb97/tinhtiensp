@@ -2,6 +2,7 @@ import { PhukienProvider } from "./context/PhukienContext";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
+import SerchAppBar from "./appBar";
 
 export const metadata = {
   title: "Create Next App",
@@ -12,8 +13,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+
         {/* Bọc toàn bộ ứng dụng trong Provider */}
-        <PhukienProvider>{children}</PhukienProvider>
+        <PhukienProvider>
+          <SerchAppBar />
+          {children}
+        </PhukienProvider>
       </body>
     </html>
   );
