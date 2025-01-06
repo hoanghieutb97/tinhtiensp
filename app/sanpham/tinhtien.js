@@ -16,10 +16,10 @@ export function tinhTienVatLieu(lop, giaVatLieu) {
             tenChatLieu = tenChatLieu.replace(/^custom/, "").trim();
             return Math.floor(giaVatLieu.filter(item => item.name == tenChatLieu)[0].price);
         }
-      
+
 
         let gia = giaVatLieu.filter(item => item.name == tenChatLieu)[0].price;
-    
+
 
         gia = +gia;
         let type = tenChatLieu.slice(0, 2).toLowerCase();
@@ -249,6 +249,7 @@ export function tinhTienThungDongHang(lop, giaVatLieu, thongSoTong) {
 
 
 
+    if (tongtien == Infinity) return 0
     return tongtien
 }
 export function tinhTienKeoDan(lop, giaVatLieu, thongSoTong) {
@@ -275,7 +276,7 @@ export function tinhTienKeoDan(lop, giaVatLieu, thongSoTong) {
 
 export function tinhTienBangDinh(lop, giaVatLieu, thongSoTong) {
 
- 
+
 
     let maxW = + thongSoTong.chieuDoc;
     let maxH = +thongSoTong.chieuNgang;
@@ -334,7 +335,7 @@ export function tinhTienMangBoc(lop, giaVatLieu, thongSoTong) {
 
 
     let giaVL = (giaVatLieu.length != 0) ? Math.floor(giaVatLieu.filter(item => item.name == activeXop)[0].price) : 0;
-  
+
 
     let tongtien = 0;
     let giaXopM2 = 0.5;

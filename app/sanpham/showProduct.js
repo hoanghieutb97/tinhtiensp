@@ -16,12 +16,13 @@ function ShowProduct(props) {
         setactiveSuaSP(params)
     }
 
+    console.log(listItems);
 
     return (
 
 
         <div className="row">
-            {handleAddSP ? <ThemSanPham dongCTN={dongCTN} data={activeSuaSP} typeCPN={"editProduct"} fetchSanPham={props.fetchSanPham} /> : ""}
+            {handleAddSP ? <ThemSanPham dongCTN={dongCTN} closeProduct={props.closeProduct} data={activeSuaSP} typeCPN={"editProduct"} fetchSanPham={props.fetchSanPham} /> : ""}
             <div className="clickshowprd">
                 <div className="container">
                     <div className="row">

@@ -166,6 +166,8 @@ export default function ThemSanPham(props) {
         }
         getItemsByQuery("/sanpham", "");
         props.dongCTN();
+        if (typeCPN == "editProduct")
+            props.closeProduct();
 
     };
     useEffect(() => {

@@ -1,37 +1,31 @@
 import React, { useState } from 'react';
 import { usePhukien } from "../context/PhukienContext";
+import { Typography, IconButton } from "@mui/material";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 function ModalThemPK(props) {
-    const [name, setName] = useState("");
-    const [price, setPrice] = useState("");
-    const [note, setNote] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    let item = props.item;
+
     const [loading, setLoading] = useState(false);
     const { fetchPhukien } = usePhukien();
-    const [image, setImage] = useState(null); // Trường lưu trữ file ảnh
 
-    const convertToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file); // Đọc file và chuyển sang Base64
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    };
+
+
+
     const handleImageUpload = async (file) => {
         try {
-            const base64File = await convertToBase64(file);
-            const formData = new FormData();
-            formData.append("file", file);
-            console.log(file);
 
             const response = await fetch("/api/cloudinary", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ base64File }),
+                body: JSON.stringify({ base64File: item.image }),
             });
 
             const data = await response.json();
+            console.log(data);
+
             if (data.success) {
                 return data.url; // URL ảnh từ Cloudinary
             } else {
@@ -43,22 +37,44 @@ function ModalThemPK(props) {
             return null;
         }
     };
+    const handleChonAnh = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
 
+            // Chuyển đổi ảnh sang Base64
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result;
+                props.setValueItem("image", base64String)
+
+            };
+            reader.readAsDataURL(file); // Đọc file dưới dạng Data URL (Base64)
+
+        }
+        else {
+
+            props.setValueItem("image", null)
+            console.log("ko chon duoc anh");
+
+        }
+    };
 
     const handleSubmit = async () => {
-        if (!name || !price|| !note) {
+        if (!item.name || !item.price || !item.note) {
             alert("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
 
-        setLoading(true); // Bắt đầu trạng thái loading
+        props.setLoadingALL(true); // Bắt đầu trạng thái loading
         try {
             // Upload ảnh
-            const imageUrl = await handleImageUpload(image);
+            const imageUrl = await handleImageUpload(item.image);
             if (!imageUrl) {
-                setLoading(false);
+                props.setLoadingALL(false);
                 return;
             }
+            console.log(imageUrl);
 
 
             const response = await fetch("/api/phukien", {
@@ -66,18 +82,29 @@ function ModalThemPK(props) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name, price, imageUrl: imageUrl , note}),
+                body: JSON.stringify({
+                    name: item.name,
+                    price: item.price,
+                    imageUrl: imageUrl,
+                    note: item.note,
+                    namecode: item.name.product.normalize("NFD") // Chuyển các ký tự có dấu thành dạng kết hợp (e.g., 'Hiếu' -> 'Hiếu')
+                        .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
+                        .replace(/[^a-zA-Z]/g, "") // Giữ lại các ký tự a-z, A-Z
+                        .toLowerCase()
+                }),
             });
 
             const result = await response.json();
             if (response.ok) {
 
                 fetchPhukien();
-                setName("");
-                setPrice("");
-                setNote("");
-                setImage(null);
-                setIsModalOpen(false);
+
+                props.setValueItem("default");
+
+
+                props.handlesetIsModalOpen(false);
+                props.setLoadingALL(true);
+
             } else {
                 alert(`Có lỗi xảy ra: ${result.error}`);
             }
@@ -94,7 +121,7 @@ function ModalThemPK(props) {
             {/* Button mở modal */}
             <button
                 className="btn btn-primary"
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => props.handlesetIsModalOpen(true)}
                 data-bs-toggle="modal"
                 data-bs-target="#addAccessoryModal"
             >
@@ -103,7 +130,7 @@ function ModalThemPK(props) {
 
             {/* Modal */}
             <div
-                className={`modal fade ${isModalOpen ? "show d-block" : ""}`}
+                className={`modal fade ${props.isModalOpen ? "show d-block" : ""}`}
                 id="addAccessoryModal"
                 tabIndex="-1"
                 role="dialog"
@@ -122,7 +149,7 @@ function ModalThemPK(props) {
                                 className="btn-close"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
-                                onClick={() => setIsModalOpen(false)}
+                                onClick={() => props.handlesetIsModalOpen(false)}
                             ></button>
                         </div>
                         <div className="modal-body">
@@ -136,8 +163,8 @@ function ModalThemPK(props) {
                                     className="form-control"
                                     id="accessoryName"
                                     placeholder="Nhập tên phụ kiện"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    value={item.name}
+                                    onChange={(e) => props.setValueItem("name", e.target.value)}
                                 />
                             </div>
                             <div className="mb-3">
@@ -149,8 +176,8 @@ function ModalThemPK(props) {
                                     className="form-control"
                                     id="accessoryPrice"
                                     placeholder="Nhập giá tiền"
-                                    value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
+                                    value={item.price}
+                                    onChange={(e) => props.setValueItem("price", e.target.value)}
                                 />
                             </div>
 
@@ -163,20 +190,38 @@ function ModalThemPK(props) {
                                     className="form-control"
                                     id="accessoryPrice"
                                     placeholder="Ghi chú"
-                                    value={note}
-                                    onChange={(e) => setNote(e.target.value)}
+                                    value={item.note}
+                                    onChange={(e) => props.setValueItem("note", e.target.value)}
                                 />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="accessoryImage" className="form-label">
-                                    Ảnh phụ kiện
-                                </label>
-                                <input
-                                    type="file"
-                                    className="form-control"
-                                    id="accessoryImage"
-                                    onChange={(e) => setImage(e.target.files[0])}
-                                />
+
+                                <Box>
+                                    <Typography variant="h6" gutterBottom>
+                                        Tải lên ảnh:
+                                    </Typography>
+                                    <Button
+                                        variant="contained"
+                                        component="label"
+                                        startIcon={<PhotoCamera />}
+                                        color="primary"
+                                    >
+                                        Chọn ảnh
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleChonAnh}
+                                            hidden
+                                        />
+                                    </Button>
+
+                                    {item.image && (
+                                        <div className="anhtailen">
+                                            <img src={item.image} alt="Uploaded" className='amttt' />
+                                        </div>
+
+                                    )}
+                                </Box>
                             </div>
 
                         </div>
@@ -185,7 +230,7 @@ function ModalThemPK(props) {
                                 type="button"
                                 className="btn btn-secondary"
                                 data-bs-dismiss="modal"
-                                onClick={() => setIsModalOpen(false)}
+                                onClick={() => props.handlesetIsModalOpen(false)}
                             >
                                 Hủy
                             </button>

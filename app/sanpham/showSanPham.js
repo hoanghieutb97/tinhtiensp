@@ -9,6 +9,7 @@ function ShowSanPham(props) {
     const groupByProduct = (list) => {
         const grouped = {};
 
+
         list.forEach((item) => {
             const productName = item.thongSoTong.product.trim().toLowerCase();
 
@@ -45,6 +46,7 @@ function ShowSanPham(props) {
     let listSP_XL = groupByProduct(props.listSP);
 
     console.log(listSP_XL);
+    
 
 
     return (

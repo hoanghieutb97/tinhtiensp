@@ -12,7 +12,7 @@ export const PhukienProvider = ({ children }) => {
     const [activeItems, setactiveItems] = useState([]);
     const [loading, setLoading] = useState(true); // Thêm trạng thái loading
     var fetchPhukien = async () => {
-        console.log("fetchPhukien................");
+
 
         try {
             setLoading(true); // Bắt đầu trạng thái loading
@@ -31,7 +31,7 @@ export const PhukienProvider = ({ children }) => {
         }
     };
     var fetchVatlieu = async () => {
-        console.log("fetchVatlieun................");
+
 
         try {
             setLoading(true); // Bắt đầu trạng thái loading
@@ -52,6 +52,8 @@ export const PhukienProvider = ({ children }) => {
         fetchPhukien();
         fetchVatlieu();
     }, []);
+    // console.log("phukien",phukien);
+    // console.log("vatLieu",vatLieu); 
 
     function setLoadingALL(params) {
         setLoading(params)
@@ -73,7 +75,7 @@ export const PhukienProvider = ({ children }) => {
 
     }
     return (
-        <PhukienContext.Provider value={{ loading, phukien, fetchPhukien, vatLieu, fetchVatlieu, setLoadingALL, getItemsByQuery, activeItems }}>{children}</PhukienContext.Provider>
+        <PhukienContext.Provider value={{ loading, setLoadingALL, phukien, fetchPhukien, vatLieu, fetchVatlieu, getItemsByQuery, activeItems }}>{children}</PhukienContext.Provider>
     );
 };
 

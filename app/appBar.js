@@ -19,7 +19,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { usePhukien } from "./context/PhukienContext";
-
+import Button from '@mui/material/Button';
+import Link from 'next/link';
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -81,7 +82,16 @@ export default function PrimarySearchAppBar() {
         }
     };
 
-
+    const pages = [{
+        typeLink: 'sanpham',
+        nameLink: "Sản Phẩm"
+    }, {
+        typeLink: 'vatlieu',
+        nameLink: "Vật Liệu"
+    }, {
+        typeLink: 'phukien',
+        nameLink: "Phụ Kiện"
+    }];
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -101,7 +111,7 @@ export default function PrimarySearchAppBar() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
-                        MUI
+                        Hehe
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
@@ -115,11 +125,24 @@ export default function PrimarySearchAppBar() {
                             onKeyDown={handleKeyDown} // Xử lý khi nhấn Enter
                         />
                     </Search>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                        {pages.map((page, key) => (
+                            <Link href={"/" + page.typeLink} key={key} passHref>
+                                <Button
+
+
+                                    sx={{ my: 2, color: 'white', display: 'block', textTransform: 'none' }}
+                                >
+                                    {page.nameLink}
+                                </Button>
+                            </Link>
+                        ))}
+                    </Box>
 
 
                 </Toolbar>
             </AppBar>
 
-        </Box>
+        </Box >
     );
 }
