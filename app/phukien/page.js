@@ -14,7 +14,10 @@ export default function ProductList() {
     price: "",
     note: "",
     nameCode: "",
-    image: null
+    image: null,
+    _id: null,
+    change: true,
+    dateCreate: Date.now()
   }
   const { loading, phukien, setLoadingALL } = usePhukien();
 
@@ -32,6 +35,12 @@ export default function ProductList() {
     }
 
   }
+  function handleChangeActiveItem(item, key) {
+    handlesetIsModalOpen(true);
+    setItems(item);
+  }
+  console.log(phukien);
+
   if (loading) {
     return <AllLoading />;
   }
@@ -44,7 +53,7 @@ export default function ProductList() {
         <div className="row">
           {
             phukien.map((item, key) =>
-              <div className="pkhh col-2" key={key}>
+              <div className="pkhh col-2" key={key} onClick={() => handleChangeActiveItem(item, key)}>
                 <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
                 <div className="tenpk">  Giá tiền: <span className="hhhg">{item.price}</span></div>
                 <div className="tenpk">Ghi chú: <span className="hhhg">{item.note}</span></div>

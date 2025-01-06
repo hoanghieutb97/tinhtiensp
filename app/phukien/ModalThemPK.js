@@ -74,24 +74,35 @@ function ModalThemPK(props) {
                 props.setLoadingALL(false);
                 return;
             }
-            console.log(imageUrl);
 
-
-            const response = await fetch("/api/phukien", {
-                method: "POST",
+            let response;
+            if (item._id !== null)
+                response = await fetch("/api/phukien", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ...item,
+                        imageUrl: imageUrl,
+                        dateCreate: Date.now(),
+                        namecode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase()
+                    }),
+                });
+            else response = await fetch("/api/phukien", {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    name: item.name,
-                    price: item.price,
-                    imageUrl: imageUrl,
-                    note: item.note,
-                    namecode: item.name.product.normalize("NFD") // Chuyển các ký tự có dấu thành dạng kết hợp (e.g., 'Hiếu' -> 'Hiếu')
-                        .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
-                        .replace(/[^a-zA-Z]/g, "") // Giữ lại các ký tự a-z, A-Z
-                        .toLowerCase()
-                }),
+                    id: item._id, // ID tài liệu bạn muốn sửa
+                    updateData: {
+                        ...item,
+                        imageUrl: imageUrl,
+                        dateCreate: Date.now(),
+                        namecode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase()
+                    }
+                }), // Gửi dữ liệu PUT
             });
 
             const result = await response.json();

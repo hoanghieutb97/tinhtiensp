@@ -8,12 +8,17 @@ if (!uri) {
 let client;
 let clientPromise;
 
-// Kiểm tra nếu đã kết nối, nếu chưa thì khởi tạo
-if (!global._mongoClientPromise) {
-  client = new MongoClient(uri);
-  global._mongoClientPromise = client.connect();
+// // Kiểm tra nếu đã kết nối, nếu chưa thì khởi tạo
+// if (!global._mongoClientPromise) {
+//   client = new MongoClient(uri);
+//   global._mongoClientPromise = client.connect();
+// }
+// clientPromise = global._mongoClientPromise;
+if (!globalThis._mongoClientPromise) {
+  const client = new MongoClient(uri);
+  globalThis._mongoClientPromise = client.connect();
 }
-clientPromise = global._mongoClientPromise;
+clientPromise = globalThis._mongoClientPromise;
 
 export async function POST(req) {
   try {
@@ -34,7 +39,7 @@ export async function PUT(req) {
 
   try {
     const { id, updateData } = await req.json(); // Lấy ID và dữ liệu cần cập nhật từ body
-    console.log("req------------");
+
 
     if (!id || !updateData) {
       return new Response(
@@ -52,7 +57,7 @@ export async function PUT(req) {
       { _id: new ObjectId(id) }, // Tìm tài liệu cần cập nhật
       { $set: updateData } // Cập nhật dữ liệu mới
     );
-    console.log("------", result);
+
     if (result.matchedCount === 0) {
       return new Response(
         JSON.stringify({ success: false, error: "Không tìm thấy tài liệu phù hợp" }),
@@ -68,18 +73,6 @@ export async function PUT(req) {
   }
 }
 
-
-// export async function GET() {
-//   try {
-//     const client = await clientPromise; // Sử dụng kết nối đã tái sử dụng
-//     const db = client.db("test"); // Tên database
-//     const collection = db.collection("sanpham"); // Tên collection
-//     const data = await collection.find({}).toArray(); // Lấy toàn bộ dữ liệu
-//     return new Response(JSON.stringify({ success: true, data }), { status: 200 });
-//   } catch (error) {
-//     return new Response(JSON.stringify({ success: false, error: error.message }), { status: 500 });
-//   }
-// }
 
 export async function GET(req) {
   try {
@@ -97,7 +90,7 @@ export async function GET(req) {
       data = await collection
         .find({ name: { $regex: searchQuery, $options: "i" } }) // Tìm kiếm theo trường "name"
         .toArray();
-        console.log(data);
+      console.log(data);
     } else {
       // Nếu không có tham số, trả về toàn bộ dữ liệu
       data = await collection.find({}).toArray();
