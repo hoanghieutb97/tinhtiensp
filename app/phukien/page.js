@@ -6,9 +6,10 @@ import ModalThemPK from "./ModalThemPK";
 import Image from "next/image";
 import { usePhukien } from "../context/PhukienContext";
 import AllLoading from "../allLoading";
-
+import { Box, Typography } from '@mui/material';
 export default function ProductList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [numberItem, setnumberItem] = useState(false);
   const defauState = {
     name: "",
     price: "",
@@ -19,7 +20,10 @@ export default function ProductList() {
     change: true,
     dateCreate: Date.now()
   }
-  const { loading, phukien, setLoadingALL } = usePhukien();
+  const { loading, phukien, setLoadingALL, getItemsByQuery, activeItems } = usePhukien();
+  useEffect(() => {
+    getItemsByQuery("/phukien", "");
+  }, []);
 
   function handlesetIsModalOpen(params) {
     setIsModalOpen(params);
@@ -38,11 +42,11 @@ export default function ProductList() {
   }
   function handleChangeActiveItem(item, key) {
     handlesetIsModalOpen(true);
-    console.log(item.imageUrl);
+    setnumberItem(key)
 
     setItems(item);
   }
-
+  let selectItem = (numberItem) ? activeItems[numberItem] : false
 
   if (loading) {
     return <AllLoading />;
@@ -52,18 +56,68 @@ export default function ProductList() {
     <div>
       <ModalThemPK setLoadingALL={setLoadingALL} handlesetIsModalOpen={handlesetIsModalOpen} isModalOpen={isModalOpen} item={Items} setValueItem={setValueItem} />
       <h1>Danh sách sản phẩm</h1>
-      <div className="container">
-        <div className="row">
-          {
-            phukien.map((item, key) =>
-              <div className="pkhh col-2" key={key} onClick={() => handleChangeActiveItem(item, key)}>
-                <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
-                <div className="tenpk">  Giá tiền: <span className="hhhg">{item.price}</span></div>
-                <div className="tenpk">Ghi chú: <span className="hhhg">{item.note}</span></div>
-                <div className="anhpk">   {item.imageUrl ? <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /> : <></>}</div>
+      <div className="container-fluid">
+        <div className="row ">
+          <div className="col-8">
+            <div className="row">
+              {
+                activeItems.map((item, key) =>
+                  <div className="pkhh col-2" key={key} onClick={() => handleChangeActiveItem(item, key)}>
+                    <div className="ctnbtnrrrr">
+                      <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
+                      <div className="tenpk">  Giá tiền: <span className="hhhg">{item.price}</span></div>
+                      <Box className="tenpknote" sx={{ mb: 2 }}>
+                        <Typography variant="body1" component="div">
+                          <div className="tenpk">Ghi chú: </div>
+                          <Typography
+                            component="span"
+                            sx={{
+                              display: 'inline-block',
+                              width: '200px', // Giới hạn chiều rộng
 
-              </div>)
-          }
+                              whiteSpace: 'nowrap', // Không xuống dòng
+                              overflow: 'hidden', // Ẩn phần tràn
+                              textOverflow: 'ellipsis', // Hiển thị dấu ba chấm
+                            }}
+                          >
+                            {item.note}
+                          </Typography>
+                        </Typography>
+                      </Box>
+
+                      {/* <p className="tenpk">Ghi chú: <span className="hhhg notepk">{item.note}</span></p> */}
+                      <div className="anhpk">   {item.imageUrl ? <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /> : <></>}</div>
+
+                    </div>
+
+                  </div>)
+              }
+            </div>
+          </div>
+          <div className="col-4 ">
+            {(selectItem) && <div className="col4-thongtin ghrh">
+              <div className="ctnbtnrrrr ">
+                <div className="tenpk">Tên: <span className="hhhg">{selectItem.name}</span></div>
+                <div className="tenpk">  Giá tiền: <span className="hhhg">{selectItem.price}</span></div>
+                <Box className="tenpknote" sx={{ mb: 2 }}>
+                  <Typography variant="body1" component="div">
+                    <div className="tenpk">Ghi chú: </div>
+                    <Typography
+                      component="span"
+           
+                    >
+                      {selectItem.note}
+                    </Typography>
+                  </Typography>
+                </Box>
+
+                {/* <p className="tenpk">Ghi chú: <span className="hhhg notepk">{item.note}</span></p> */}
+                <div className="anhpk">   {selectItem.imageUrl ? <Image priority src={selectItem.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /> : <></>}</div>
+
+              </div>
+            </div>}
+          </div>
+
         </div>
       </div>
 

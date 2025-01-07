@@ -3,9 +3,20 @@
   padding: 0;
 }
 
+.ctnbtnrrrr {
+  background: #fff;
+  border-radius: 11px;
+  padding: 5px;
+  height: 100%;
+}
+
+.tenpknote.MuiBox-root.css-1qm1lh {
+  margin: 0;
+}
+
 .anhpk {
   width: 100%;
-  height: 150px;
+  height: 180px;
 }
 
 body.bodyds {
@@ -80,16 +91,17 @@ img.amttt {
 }
 
 .pkhh {
-  background: #fff;
-  margin: 5px 10px;
+  margin: 15px 0px;
+  /* padding: 5px; */
   border-radius: 6px;
-  height: 230px;
+  height: 300px;
   overflow: hidden;
   cursor: pointer;
 }
 
 .tenpk {
   font-weight: 500;
+  border-bottom: 1px solid #e7e7e7;
 }
 
 span.hhhg {

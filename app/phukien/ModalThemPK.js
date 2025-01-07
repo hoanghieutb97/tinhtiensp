@@ -4,14 +4,14 @@ import { Typography, IconButton } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-
+import TextField from '@mui/material/TextField';
 function ModalThemPK(props) {
     let item = props.item;
 
     const [loading, setLoading] = useState(false);
     const { fetchPhukien } = usePhukien();
 
-    console.log(item);
+
 
 
 
@@ -25,7 +25,7 @@ function ModalThemPK(props) {
             });
 
             const data = await response.json();
-            console.log(data);
+
 
             if (data.success) {
                 return data.url; // URL ảnh từ Cloudinary
@@ -106,8 +106,7 @@ function ModalThemPK(props) {
                         id: item._id, // ID tài liệu bạn muốn sửa
                         updateData: {
                             ...updateFields,
-                            imageUrl: (item.image) ? item.imageUrl : imageUrl,
-                            dateCreate: Date.now(),
+                            imageUrl: (item.image == null) ? item.imageUrl : imageUrl,
                             namecode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase(),
                             image: null
                         }
@@ -157,7 +156,7 @@ function ModalThemPK(props) {
                 tabIndex="-1"
                 role="dialog"
                 aria-labelledby="addAccessoryModalLabel"
-                aria-hidden="true"
+                // aria-hidden="true"
                 style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
             >
                 <div className="modal-dialog" role="document">
@@ -204,17 +203,17 @@ function ModalThemPK(props) {
                             </div>
 
                             <div className="mb-3">
-                                <label htmlFor="accessoryPrice" className="form-label">
-                                    Note
-                                </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="accessoryPrice"
-                                    placeholder="Ghi chú"
+                              
+                                <TextField
+                                    label="Note"
+                                    multiline
+                                    minRows={4} 
                                     value={item.note}
                                     onChange={(e) => props.setValueItem("note", e.target.value)}
+                                    variant="outlined"
+                                    fullWidth
                                 />
+
                             </div>
                             <div className="mb-3">
 

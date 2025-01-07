@@ -52,27 +52,29 @@ export const PhukienProvider = ({ children }) => {
         fetchPhukien();
         fetchVatlieu();
     }, []);
-    // console.log("phukien",phukien);
-    // console.log("vatLieu",vatLieu); 
+    console.log("phukien", phukien);
+    console.log("vatLieu", vatLieu);
 
     function setLoadingALL(params) {
         setLoading(params)
     }
     async function getItemsByQuery(pathname, searchText) {
+        if (pathname !== "activeItemsToDedault")
+            try {
 
-        try {
-
-            const response = await fetch("/api" + pathname + "?q=" + searchText, { cache: "no-store" });
-            const data = await response.json();
-            setactiveItems(data.data)
+                const response = await fetch("/api" + pathname + "?q=" + searchText, { cache: "no-store" });
+                const data = await response.json();
+                setactiveItems(data.data)
 
 
-        } catch (error) {
-            console.error("Error fetching vatlieu:", error);
-        } finally {
+            } catch (error) {
+                console.error("Error fetching vatlieu:", error);
+            } finally {
 
+            }
+        else {
+            setactiveItems([])
         }
-
     }
     return (
         <PhukienContext.Provider value={{ loading, setLoadingALL, phukien, fetchPhukien, vatLieu, fetchVatlieu, getItemsByQuery, activeItems }}>{children}</PhukienContext.Provider>
