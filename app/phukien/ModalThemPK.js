@@ -11,6 +11,7 @@ function ModalThemPK(props) {
     const [loading, setLoading] = useState(false);
     const { fetchPhukien } = usePhukien();
 
+    console.log(item);
 
 
 
@@ -69,14 +70,17 @@ function ModalThemPK(props) {
         props.setLoadingALL(true); // Bắt đầu trạng thái loading
         try {
             // Upload ảnh
-            const imageUrl = await handleImageUpload(item.image);
-            if (!imageUrl) {
-                props.setLoadingALL(false);
-                return;
+            let imageUrl = ""
+            if (item.image) {
+                imageUrl = await handleImageUpload(item.image);
+                if (!imageUrl) {
+                    props.setLoadingALL(false);
+                    return;
+                }
             }
 
             let response;
-            if (item._id !== null)
+            if (item._id == null)
                 response = await fetch("/api/phukien", {
                     method: "POST",
                     headers: {
@@ -89,21 +93,28 @@ function ModalThemPK(props) {
                         namecode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase()
                     }),
                 });
-            else response = await fetch("/api/phukien", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: item._id, // ID tài liệu bạn muốn sửa
-                    updateData: {
-                        ...item,
-                        imageUrl: imageUrl,
-                        dateCreate: Date.now(),
-                        namecode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase()
-                    }
-                }), // Gửi dữ liệu PUT
-            });
+
+
+            else {
+                let { _id, ...updateFields } = item;
+                response = await fetch("/api/phukien", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: item._id, // ID tài liệu bạn muốn sửa
+                        updateData: {
+                            ...updateFields,
+                            imageUrl: (item.image) ? item.imageUrl : imageUrl,
+                            dateCreate: Date.now(),
+                            namecode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase(),
+                            image: null
+                        }
+                    }), // Gửi dữ liệu PUT
+                });
+            }
+            console.log(response);
 
             const result = await response.json();
             if (response.ok) {
@@ -232,6 +243,12 @@ function ModalThemPK(props) {
                                         </div>
 
                                     )}
+                                    {(!item.image) ? item.imageUrl && (
+                                        <div className="anhtailen">
+                                            <img src={item.imageUrl} alt="Uploaded" className='amttt' />
+                                        </div>
+
+                                    ) : ""}
                                 </Box>
                             </div>
 

@@ -22,7 +22,8 @@ export default function ProductList() {
   const { loading, phukien, setLoadingALL } = usePhukien();
 
   function handlesetIsModalOpen(params) {
-    setIsModalOpen(params)
+    setIsModalOpen(params);
+    setItems(defauState)
   }
   const [Items, setItems] = useState(defauState);
   function setValueItem(target, value) {
@@ -37,9 +38,11 @@ export default function ProductList() {
   }
   function handleChangeActiveItem(item, key) {
     handlesetIsModalOpen(true);
+    console.log(item.imageUrl);
+
     setItems(item);
   }
-  console.log(phukien);
+
 
   if (loading) {
     return <AllLoading />;
