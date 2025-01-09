@@ -47,25 +47,35 @@ function ShowSanPham(props) {
     // Kết quả
     let listSP_XL = groupByProduct(props.listSP);
 
-    console.log(listSP_XL);
+
 
 
 
     return (
-        <div className="container">
-            {showProduct ? <ShowProduct activeProduct={activeProduct} closeProduct={() => setshowProduct(false)} fetchSanPham={props.fetchSanPham} /> : ""}
+        <div className="container-fluid">
+            <div className="row hienthispsp">
+
+                {showProduct ? <ShowProduct activeProduct={activeProduct} closeProduct={() => setshowProduct(false)} fetchSanPham={props.fetchSanPham} /> : ""}
+            </div>
+
+
+
             <div className="row">
+                <div className="col-8">
+                    <div className="row">
+                        {listSP_XL.map((item, key) => <div className=" pkhh col-3 motproduct11" key={key} onClick={() => handleClickProduct(item)}>
+                            <div className="ctnbtnrrrr">
+                                <div className="tenpk">product: <span className="hhhg">{item.productName}</span></div>
+                                <div className="tenpk">Số lượng:<span className="hhhg">{item.data.length}</span></div>
 
-                {listSP_XL.map((item, key) => <div className="col-2 motproduct11" key={key} onClick={() => handleClickProduct(item)}>
-                    <div className="divtongsp">
-                        <p className="hhh"><span className="thththth">product: </span>{item.productName}</p>
-                        <p className="hhh"><span className="thththth">Số lượng: </span>{item.data.length}</p>
-                        <div className="divanh">
-                            <Image priority src={item.image} alt="My GIF" width={500} height={300} className="anhpksp" />
-                        </div>
+                                <div className="anhpk"> <Image priority src={item.image} alt="My GIF" width={500} height={300} className="anhpk" /></div>
 
+                            </div>
+                        </div>)}
                     </div>
-                </div>)}
+
+                </div>
+
 
 
             </div>

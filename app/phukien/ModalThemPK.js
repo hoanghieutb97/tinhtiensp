@@ -78,25 +78,27 @@ function ModalThemPK(props) {
                     return;
                 }
             }
- 
+
             let response;
-            if (item._id == null)
+            if (item._id == null) {
+                let {  image, ...updateFields } = item;
                 response = await fetch("/api/phukien", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        ...item,
+                        ...updateFields,
                         imageUrl: imageUrl,
                         dateCreate: Date.now(),
                         nameCode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase()
                     }),
                 });
+            }
 
 
             else {
-                let { _id,image, ...updateFields } = item;
+                let { _id, image, ...updateFields } = item;
                 response = await fetch("/api/phukien", {
                     method: "PUT",
                     headers: {
@@ -108,7 +110,7 @@ function ModalThemPK(props) {
                             ...updateFields,
                             imageUrl: (item.image == null) ? item.imageUrl : imageUrl,
                             nameCode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase(),
-                            image: null
+
                         }
                     }), // Gửi dữ liệu PUT
                 });

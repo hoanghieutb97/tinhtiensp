@@ -5,7 +5,7 @@ if (!uri) {
   throw new Error("MONGODB_URI không được cấu hình trong .env.local");
 }
 
-let client;
+
 let clientPromise;
 
 
@@ -108,6 +108,7 @@ export async function DELETE(req) {
 export async function GET(req) {
 
 
+
   try {
     const url = new URL(req.url); // Lấy URL từ request
     const searchQuery = url.searchParams.get("q"); // Lấy tham số 'q' từ query string
@@ -124,9 +125,13 @@ export async function GET(req) {
         .find({ name: { $regex: searchQuery, $options: "i" } }) // Tìm kiếm theo trường "name"
         .toArray();
 
+
     } else {
+
       // Nếu không có tham số, trả về toàn bộ dữ liệu
       data = await collection.find({}).toArray();
+      
+
     }
 
     return new Response(JSON.stringify({ success: true, data }), { status: 200 });

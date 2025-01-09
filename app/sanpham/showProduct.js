@@ -20,14 +20,13 @@ function ShowProduct(props) {
 
     return (
 
-
-        <div className="row">
+        <>
             {handleAddSP ? <ThemSanPham dongCTN={dongCTN} closeProduct={props.closeProduct} data={activeSuaSP} typeCPN={"editProduct"} fetchSanPham={props.fetchSanPham} /> : ""}
             <div className="clickshowprd">
-                <div className="container">
+                <div className="container-fluid">
                     <div className="row">
                         <div className="col-12 ">
-                            <Button variant="contained" onClick={props.closeProduct} className="btn btn-danger btvrrr"  >X </Button>
+                            <Button variant="contained" onClick={props.closeProduct} className="btn btn-danger btvrrr"  >Xxx </Button>
 
                         </div>
 
@@ -53,11 +52,12 @@ function ShowProduct(props) {
                     </div>
                 </div>
 
+
+
+
             </div>
 
-
-
-        </div>
+        </>
     );
 }
 

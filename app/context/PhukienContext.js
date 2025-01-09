@@ -15,11 +15,13 @@ export const PhukienProvider = ({ children }) => {
 
 
         try {
+            console.log("data....vat lieu");
             setLoading(true); // Bắt đầu trạng thái loading
             const response = await fetch("/api/phukien", { cache: "no-store" });
 
 
             const data = await response.json();
+            console.log("data....", data);
 
 
             setPhukien(data?.data || []);
@@ -59,7 +61,11 @@ export const PhukienProvider = ({ children }) => {
         setLoading(params)
     }
     async function getItemsByQuery(pathname, searchText) {
-        if (pathname !== "activeItemsToDedault")
+        setactiveItems([])
+        console.log(searchText);
+        console.log(searchText !== "activeItemsToDedault");
+
+        if (searchText !== "activeItemsToDedault")
 
             try {
                 setLoading(true); // Kết thúc trạng thái loading

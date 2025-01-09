@@ -54,8 +54,7 @@ export default function ProductList() {
     setItems(item);
   }
 
-  console.log(numberItem);
-  console.log(selectItem);
+
 
 
   if (loading) {
@@ -66,11 +65,11 @@ export default function ProductList() {
     <div>
       <ModalThemPK setLoadingALL={setLoadingALL} handlesetIsModalOpen={handlesetIsModalOpen} isModalOpen={isModalOpen} item={Items} setValueItem={setValueItem} />
       <h1>Danh sách sản phẩm</h1>
-      <div className="container-fluid MHEX">
-        <div className="row  MHEX">
+      <div className="container-fluid">
+        <div className="row">
           <div className="col-8">
             <div className="row">
-              { 
+              {
                 activeItems.map((item, key) =>
                   <div className={("pkhh col-3")} key={key} onClick={() => handleClickItem(item, key)} >
                     <div className={("ctnbtnrrrr") + ((key == numberItem) ? " borderactive" : "")}>
@@ -78,27 +77,7 @@ export default function ProductList() {
                       <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
                       <div className="tenpk">  Giá tiền: <span className="hhhg">{item.price}</span></div>
                       <div className="tenpk">  Cân Nặng: <span className="hhhg">{item.canNang}</span></div>
-                      {/* <Box className="tenpknote" sx={{ mb: 2 }}>
-                        <Typography variant="body1" component="div">
-                          <div className="tenpk">Ghi chú: </div>
-                          <Typography
-                            component="span"
-                            sx={{
-                              display: 'inline-block',
-                              width: '200px', // Giới hạn chiều rộng
-
-                              whiteSpace: 'nowrap', // Không xuống dòng
-                              overflow: 'hidden', // Ẩn phần tràn
-                              textOverflow: 'ellipsis', // Hiển thị dấu ba chấm
-                            }}
-                          >
-                            {item.note}
-                          </Typography>
-                        </Typography>
-                      </Box> */}
-
-                      {/* <p className="tenpk">Ghi chú: <span className="hhhg notepk">{item.note}</span></p> */}
-                      <div className="anhpk">   {item.imageUrl ? <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /> : <></>}</div>
+                      <div className="anhpk"> <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /></div>
                       <div className="divsuabtn" onClick={() => handleChangeActiveItem(item, key)}>
                         <Button
                           variant="contained"
