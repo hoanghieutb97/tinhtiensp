@@ -3,11 +3,22 @@
   padding: 0;
 }
 
+.borderactive {
+  border: 2px solid #1976d2;
+}
+
+.divsuabtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .ctnbtnrrrr {
   background: #fff;
   border-radius: 11px;
   padding: 5px;
   height: 100%;
+  overflow: hidden;
 }
 
 .tenpknote.MuiBox-root.css-1qm1lh {
@@ -94,7 +105,7 @@ img.amttt {
   margin: 15px 0px;
   /* padding: 5px; */
   border-radius: 6px;
-  height: 300px;
+  height: 350px;
   overflow: hidden;
   cursor: pointer;
 }

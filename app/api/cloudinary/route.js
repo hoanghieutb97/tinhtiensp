@@ -15,6 +15,9 @@ export async function POST(req) {
     // Upload file lên Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(base64File, {
       folder: 'vatlieu', // Thư mục lưu trữ trên Cloudinary
+      transformation: [
+        { width: 400, height: 400, crop: 'limit' } // Giới hạn kích thước tối đa 300x300
+      ],
     });
 
     return new Response(JSON.stringify({ success: true, url: uploadResponse.secure_url }), { status: 200 });

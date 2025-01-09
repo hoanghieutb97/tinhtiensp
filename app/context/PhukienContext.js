@@ -60,8 +60,9 @@ export const PhukienProvider = ({ children }) => {
     }
     async function getItemsByQuery(pathname, searchText) {
         if (pathname !== "activeItemsToDedault")
-            try {
 
+            try {
+                setLoading(true); // Kết thúc trạng thái loading
                 const response = await fetch("/api" + pathname + "?q=" + searchText, { cache: "no-store" });
                 const data = await response.json();
                 setactiveItems(data.data)
@@ -70,7 +71,7 @@ export const PhukienProvider = ({ children }) => {
             } catch (error) {
                 console.error("Error fetching vatlieu:", error);
             } finally {
-
+                setLoading(false); // Kết thúc trạng thái loading
             }
         else {
             setactiveItems([])

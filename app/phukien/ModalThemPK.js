@@ -8,8 +8,8 @@ import TextField from '@mui/material/TextField';
 function ModalThemPK(props) {
     let item = props.item;
 
-    const [loading, setLoading] = useState(false);
-    const { fetchPhukien } = usePhukien();
+    const { fetchPhukien, getItemsByQuery } = usePhukien();
+
 
 
 
@@ -62,7 +62,7 @@ function ModalThemPK(props) {
     };
 
     const handleSubmit = async () => {
-        if (!item.name || !item.price || !item.note) {
+        if (!item.name || !item.price || !item.note || !item.canNang || !item.image) {
             alert("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
@@ -78,7 +78,7 @@ function ModalThemPK(props) {
                     return;
                 }
             }
-
+ 
             let response;
             if (item._id == null)
                 response = await fetch("/api/phukien", {
@@ -90,13 +90,13 @@ function ModalThemPK(props) {
                         ...item,
                         imageUrl: imageUrl,
                         dateCreate: Date.now(),
-                        namecode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase()
+                        nameCode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase()
                     }),
                 });
 
 
             else {
-                let { _id, ...updateFields } = item;
+                let { _id,image, ...updateFields } = item;
                 response = await fetch("/api/phukien", {
                     method: "PUT",
                     headers: {
@@ -107,24 +107,24 @@ function ModalThemPK(props) {
                         updateData: {
                             ...updateFields,
                             imageUrl: (item.image == null) ? item.imageUrl : imageUrl,
-                            namecode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase(),
+                            nameCode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase(),
                             image: null
                         }
                     }), // Gửi dữ liệu PUT
                 });
             }
-            console.log(response);
+
 
             const result = await response.json();
             if (response.ok) {
 
-                fetchPhukien();
+                getItemsByQuery("/phukien", "");
 
                 props.setValueItem("default");
 
 
                 props.handlesetIsModalOpen(false);
-                props.setLoadingALL(true);
+
 
             } else {
                 alert(`Có lỗi xảy ra: ${result.error}`);
@@ -133,10 +133,37 @@ function ModalThemPK(props) {
             console.error("Error:", error);
             alert("Không thể thêm phụ kiện!");
         } finally {
-            setLoading(false); // Kết thúc trạng thái loading
-        }
-    };;
 
+
+        }
+    };
+
+
+    async function xoaSanPham(params) {
+        try {
+            props.setLoadingALL(true);
+            const response = await fetch(`/api/phukien?id=${item._id}`, {
+                method: 'DELETE',
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                getItemsByQuery("/phukien", "");
+
+                props.setValueItem("default");
+            } else {
+                console.error("Lỗi khi xóa:", result.error);
+            }
+
+        } catch (error) {
+            console.error("Lỗi hệ thống:", error);
+        }
+        finally {
+            props.handlesetIsModalOpen(false);
+            props.setLoadingALL(false);
+        }
+    }
     return (
         <div className="container mt-4">
             {/* Button mở modal */}
@@ -176,38 +203,48 @@ function ModalThemPK(props) {
                         <div className="modal-body">
                             {/* Form thêm phụ kiện */}
                             <div className="mb-3">
-                                <label htmlFor="accessoryName" className="form-label">
-                                    Tên phụ kiện
-                                </label>
-                                <input
+                                <TextField
+                                    label="Tên SP"
                                     type="text"
-                                    className="form-control"
-                                    id="accessoryName"
-                                    placeholder="Nhập tên phụ kiện"
+
                                     value={item.name}
                                     onChange={(e) => props.setValueItem("name", e.target.value)}
+                                    variant="outlined"
+                                    fullWidth
                                 />
+
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="accessoryPrice" className="form-label">
-                                    Giá tiền (VNĐ)
-                                </label>
-                                <input
+                                <TextField
+                                    label="Giá Tiền"
                                     type="number"
-                                    className="form-control"
-                                    id="accessoryPrice"
-                                    placeholder="Nhập giá tiền"
+                                    minRows={4}
                                     value={item.price}
                                     onChange={(e) => props.setValueItem("price", e.target.value)}
+                                    variant="outlined"
+                                    fullWidth
                                 />
+
+                            </div>
+                            <div className="mb-3">
+                                <TextField
+                                    label="Cân nặng"
+                                    type="number"
+                                    minRows={4}
+                                    value={item.canNang}
+                                    onChange={(e) => props.setValueItem("canNang", e.target.value)}
+                                    variant="outlined"
+                                    fullWidth
+                                />
+
                             </div>
 
                             <div className="mb-3">
-                              
+
                                 <TextField
                                     label="Note"
                                     multiline
-                                    minRows={4} 
+                                    minRows={4}
                                     value={item.note}
                                     onChange={(e) => props.setValueItem("note", e.target.value)}
                                     variant="outlined"
@@ -257,6 +294,14 @@ function ModalThemPK(props) {
                                 type="button"
                                 className="btn btn-secondary"
                                 data-bs-dismiss="modal"
+                                onClick={xoaSanPham}
+                            >
+                                Xóa
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-secondary"
+                                data-bs-dismiss="modal"
                                 onClick={() => props.handlesetIsModalOpen(false)}
                             >
                                 Hủy
@@ -265,9 +310,9 @@ function ModalThemPK(props) {
                                 type="button"
                                 className="btn btn-primary"
                                 onClick={handleSubmit}
-                                disabled={loading}
+
                             >
-                                {loading ? "Đang thêm..." : "Thêm"}
+                                Thêm
                             </button>
                         </div>
                     </div>
