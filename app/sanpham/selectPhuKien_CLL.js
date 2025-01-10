@@ -5,8 +5,8 @@ import { usePhukien } from "../context/PhukienContext";
 import Image from "next/image";
 
 
-export default function SelectChatLieuLop({ onClose }) {
-    const { vatLieu } = usePhukien();
+export default function SelectPhuKien_CLL({ onClose }) {
+    const { phukien } = usePhukien();
 
     const [customValue, setCustomValue] = useState("");
     const [activeCL, setactiveCL] = useState(false);
@@ -23,7 +23,7 @@ export default function SelectChatLieuLop({ onClose }) {
 
     }
     function closePopUp(activeItem) {
-        onClose(activeItem); // Đóng cửa sổ sau khi lưu
+        onClose([activeItem]); // Đóng cửa sổ sau khi lưu
         setactiveCL(false);
         setactiveItem(false);
 
@@ -47,7 +47,7 @@ export default function SelectChatLieuLop({ onClose }) {
                 <div className="container">
                     <div className="row">
                         {
-                            vatLieu.map((item, key) =>
+                            phukien.map((item, key) =>
                                 <div className={"pkhh col-3 motproduct11 " + ((key === activeCL) ? "activeCL" : "")} key={key} onClick={() => SelectChatLieuLop(item, key)} >
                                     <div className="ctnbtnrrrr">
                                         <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>

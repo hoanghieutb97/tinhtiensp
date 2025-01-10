@@ -1,17 +1,24 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from "next/image";
-import ShowProduct from './showProduct';
+import ShowVariant from './showVariant';
+import ThemSanPham from './themSamPham';
+
+import { Box, Modal, Button, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 
 function ShowSanPham(props) {
     const [activeProduct, setactiveProduct] = useState();
     const [showProduct, setshowProduct] = useState(false);
+
+
     const groupByProduct = (list) => {
         const grouped = {};
 
 
         list.forEach((item) => {
-            console.log(item);
+
 
             const productName = item.thongSoTong.product.trim().toLowerCase();
 
@@ -44,21 +51,69 @@ function ShowSanPham(props) {
         setshowProduct(true);
         setactiveProduct(item)
     }
+
+
     // Kết quả
     let listSP_XL = groupByProduct(props.listSP);
 
+    const [handleAddSP, sethandleAddSP] = useState(false);
+    function dongCTN(params) {
+        sethandleAddSP(false)
+    }
+    const [listSP, setListSP] = useState([]);
 
+    const [open, setOpen] = useState(false);
 
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
 
     return (
         <div className="container-fluid">
             <div className="row hienthispsp">
 
-                {showProduct ? <ShowProduct activeProduct={activeProduct} closeProduct={() => setshowProduct(false)} fetchSanPham={props.fetchSanPham} /> : ""}
+                <Modal
+                    open={showProduct}
+                    onClose={handleClose}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: '94vw',
+                            height: '90vh',
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 4,
+                            overflow: 'auto', position: 'relative', // Để định vị button trong modal
+                            background: "#dfdfdf"
+                        }}
+                    >
+
+                        <IconButton
+                            onClick={() => setshowProduct(false)}
+                            sx={{
+                                position: 'absolute',
+                                top: 8,
+                                right: 8,
+                                zIndex: 99,
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                        <ShowVariant activeProduct={activeProduct} closeProduct={() => setshowProduct(false)} />
+                    </Box>
+                </Modal>
             </div>
 
+            {handleAddSP && <ThemSanPham dongCTN={dongCTN} closeProduct={() => setshowProduct(false)} />}
 
+            <Button variant="contained" color="success" onClick={() => sethandleAddSP(true)}>
+                Thêm Sản Phẩm
+            </Button>
 
             <div className="row">
                 <div className="col-8">

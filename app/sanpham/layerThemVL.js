@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import SelectChatLieuLop from "./selectChatLieuLop";
-import Box from '@mui/material/Box';
+
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -11,16 +11,15 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import _ from 'lodash';
+import { Box, Modal, Typography, IconButton } from '@mui/material';
+
+import CloseIcon from '@mui/icons-material/Close';
 export default function LayerThemVL(props) {
     const [isCustomOpen, setIsCustomOpen] = useState(false);
-
-
     function xoaLayer() {
         props.xoaLayer(props.stt)
-
     }
-
-
     function changeThongtinLop(name, value) {
         if (name == "chatLieu" && value == "custom") {
             setIsCustomOpen(true); // Mở cửa sổ component tùy chỉnh
@@ -29,25 +28,24 @@ export default function LayerThemVL(props) {
             if (value == "true") value = true;
             if (value == "false") value = false;
             let item = props.item;
-
-
             item[name] = value
             props.changeLopCL(item, props.stt);
-
+            if (name == "chieuDai") {
+                props.handleChangeThongSoTong("chieuDai", value)
+            }
+            if (name == "chieuRong") {
+                props.handleChangeThongSoTong("chieuRong", value)
+            }
         }
-
-
     }
     function setChatLieuNgoai(item) {
         let name = item.name;
+         console.log(name);
 
         if (name != undefined)
             changeThongtinLop("chatLieu", "custom" + name)
-
         setIsCustomOpen(false);
     }
-
-
     return (
         <>
             <div className='ggg'>
@@ -70,7 +68,42 @@ export default function LayerThemVL(props) {
                             <MenuItem value="custom">Phôi sẵn:{props.item.chatLieu.replace(/^custom/, "").trim()}</MenuItem>
                         </Select>
                     </FormControl>
-                    {isCustomOpen && <SelectChatLieuLop onClose={setChatLieuNgoai} />}
+                    <Modal
+                        open={isCustomOpen}
+                        onClose={setChatLieuNgoai}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '94vw',
+                                height: '90vh',
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4,
+                                overflow: 'auto', position: 'relative', // Để định vị button trong modal
+                                background: "#dfdfdf"
+                            }}
+                        >
+
+                            <IconButton
+                                onClick={setChatLieuNgoai}
+                                sx={{
+                                    position: 'absolute',
+                                    top: 8,
+                                    right: 8,
+                                    zIndex: 99,
+                                }}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                            <SelectChatLieuLop onClose={setChatLieuNgoai} />
+                        </Box>
+                    </Modal>
+                    {/* {isCustomOpen && <SelectChatLieuLop onClose={setChatLieuNgoai} />} */}
 
 
                 </div>
@@ -78,7 +111,7 @@ export default function LayerThemVL(props) {
                 {/* Chiều dài */}
                 <div className="kvsvlsvlffs">
                     <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                        <TextField id="outlined-basic" label="Chiều ngang" variant="outlined" type="number" size="small"
+                        <TextField id="outlined-basic" label="Chiều ngang" variant="outlined" type="text" size="small"
                             value={props.item.chieuDai || ''}
                             onChange={(e) => changeThongtinLop("chieuDai", e.target.value)}
                             placeholder="Nhập số"
@@ -92,7 +125,7 @@ export default function LayerThemVL(props) {
                     <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
                         <TextField id="outlined-basic" label="Chiều dọc" variant="outlined" type="number" size="small"
                             value={props.item.chieuRong || ''}
-                            onChange={(e) => changeThongtinLop("chieuRong", e.target.value)}
+                            onChange={(e) => changeThongtinLop("chieuRong", _.toNumber(e.target.value))}
                             placeholder="Nhập số"
                             slotProps={{ input: { endAdornment: <InputAdornment position="end">inch</InputAdornment>, }, }}
                         />

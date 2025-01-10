@@ -14,9 +14,17 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import { Typography, IconButton } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import SelectPhuKien_CLL from './selectPhuKien_CLL';
+import { Modal } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import Image from "next/image";
+
+
 export default function ThemSanPham(props) {
     let typeCPN = props.typeCPN;
     let ItemSua = props.data;
+
+
     const initialStateVL = {
         tienVatLieu: 0, // có thể chọn ngoài
         tienMuc: 0,
@@ -35,7 +43,7 @@ export default function ThemSanPham(props) {
         tienMangBoc: 0,
     }
     const defaultThongSoTong = {
-        doCao: 0,
+        doCao: 2.5,
         chieuNgang: 0,
         chieuDoc: 0,
         xop: "xopmong",
@@ -43,14 +51,22 @@ export default function ThemSanPham(props) {
         product: "",
         variant: "",
         note: "",
-        type: "demo"
+        type: "demo",
+        phuKien: []
     }
     const { vatLieu, getItemsByQuery } = usePhukien();
     const [lop, setlop] = useState((typeCPN != "editProduct") ? [] : ItemSua.lop);
-
+    const [isOpenSelectPK, setisOpenSelectPK] = useState(false);
     const [tienVL, setTienVL] = useState(initialStateVL);
     const [thongSoTong, setThongSoTong] = useState((typeCPN != "editProduct") ? defaultThongSoTong : ItemSua.thongSoTong);
     const [image, setImage] = useState(null);
+    function CloseSelectPK(item) {
+
+        setisOpenSelectPK(false);
+        handleChangeThongSoTong("phuKien", item)
+
+    }
+    
     const handleChonAnh = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -128,7 +144,8 @@ export default function ThemSanPham(props) {
                 const result = await response.json();
                 if (result.success) {
                     props.dongCTN();
-                    props.fetchSanPham();
+                    getItemsByQuery("/sanpham", "");
+                    
                 } else {
                     alert(`Có lỗi xảy ra: ${result.error}`);
                 }
@@ -159,7 +176,8 @@ export default function ThemSanPham(props) {
             const result = await response.json(); // Lấy phản hồi từ server
             if (result.success) {
                 props.dongCTN();
-                props.fetchSanPham();
+                getItemsByQuery("/sanpham", "");
+                
             } else {
                 console.error("Cập nhật thất bại:", result.error);
             }
@@ -216,18 +234,43 @@ export default function ThemSanPham(props) {
         lopNew[key] = item;
         setlop(lopNew);
     }
+
     function xoaLayer(key) {
         setlop((prevLop) => prevLop.filter((_, index) => index !== key));
     }
     const handleChangeThongSoTong = (type, value) => {
+        let typeName = type;
         let val = value;
 
+        if (typeName == "chieuDai") {
+            typeName = "chieuNgang";
+            for (let i = 0; i < lop.length; i++) {
+                if (parseFloat(val) < parseFloat(lop[i].chieuDai)) {
+                    val = parseFloat(lop[i].chieuDai);
 
+                }
+            }
+            val = parseFloat(val) * 2.54 + 1.5
+
+
+        }
+        else if (typeName == "chieuRong") {
+            typeName = "chieuDoc";
+            for (let i = 0; i < lop.length; i++) {
+                if (parseFloat(val) < parseFloat(lop[i].chieuRong)) {
+                    val = parseFloat(lop[i].chieuRong);
+
+                }
+            }
+            val = parseFloat(val) * 2.54 + 1.5
+
+
+        }
 
 
         setThongSoTong((prevState) => ({
             ...prevState,
-            [type]: val,
+            [typeName]: val,
         }));
     };
 
@@ -243,10 +286,67 @@ export default function ThemSanPham(props) {
                         <Button variant="contained" onClick={handleAddLayer} >Thêm lớp chất liệu </Button>
                     </div>
                     <div className="col-12">
-                        {lop.map((item, key) => <LayerThemVL key={key} item={item} changeLopCL={changeLopCL} stt={key} xoaLayer={xoaLayer} />)}
+                        {lop.map((item, key) => <LayerThemVL key={key} item={item} handleChangeThongSoTong={handleChangeThongSoTong} changeLopCL={changeLopCL} stt={key} xoaLayer={xoaLayer} />)}
                     </div>
+
                 </div>
 
+
+                <div className="row glrsjngsl">
+                    <div className="col-12">
+                        <Button variant="contained" onClick={() => setisOpenSelectPK(true)} >Thêm Phụ Kiện</Button>
+                        <div className="row">
+                            {(thongSoTong.phuKien.length > 0) && thongSoTong.phuKien.map((item, key) => <div className="col-2" key={key}>
+                                sdsvs
+                                <div className="divtongvl">
+                                    <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
+                                    <div className="anhpkvl">
+                                        {item.imageUrl ? <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpkvl" /> : <></>}
+                                    </div>
+
+                                </div>
+                            </div>)
+                            }
+
+                        </div>
+
+                        <Modal
+                            open={isOpenSelectPK}
+                            onClose={CloseSelectPK}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: '94vw',
+                                    height: '90vh',
+                                    bgcolor: 'background.paper',
+                                    boxShadow: 24,
+                                    p: 4,
+                                    overflow: 'auto', position: 'relative', // Để định vị button trong modal
+                                    background: "#dfdfdf"
+                                }}
+                            >
+
+                                <IconButton
+                                    onClick={CloseSelectPK}
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 8,
+                                        right: 8,
+                                        zIndex: 99,
+                                    }}
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                                <SelectPhuKien_CLL onClose={CloseSelectPK} />
+                            </Box>
+                        </Modal>
+                    </div>
+                </div>
 
 
                 <div className="container">
