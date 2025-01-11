@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import LayerThemVL from "./layerThemVL";
-import { tinhTienVatLieu, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "./tinhtien";
+import { tinhTienVatLieu, tinhCanNang, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "./tinhtien";
 import { usePhukien } from "../context/PhukienContext";
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -52,6 +52,7 @@ export default function ThemSanPham(props) {
         variant: "",
         note: "",
         type: "demo",
+        canNang: 0,
         phuKien: []
     }
     const { vatLieu, getItemsByQuery } = usePhukien();
@@ -66,7 +67,7 @@ export default function ThemSanPham(props) {
         handleChangeThongSoTong("phuKien", item)
 
     }
-    
+
     const handleChonAnh = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -145,7 +146,7 @@ export default function ThemSanPham(props) {
                 if (result.success) {
                     props.dongCTN();
                     getItemsByQuery("/sanpham", "");
-                    
+
                 } else {
                     alert(`Có lỗi xảy ra: ${result.error}`);
                 }
@@ -177,7 +178,7 @@ export default function ThemSanPham(props) {
             if (result.success) {
                 props.dongCTN();
                 getItemsByQuery("/sanpham", "");
-                
+
             } else {
                 console.error("Cập nhật thất bại:", result.error);
             }
@@ -189,7 +190,7 @@ export default function ThemSanPham(props) {
 
     };
     useEffect(() => {
-        if (lop.length > 0)
+        if (lop.length > 0) {
             setTienVL({
                 ...tienVL,
                 tienVatLieu: Math.floor(tinhTienVatLieu(lop, vatLieu)),
@@ -205,7 +206,12 @@ export default function ThemSanPham(props) {
                 tienThungDongHang: Math.floor(tinhTienThungDongHang(lop, vatLieu, thongSoTong)),
                 tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
                 tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong))
+
             })
+
+
+            // setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong)) })
+        }
         else setTienVL({
             ...initialStateVL,
             tienHop: Math.floor(tinhTienHop(lop, vatLieu, thongSoTong)),
@@ -214,7 +220,17 @@ export default function ThemSanPham(props) {
             tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
             tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong))
         });
+
     }, [lop, thongSoTong]);
+    useEffect(() => {
+        if (lop.length > 0) {
+
+            setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong)) })
+        }
+
+    }, [lop]);
+    console.log(thongSoTong);
+
     function tongTien() {
         return Object.values(tienVL).reduce((sum, value) => sum + value, 0);
     }

@@ -1,7 +1,7 @@
 
 export function macdinh(lop, giaVatLieu) {
     let tongtien = 0;
-    let gia = giaVatLieu.filter(item => item.name == lop[i].chatLieu)[0].price;
+    let gia = giaVatLieu.filter(item => item.nameCode == lop[i].chatLieu)[0].price;
     for (let i = 0; i < lop.length; i++) {
 
     }
@@ -14,11 +14,13 @@ export function tinhTienVatLieu(lop, giaVatLieu) {
         let tenChatLieu = lop[i].chatLieu;
         if (tenChatLieu.startsWith("custom")) {
             tenChatLieu = tenChatLieu.replace(/^custom/, "").trim();
-            return Math.floor(giaVatLieu.filter(item => item.name == tenChatLieu)[0].price);
+
+
+            return Math.floor(giaVatLieu.filter(item => item.nameCode == tenChatLieu)[0].price);
         }
 
 
-        let gia = giaVatLieu.filter(item => item.name == tenChatLieu)[0].price;
+        let gia = giaVatLieu.filter(item => item.nameCode == tenChatLieu)[0].price;
 
 
         gia = +gia;
@@ -91,8 +93,7 @@ export function tinhTienVatLieu(lop, giaVatLieu) {
 
         }
         tongtien = tongtien + dongia
-        // console.log(dongia);
-        // console.log(giaVatLieu);
+
 
 
     }
@@ -104,7 +105,9 @@ export function tinhTienVatLieu(lop, giaVatLieu) {
 
 export function tinhTienMuc(lop, giaVatLieu) {
     let tongtien = 0;
-    let muc = giaVatLieu.filter(item => item.name == "tienmuc")[0].price;
+    console.log(giaVatLieu);
+
+    let muc = giaVatLieu.filter(item => item.nameCode == "tienmuc")[0].price;
     let mucM2 = muc / 30;
 
 
@@ -127,7 +130,7 @@ export function tinhTienTK(lop, giaVatLieu) {
 }
 export function tinhTienIn(lop, giaVatLieu) {
     let tongtien = 0;
-    let gia = giaVatLieu.filter(item => item.name == "luongcongnhan")[0].price;
+    let gia = giaVatLieu.filter(item => item.nameCode == "luongcongnhan")[0].price;
     let tienCongPhut = gia / (24 * 8 * 60);
 
 
@@ -147,7 +150,7 @@ export function tinhTienIn(lop, giaVatLieu) {
 }
 export function tinhTienCat(lop, giaVatLieu) {
     let tongtien = 0;
-    let gia = giaVatLieu.filter(item => item.name == "luongcongnhan")[0].price;
+    let gia = giaVatLieu.filter(item => item.nameCode == "luongcongnhan")[0].price;
     let tienCongPhut = gia / (24 * 8 * 60);
     for (let i = 0; i < lop.length; i++) {
         let heSoNhan = 2;
@@ -221,7 +224,7 @@ export function tinhTienHop(lop, giaVatLieu, thongSoTong) {
 export function tinhTienThungDongHang(lop, giaVatLieu, thongSoTong) {
 
 
-    let tienThung = (giaVatLieu.length == 0) ? 0 : + giaVatLieu.filter(item => item.name == "thungdonghang505050")[0].price;
+    let tienThung = (giaVatLieu.length == 0) ? 0 : + giaVatLieu.filter(item => item.nameCode == "thungdonghang505050")[0].price;
 
 
     let tongtien = 0
@@ -295,7 +298,7 @@ export function tinhTienXop(lop, giaVatLieu, thongSoTong) {
     let activeXop = thongSoTong.xop;
 
 
-    let giaVL = (giaVatLieu.length != 0) ? Math.floor(giaVatLieu.filter(item => item.name == activeXop)[0].price) : 0;
+    let giaVL = (giaVatLieu.length != 0) ? Math.floor(giaVatLieu.filter(item => item.nameCode == activeXop)[0].price) : 0;
 
 
     let tongtien = 0;
@@ -334,7 +337,7 @@ export function tinhTienMangBoc(lop, giaVatLieu, thongSoTong) {
     let activeXop = thongSoTong.xop;
 
 
-    let giaVL = (giaVatLieu.length != 0) ? Math.floor(giaVatLieu.filter(item => item.name == activeXop)[0].price) : 0;
+    let giaVL = (giaVatLieu.length != 0) ? Math.floor(giaVatLieu.filter(item => item.nameCode == activeXop)[0].price) : 0;
 
 
     let tongtien = 0;
@@ -343,4 +346,61 @@ export function tinhTienMangBoc(lop, giaVatLieu, thongSoTong) {
     tongtien = Math.floor(2.5 * giaXopM2 * ((+ thongSoTong.chieuDoc) + (+thongSoTong.chieuNgang)));
 
     return tongtien
+}
+
+export function tinhCanNang(lop, giaVatLieu, thongSoTong) {
+    let tongCan = 0;
+    for (let i = 0; i < lop.length; i++) {
+        let tenChatLieu = lop[i].chatLieu;
+        if (tenChatLieu.startsWith("custom")) {
+            tenChatLieu = tenChatLieu.replace(/^custom/, "").trim();
+            tongCan = tongCan + (+(giaVatLieu.filter(item => item.nameCode == tenChatLieu)[0].canNang));
+        }
+
+
+        else {
+            let canVL = giaVatLieu.filter(item => item.nameCode == tenChatLieu)[0].canNang;
+
+
+            canVL = +canVL;
+            let type = tenChatLieu.slice(0, 2).toLowerCase();
+            let can1L = 0
+            if (type == "mi") {
+                canVL = canVL / 3
+
+
+                let width = (+ lop[i].chieuDai) * 2.54;
+                let hight = (+lop[i].chieuRong) * 2.54;
+
+
+
+                can1L = (canVL * (width * hight) / (122 * 80));
+
+
+
+
+
+            }
+            else if (type = "go") {
+
+                let width = (+ lop[i].chieuDai) * 2.54;
+                let hight = (+lop[i].chieuRong) * 2.54;
+
+
+
+                can1L = (canVL * (width * hight) / (92 * 92));
+
+
+
+            }
+
+            tongCan = tongCan + can1L
+        }
+
+
+
+    }
+
+
+    return tongCan
 }

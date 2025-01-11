@@ -81,7 +81,7 @@ function ModalThemPK(props) {
 
             let response;
             if (item._id == null) {
-                let {  image, ...updateFields } = item;
+                let { image, ...updateFields } = item;
                 response = await fetch("/api/phukien", {
                     method: "POST",
                     headers: {
@@ -91,7 +91,7 @@ function ModalThemPK(props) {
                         ...updateFields,
                         imageUrl: imageUrl,
                         dateCreate: Date.now(),
-                        nameCode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase()
+                        nameCode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").replace(/[^a-zA-Z0-9]/g, "").toLowerCase()
                     }),
                 });
             }
@@ -109,7 +109,7 @@ function ModalThemPK(props) {
                         updateData: {
                             ...updateFields,
                             imageUrl: (item.image == null) ? item.imageUrl : imageUrl,
-                            nameCode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toLowerCase(),
+                            nameCode: item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").replace(/[^a-zA-Z0-9]/g, "").toLowerCase()
 
                         }
                     }), // Gửi dữ liệu PUT

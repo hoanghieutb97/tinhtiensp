@@ -80,7 +80,7 @@ export async function DELETE(req) {
         { status: 400 }
       );
     }
-    console.log(req.url);
+    
 
     const client = await clientPromise;
     const db = client.db("test"); // Tên database
