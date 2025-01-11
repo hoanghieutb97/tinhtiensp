@@ -350,6 +350,7 @@ export function tinhTienMangBoc(lop, giaVatLieu, thongSoTong) {
 
 export function tinhCanNang(lop, giaVatLieu, thongSoTong) {
     let tongCan = 0;
+    // can nang vat lieu
     for (let i = 0; i < lop.length; i++) {
         let tenChatLieu = lop[i].chatLieu;
         if (tenChatLieu.startsWith("custom")) {
@@ -401,6 +402,14 @@ export function tinhCanNang(lop, giaVatLieu, thongSoTong) {
 
     }
 
-
+    // can nang muc
+    for (let i = 0; i < lop.length; i++) {
+        let soMatIn = (lop[i].soMatIn != "false") ? lop[i].soMatIn : 0;
+        let chieuDai = (+ lop[i].chieuDai) * 2.54;
+        let chieuRong = (+lop[i].chieuRong) * 2.54;
+        let canNangMuc = soMatIn * (chieuDai * chieuRong) * 33/10000;
+        tongCan = tongCan + canNangMuc;
+    }
+    
     return tongCan
 }

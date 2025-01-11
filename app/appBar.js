@@ -86,8 +86,8 @@ export default function PrimarySearchAppBar() {
                     </Search>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page, key) => (
-                            <Link href={"/" + page.typeLink} key={key} passHref onClick={() => getItemsByQuery("/" + page.typeLink, "activeItemsToDedault")} >
-                                <Button
+                            <Link className='linkfv' href={"/" + page.typeLink} key={key} passHref onClick={() => getItemsByQuery("/" + page.typeLink, "activeItemsToDedault")} >
+                                <Button className={(pathname == ("/" + page.typeLink)) ? "activenavc" : "noactivenavc"}
 
 
                                     sx={{ my: 2, color: 'white', display: 'block', textTransform: 'none' }}
