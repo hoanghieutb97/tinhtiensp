@@ -24,7 +24,36 @@ export default function ThemSanPham(props) {
     let typeCPN = props.typeCPN;
     let ItemSua = props.data;
 
-
+    const initialWHZ = [
+        {
+            nameSTT: "Chiều Ngắn Hộp",
+            valueSTT: "chieuNgang"
+        },
+        {
+            nameSTT: "Chiều Dài Hộp",
+            valueSTT: "chieuDoc",
+        },
+        {
+            nameSTT: "Độ Cao Hộp",
+            valueSTT: "doCao",
+        },
+        {
+            nameSTT: "Cân Nặng Hộp",
+            valueSTT: "canNang",
+        }]
+    const initialVIP = [
+        {
+            nameSTT: "VIP 1",
+            valueSTT: "vip1"
+        },
+        {
+            nameSTT: "VIP 2",
+            valueSTT: "vip2",
+        },
+        {
+            nameSTT: "VIP 3",
+            valueSTT: "vip3",
+        }]
     const initialStateVL = {
         tienVatLieu: 0, // có thể chọn ngoài
         tienMuc: 0,
@@ -53,13 +82,17 @@ export default function ThemSanPham(props) {
         note: "",
         type: "demo",
         canNang: 0,
-        phuKien: []
+        phuKien: [],
+        vip1: 0,
+        vip2: 0,
+        vip3: 0,
+        canChageTST: true
     }
     const { vatLieu, getItemsByQuery } = usePhukien();
     const [lop, setlop] = useState((typeCPN != "editProduct") ? [] : ItemSua.lop);
     const [isOpenSelectPK, setisOpenSelectPK] = useState(false);
     const [tienVL, setTienVL] = useState(initialStateVL);
-    const [thongSoTong, setThongSoTong] = useState((typeCPN != "editProduct") ? defaultThongSoTong : ItemSua.thongSoTong);
+    const [thongSoTong, setThongSoTong] = useState((typeCPN != "editProduct") ? defaultThongSoTong : { ...defaultThongSoTong, ...ItemSua.thongSoTong });
     const [image, setImage] = useState(null);
     function CloseSelectPK(item) {
 
@@ -228,8 +261,9 @@ export default function ThemSanPham(props) {
             setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong)) })
         }
 
-    }, [lop]);
+    }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.chieuNgang]);
     console.log(thongSoTong);
+
 
     function tongTien() {
         return Object.values(tienVL).reduce((sum, value) => sum + value, 0);
@@ -289,6 +323,7 @@ export default function ThemSanPham(props) {
             [typeName]: val,
         }));
     };
+    console.log(thongSoTong[initialWHZ[0].valueSTT]);
 
     return (
 
@@ -367,41 +402,32 @@ export default function ThemSanPham(props) {
 
                 <div className="container">
                     <div className="row">
-                        <div className="col-3">
-
+                        {initialWHZ.map((item, key) => <div className="col-3" key={key}>
                             <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                                <TextField id="outlined-basic" label="Chiều Ngang Hộp" variant="outlined" type="number" size="small"
-                                    value={thongSoTong.chieuNgang}
-                                    onChange={(e) => handleChangeThongSoTong("chieuNgang", e.target.value)}
+                                <TextField id="outlined-basic" label={item.nameSTT} variant="outlined" type="number" size="small"
+                                    value={thongSoTong[item.valueSTT]}
+                                    onChange={(e) => handleChangeThongSoTong(item.valueSTT, e.target.value)}
                                     placeholder="Nhập số"
                                     slotProps={{ input: { endAdornment: <InputAdornment position="end">cm</InputAdornment>, }, }}
                                 />
                             </Box>
+                        </div>)}
 
-
-                        </div>
-                        <div className="col-3">
-                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                                <TextField id="outlined-basic" label="Chiều Dọc Hộp" variant="outlined" type="number" size="small"
-                                    value={thongSoTong.chieuDoc}
-                                    onChange={(e) => handleChangeThongSoTong("chieuDoc", e.target.value)}
-                                    placeholder="Nhập số"
-                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">cm</InputAdornment>, }, }}
-                                />
-                            </Box>
-
-                        </div>
-                        <div className="col-3">
-                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                                <TextField id="outlined-basic" label="Chiều Cao Hộp" variant="outlined" type="number" size="small"
-                                    value={thongSoTong.doCao}
-                                    onChange={(e) => handleChangeThongSoTong("doCao", e.target.value)}
-                                    placeholder="Nhập số"
-                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">cm</InputAdornment>, }, }}
-                                />
-                            </Box>
-                        </div>
                     </div>
+                    <div className="row">
+                        {initialVIP.map((item, key) => <div className="col-3" key={key}>
+                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                                <TextField id="outlined-basic" label={item.nameSTT} variant="outlined" type="number" size="small"
+                                    value={thongSoTong[item.valueSTT]}
+                                    onChange={(e) => handleChangeThongSoTong(item.valueSTT, e.target.value)}
+                                    placeholder="Nhập số"
+                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
+                                />
+                            </Box>
+                        </div>)}
+
+                    </div>
+                    initialVIP
 
                     <div className="row">
                         <div className="col-6">
@@ -475,6 +501,7 @@ export default function ThemSanPham(props) {
                                             label="Loại thẻ"
                                         >
                                             <MenuItem value="demo">demo</MenuItem>
+                                            <MenuItem value="test">test</MenuItem>
                                             <MenuItem value="publish">publish</MenuItem>
                                         </Select>
                                     </FormControl>

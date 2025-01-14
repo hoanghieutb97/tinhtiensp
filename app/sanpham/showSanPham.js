@@ -4,15 +4,16 @@ import Image from "next/image";
 import ShowVariant from './showVariant';
 import ThemSanPham from './themSamPham';
 
-import { Box, Modal, Button, IconButton } from '@mui/material';
+import { Box, Modal, Button, IconButton, Badge } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { filter, functions } from 'lodash';
 
 
 function ShowSanPham(props) {
     const [activeProduct, setactiveProduct] = useState();
     const [showProduct, setshowProduct] = useState(false);
-
-
+    const [typeSanPham, settypeSanPham] = useState("all");
+    const ListStatusActive = ["all", "demo", "test", "publish"]
     const groupByProduct = (list) => {
         const grouped = {};
 
@@ -51,22 +52,33 @@ function ShowSanPham(props) {
         setshowProduct(true);
         setactiveProduct(item)
     }
+    const spMapping = {
+        test: props.listSP.filter(item => item.thongSoTong.type === "test").length,
+        all: props.listSP.filter(item => item).length,
+        demo: props.listSP.filter(item => item.thongSoTong.type === "demo").length,
+        publish: props.listSP.filter(item => item.thongSoTong.type === "publish").length,
+    };
 
+    let SP_ACtive = props.listSP.filter(item => { return typeSanPham == "all" ? item : item.thongSoTong.type == typeSanPham });
+    console.log(spMapping);
 
     // Kết quả
-    let listSP_XL = groupByProduct(props.listSP);
+    let listSP_XL = groupByProduct(SP_ACtive);
+
 
     const [handleAddSP, sethandleAddSP] = useState(false);
     function dongCTN(params) {
         sethandleAddSP(false)
     }
-    const [listSP, setListSP] = useState([]);
+
 
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
+    function handleSetStatusActive(params) {
+        settypeSanPham(params);
+    }
 
     return (
         <div className="container-fluid">
@@ -114,6 +126,21 @@ function ShowSanPham(props) {
             <Button variant="contained" color="success" onClick={() => sethandleAddSP(true)}>
                 Thêm Sản Phẩm
             </Button>
+
+            <div className="row mt-3">
+                <div className="dbtongluachon">
+
+                    {ListStatusActive.map((item, key) => <div className="divbageff" key={key}>
+                        <Badge badgeContent={spMapping[item]} color="warning">
+                            <Button variant="contained" sx={item == typeSanPham ? { backgroundColor: 'black', color: 'white' } : {}} onClick={() => handleSetStatusActive(item)}>{item}</Button>
+                        </Badge>
+                    </div>)}
+
+                </div>
+
+            </div>
+
+
 
             <div className="row">
                 <div className="col-8">

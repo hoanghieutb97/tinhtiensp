@@ -402,14 +402,51 @@ export function tinhCanNang(lop, giaVatLieu, thongSoTong) {
 
     }
 
+
     // can nang muc
     for (let i = 0; i < lop.length; i++) {
         let soMatIn = (lop[i].soMatIn != "false") ? lop[i].soMatIn : 0;
         let chieuDai = (+ lop[i].chieuDai) * 2.54;
         let chieuRong = (+lop[i].chieuRong) * 2.54;
-        let canNangMuc = soMatIn * (chieuDai * chieuRong) * 33/10000;
+        let canNangMuc = soMatIn * (chieuDai * chieuRong) * 33 / 10000;
         tongCan = tongCan + canNangMuc;
     }
-    
+    // can nang hop
+    let x = 0.038823529
+    let Whop = + thongSoTong.chieuDoc;
+    let Hhop = +thongSoTong.chieuNgang;
+    let Zhop = +thongSoTong.doCao;
+    let kichThuocHop = 2 * (Whop * Hhop) + 3 * (Whop * Zhop) + 6 * (Zhop * Zhop) + 2 * (1.8 * Hhop * Zhop) + 4 * (Hhop * Zhop)
+    tongCan = tongCan + kichThuocHop * x
+
+    // tienxop
+    let xx = 0.00897920604
+    let canNangXop = 2 * (Whop * Hhop * xx);
+
+
+    switch (thongSoTong.xop) {
+        case "xong5mm":
+            canNangXop = canNangXop = canNangXop * 1
+            break;
+        case "xopno":
+            canNangXop = canNangXop / 4
+            break;
+        case "xop10mm":
+            canNangXop = canNangXop * 2
+            break;
+        case "xop3mm":
+            canNangXop = 3 * canNangXop / 5
+            break;
+        case "xop20mm":
+            canNangXop = canNangXop * 4
+            break;
+
+        default:
+            canNangXop = canNangXop / 5
+            break;
+    }
+    console.log(canNangXop);
+    console.log(tongCan);
+    tongCan = tongCan + canNangXop
     return tongCan
 }
