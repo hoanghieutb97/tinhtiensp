@@ -18,6 +18,7 @@ import SelectPhuKien_CLL from './selectPhuKien_CLL';
 import { Modal } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from "next/image";
+import axios from "axios";
 
 
 export default function ThemSanPham(props) {
@@ -86,7 +87,8 @@ export default function ThemSanPham(props) {
         vip1: 0,
         vip2: 0,
         vip3: 0,
-        canChageTST: true
+        canChageTST: true,
+        idChat: ""
     }
     const { vatLieu, getItemsByQuery } = usePhukien();
     const [lop, setlop] = useState((typeCPN != "editProduct") ? [] : ItemSua.lop);
@@ -142,6 +144,18 @@ export default function ThemSanPham(props) {
             return null;
         }
     };
+    async function createChatLark(urlCloudinary) {
+        try {
+            const response = await axios.post('/api/lark/sendImage_Chat', {
+                imageUrl: urlCloudinary,
+                product: thongSoTong.product
+            });
+            console.log(response.data.ID_Messenger);
+        } catch (error) {
+            console.error('Error posting data:', error);
+        }
+    };
+
     const themSanPham = async () => {
         let DataPost = {
             thongSoTong: thongSoTong,
@@ -166,6 +180,7 @@ export default function ThemSanPham(props) {
                     return;
                 }
                 DataPost.thongSoTong.anh = imageUrl;
+                let Img_key_lark = await createChatLark(imageUrl);
 
                 const response = await fetch("/api/sanpham", {
                     method: "POST",
@@ -323,7 +338,7 @@ export default function ThemSanPham(props) {
             [typeName]: val,
         }));
     };
-    console.log(thongSoTong[initialWHZ[0].valueSTT]);
+
 
     return (
 
