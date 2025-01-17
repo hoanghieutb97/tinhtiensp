@@ -9,19 +9,20 @@ const PhukienContext = createContext();
 export const PhukienProvider = ({ children }) => {
     const [phukien, setPhukien] = useState([]);
     const [vatLieu, setVatLieu] = useState([]);
+    const [larkUser, setlarkUser] = useState([]);
     const [activeItems, setactiveItems] = useState([]);
     const [loading, setLoading] = useState(true); // Thêm trạng thái loading
     var fetchPhukien = async () => {
 
 
         try {
-            
+
             setLoading(true); // Bắt đầu trạng thái loading
             const response = await fetch("/api/phukien", { cache: "no-store" });
 
 
             const data = await response.json();
-            
+
 
 
             setPhukien(data?.data || []);
@@ -50,18 +51,39 @@ export const PhukienProvider = ({ children }) => {
             setLoading(false); // Kết thúc trạng thái loading
         }
     };
+    var fetchLakUser = async () => {
+
+
+        try {
+            setLoading(true); // Bắt đầu trạng thái loading
+            const response = await fetch("/api/larkUser", { cache: "no-store" });
+
+
+            const data = await response.json();
+
+
+            setlarkUser(data?.data || []);
+        } catch (error) {
+            console.error("Error fetching vatlieu:", error);
+        } finally {
+            setLoading(false); // Kết thúc trạng thái loading
+        }
+    };
     useEffect(() => {
         fetchPhukien();
         fetchVatlieu();
+        fetchLakUser();
     }, []);
- 
+    console.log("phukien...", phukien);
+    console.log("vatLieu...", vatLieu);
+
 
     function setLoadingALL(params) {
         setLoading(params)
     }
     async function getItemsByQuery(pathname, searchText) {
         setactiveItems([])
-  
+
 
         if (searchText !== "activeItemsToDedault")
 
@@ -82,7 +104,7 @@ export const PhukienProvider = ({ children }) => {
         }
     }
     return (
-        <PhukienContext.Provider value={{ loading, setLoadingALL, phukien, fetchPhukien, vatLieu, fetchVatlieu, getItemsByQuery, activeItems }}>{children}</PhukienContext.Provider>
+        <PhukienContext.Provider value={{ loading, setLoadingALL, phukien, fetchPhukien, vatLieu, fetchVatlieu, larkUser, fetchLakUser, getItemsByQuery, activeItems }}>{children}</PhukienContext.Provider>
     );
 };
 

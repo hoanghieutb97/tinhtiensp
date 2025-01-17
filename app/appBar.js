@@ -50,6 +50,9 @@ export default function PrimarySearchAppBar() {
     }, {
         typeLink: 'phukien',
         nameLink: "Phụ Kiện"
+    }, {
+        typeLink: 'larkUser',
+        nameLink: "lark User"
     }];
     return (
         <Box sx={{ flexGrow: 1 }}>

@@ -1,17 +1,18 @@
-import { downloadImage, uploadImageToLark, sendImageMessage } from '@/lib/larkUtils';
+import { downloadImage, uploadImageToLark, sendImageMessage, repplyMessage } from '@/lib/larkUtils';
 import path from 'path';
 import axios from 'axios';
 import fs from 'fs';
 
 
-
 export async function POST(req) {
   let chatId = process.env.LARK_CHAT_ID;
-  const { imageUrl,product } = await req.json(); // Lấy URL ảnh và chat ID từ body request
+  const { imageUrl, product, type, userMess } = await req.json(); // Lấy URL ảnh và chat ID từ body request
+  console.log(userMess);
 
   const imagePath = path.join(process.cwd(), 'public', 'downloads', 'downloaded_image.jpg');
 
   try {
+
 
 
     // // Tải ảnh từ URL về máy
@@ -22,8 +23,10 @@ export async function POST(req) {
     const imageKey = await uploadImageToLark(imagePath);
 
     // Gửi tin nhắn có ảnh
-    const ID_Messenger = await sendImageMessage(chatId, imageKey,product);
-    console.log("ID_Messenger", ID_Messenger);
+    const ID_Messenger = await sendImageMessage(chatId, imageKey, product, userMess);
+    const repply_Message = await repplyMessage(ID_Messenger, userMess, type);
+
+
 
     return new Response(JSON.stringify({ message: 'Image message sent successfully!', ID_Messenger }), {
       status: 200,

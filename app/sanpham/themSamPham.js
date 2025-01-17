@@ -21,6 +21,7 @@ import Image from "next/image";
 import axios from "axios";
 
 
+
 export default function ThemSanPham(props) {
     let typeCPN = props.typeCPN;
     let ItemSua = props.data;
@@ -102,6 +103,19 @@ export default function ThemSanPham(props) {
         handleChangeThongSoTong("phuKien", item)
 
     }
+    async function Get_MongoDB_UserCongDoan(type) {
+        let items = await axios.get(`/api/larkUser`)
+            .then(response => {
+                return response.data.data[0].data
+            })
+            .catch(error => {
+                return false
+            });
+        console.log(items);
+        console.log(type);
+
+        return items.filter((item => item.type == type))[0].value.map(item => item.member_id)
+    }
 
     const handleChonAnh = (event) => {
         const file = event.target.files[0];
@@ -144,15 +158,28 @@ export default function ThemSanPham(props) {
             return null;
         }
     };
-    async function createChatLark(urlCloudinary) {
+    async function createChatLark(urlCloudinary, type) {
+
+        console.log(type);
+
+        let userMess = await Get_MongoDB_UserCongDoan(type);
+
+
+
         try {
             const response = await axios.post('/api/lark/sendImage_Chat', {
                 imageUrl: urlCloudinary,
-                product: thongSoTong.product
+                product: thongSoTong.product,
+                type: type,
+                userMess: userMess
             });
-            console.log(response.data.ID_Messenger);
+            return response.data.ID_Messenger;
+
+
         } catch (error) {
+
             console.error('Error posting data:', error);
+            return false
         }
     };
 
@@ -179,9 +206,12 @@ export default function ThemSanPham(props) {
                     // setLoading(false);
                     return;
                 }
-                DataPost.thongSoTong.anh = imageUrl;
-                let Img_key_lark = await createChatLark(imageUrl);
+                console.log(DataPost);
 
+
+                DataPost.thongSoTong.anh = imageUrl;
+                let ID_Messenger = await createChatLark(imageUrl, DataPost.thongSoTong.type);
+                DataPost.thongSoTong.idChat = ID_Messenger;
                 const response = await fetch("/api/sanpham", {
                     method: "POST",
                     headers: {
@@ -206,6 +236,38 @@ export default function ThemSanPham(props) {
             }
         }
         else if (typeCPN == "editProduct") {
+            if (DataPost.namecode !== ItemSua.namecode) {
+                // đổi product và 
+            }
+            if (DataPost.thongSoTong.variant !== ItemSua.thongSoTong.variant) {
+                // đổi product và 
+            }
+
+
+            if (DataPost.thongSoTong.type !== ItemSua.thongSoTong.type) {
+                let userMess = await Get_MongoDB_UserCongDoan(DataPost.thongSoTong.type);
+                console.log(userMess);
+
+                let dataF = {
+                    ID_Messenger: DataPost.thongSoTong.idChat,
+                    userMess: userMess,
+                    type: DataPost.thongSoTong.type
+
+                }
+
+                let response = await fetch("/api/lark/tagUserType", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(dataF),
+                });
+                console.log(response);
+
+
+            }
+
+
 
             let DataPut = {
                 id: ItemSua._id, // ID tài liệu bạn muốn sửa

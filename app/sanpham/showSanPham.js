@@ -60,7 +60,7 @@ function ShowSanPham(props) {
     };
 
     let SP_ACtive = props.listSP.filter(item => { return typeSanPham == "all" ? item : item.thongSoTong.type == typeSanPham });
-    console.log(spMapping);
+    
 
     // Kết quả
     let listSP_XL = groupByProduct(SP_ACtive);
