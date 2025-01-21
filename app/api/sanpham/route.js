@@ -8,12 +8,7 @@ if (!uri) {
 let client;
 let clientPromise;
 
-// // Kiểm tra nếu đã kết nối, nếu chưa thì khởi tạo
-// if (!global._mongoClientPromise) {
-//   client = new MongoClient(uri);
-//   global._mongoClientPromise = client.connect();
-// }
-// clientPromise = global._mongoClientPromise;
+
 if (!globalThis._mongoClientPromise) {
   const client = new MongoClient(uri);
   globalThis._mongoClientPromise = client.connect();
@@ -90,7 +85,7 @@ export async function GET(req) {
       data = await collection
         .find({ name: { $regex: searchQuery, $options: "i" } }) // Tìm kiếm theo trường "name"
         .toArray();
-      console.log(data);
+   
     } else {
       // Nếu không có tham số, trả về toàn bộ dữ liệu
       data = await collection.find({}).toArray();
@@ -102,3 +97,40 @@ export async function GET(req) {
   }
 }
 
+export async function DELETE(req) {
+  try {
+
+    const url = new URL(req.url);
+    const id = url.searchParams.get("id"); // Lấy ID từ query string
+
+
+    if (!id) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Thiếu ID để xóa" }),
+        { status: 400 }
+      );
+    }
+
+    
+
+    const client = await clientPromise;
+    const db = client.db("test"); // Tên database
+    const collection = db.collection("sanpham"); // Tên collection
+
+    const result = await collection.deleteOne({ _id: new ObjectId(id) }); // Xóa tài liệu theo ID
+
+    if (result.deletedCount === 0) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Không tìm thấy tài liệu để xóa" }),
+        { status: 404 }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({ success: true, deletedCount: result.deletedCount }),
+      { status: 200 }
+    );
+  } catch (error) {
+    return new Response(JSON.stringify({ success: false, error: error.message }), { status: 500 });
+  }
+}

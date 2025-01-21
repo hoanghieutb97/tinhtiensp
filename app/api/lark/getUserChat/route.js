@@ -17,7 +17,7 @@ export async function GET(req) {
 
   return axios.request(config)
     .then((response) => {
-      console.log(JSON.stringify(response.data));
+      
       return new Response(JSON.stringify({ message: 'member lark successfully!', data: response.data.data.items }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

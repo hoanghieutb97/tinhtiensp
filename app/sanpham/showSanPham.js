@@ -60,7 +60,7 @@ function ShowSanPham(props) {
     };
 
     let SP_ACtive = props.listSP.filter(item => { return typeSanPham == "all" ? item : item.thongSoTong.type == typeSanPham });
-    
+
 
     // Kết quả
     let listSP_XL = groupByProduct(SP_ACtive);
@@ -121,7 +121,7 @@ function ShowSanPham(props) {
                 </Modal>
             </div>
 
-            {handleAddSP && <ThemSanPham dongCTN={dongCTN} closeProduct={() => setshowProduct(false)} />}
+            {handleAddSP && <ThemSanPham dongCTN={dongCTN} closeProduct={() => setshowProduct(false)} styleSP="new" />}
 
             <Button variant="contained" color="success" onClick={() => sethandleAddSP(true)}>
                 Thêm Sản Phẩm

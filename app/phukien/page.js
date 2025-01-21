@@ -75,8 +75,8 @@ export default function ProductList() {
                     <div className={("ctnbtnrrrr") + ((key == numberItem) ? " borderactive" : "")}>
 
                       <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
-                      <div className="tenpk">  Giá tiền: <span className="hhhg">{item.price}</span></div>
-                      <div className="tenpk">  Cân Nặng: <span className="hhhg">{item.canNang}</span></div>
+                      <div className="tenpk">  Giá tiền: <span className="hhhg">{(+item.price).toLocaleString("en-US")}</span></div>
+                      <div className="tenpk">  Cân Nặng: <span className="hhhg">{(+item.canNang).toLocaleString("en-US")}  (g)</span></div>
                       <div className="anhpk"> <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /></div>
                       <div className="divsuabtn" onClick={() => handleChangeActiveItem(item, key)}>
                         <Button
@@ -100,18 +100,8 @@ export default function ProductList() {
               <div className="ctnbtnrrrr ">
 
                 <div className="tenpk">Tên: <span className="hhhg">{selectItem.name}</span></div>
-                <div className="tenpk">  Giá tiền: <span className="hhhg">{selectItem.price}</span></div>
-                {/* <Box className="tenpknote" sx={{ mb: 2 }}>
-                  <Typography variant="body1" component="div">
-                    <div className="tenpk">Ghi chú: </div>
-                    <Typography
-                      component="span"
+                <div className="tenpk">  Giá tiền: <span className="hhhg">{(+selectItem.price).toLocaleString("en-US")}</span></div>
 
-                    >
-                      {selectItem.note}
-                    </Typography>
-                  </Typography>
-                </Box> */}
 
                 <p className="tenpk">Ghi chú: <span className="hhhg notepk">{selectItem.note}</span></p>
                 <div className="anhpk">   {selectItem.imageUrl ? <Image priority src={selectItem.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /> : <></>}</div>

@@ -3,6 +3,18 @@
   padding: 0;
 }
 
+.iconbtdlelepk {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.iconbtdlele {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
 .divbageff {
   margin-right: 40px;
 }
@@ -28,6 +40,11 @@ a.linkfv {
   background: #e3e3e3;
   border-radius: 6px;
   padding: 4px;
+}
+
+.divtongvl.vsdv {
+  position: relative;
+  padding-top: 22px;
 }
 
 .anhpkvl {
@@ -125,6 +142,7 @@ img.amttt {
   background: #fff;
   padding: 10px;
   border-radius: 9px;
+  position: relative;
 }
 
 .motproduct11 {

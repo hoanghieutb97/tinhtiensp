@@ -12,36 +12,41 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
-import { Typography, IconButton } from "@mui/material";
+import { Typography, IconButton, FormControlLabel, FormGroup, Switch } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import SelectPhuKien_CLL from './selectPhuKien_CLL';
 import { Modal } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from "next/image";
 import axios from "axios";
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export default function ThemSanPham(props) {
     let typeCPN = props.typeCPN;
     let ItemSua = props.data;
+    let styleSP = props.styleSP;
 
     const initialWHZ = [
         {
             nameSTT: "Chiều Ngắn Hộp",
-            valueSTT: "chieuNgang"
+            valueSTT: "chieuNgang",
+            dv: "cm"
         },
         {
             nameSTT: "Chiều Dài Hộp",
             valueSTT: "chieuDoc",
+            dv: "cm"
         },
         {
             nameSTT: "Độ Cao Hộp",
             valueSTT: "doCao",
+            dv: "cm"
         },
         {
             nameSTT: "Cân Nặng Hộp",
             valueSTT: "canNang",
+            dv: "gam"
         }]
     const initialVIP = [
         {
@@ -77,7 +82,7 @@ export default function ThemSanPham(props) {
         doCao: 2.5,
         chieuNgang: 0,
         chieuDoc: 0,
-        xop: "xopmong",
+        xop: "xop5mm",
         anh: "",
         product: "",
         variant: "",
@@ -91,7 +96,7 @@ export default function ThemSanPham(props) {
         canChageTST: true,
         idChat: ""
     }
-    const { vatLieu, getItemsByQuery } = usePhukien();
+    const { vatLieu, getItemsByQuery, setLoadingALL } = usePhukien();
     const [lop, setlop] = useState((typeCPN != "editProduct") ? [] : ItemSua.lop);
     const [isOpenSelectPK, setisOpenSelectPK] = useState(false);
     const [tienVL, setTienVL] = useState(initialStateVL);
@@ -100,7 +105,7 @@ export default function ThemSanPham(props) {
     function CloseSelectPK(item) {
 
         setisOpenSelectPK(false);
-        handleChangeThongSoTong("phuKien", item)
+        handleChangeThongSoTong("phuKien", [...thongSoTong.phuKien, ...item])
 
     }
     async function Get_MongoDB_UserCongDoan(type) {
@@ -111,13 +116,14 @@ export default function ThemSanPham(props) {
             .catch(error => {
                 return false
             });
-        console.log(items);
-        console.log(type);
+
 
         return items.filter((item => item.type == type))[0].value.map(item => item.member_id)
     }
 
     const handleChonAnh = (event) => {
+
+
         const file = event.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
@@ -133,11 +139,19 @@ export default function ThemSanPham(props) {
             reader.readAsDataURL(file); // Đọc file dưới dạng Data URL (Base64)
         }
         else {
-            setImage(null)
-            console.log("ko chon duoc anh");
+            setImage(null);
+            setThongSoTong({ ...thongSoTong, anh: "" }); // Cần định nghĩa setBase64Image trước
+
 
         }
     };
+
+    function checkNewMessenger(DataPost) {
+        console.log(DataPost);
+        if (DataPost.thongSoTong.idChat == "") return true
+        return false
+
+    }
     const handleImageUpload = async () => {
         try {
             const response = await fetch("/api/cloudinary", {
@@ -159,19 +173,12 @@ export default function ThemSanPham(props) {
         }
     };
     async function createChatLark(urlCloudinary, type) {
-
-        console.log(type);
-
-        let userMess = await Get_MongoDB_UserCongDoan(type);
-
-
-
         try {
             const response = await axios.post('/api/lark/sendImage_Chat', {
                 imageUrl: urlCloudinary,
                 product: thongSoTong.product,
                 type: type,
-                userMess: userMess
+                userMess: await Get_MongoDB_UserCongDoan(type)
             });
             return response.data.ID_Messenger;
 
@@ -183,11 +190,11 @@ export default function ThemSanPham(props) {
         }
     };
 
-    const themSanPham = async () => {
+    const HandlethemSanPham = async () => {
         let DataPost = {
             thongSoTong: thongSoTong,
             lop: lop,
-            tienVL: tienVL,
+            // tienVL: tienVL,
             name: thongSoTong.product,
             namecode: thongSoTong.product.normalize("NFD") // Chuyển các ký tự có dấu thành dạng kết hợp (e.g., 'Hiếu' -> 'Hiếu')
                 .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
@@ -195,23 +202,54 @@ export default function ThemSanPham(props) {
                 .toLowerCase()
 
         }
-        if (typeCPN != "editProduct") {
+        setLoadingALL(true)
+        if (styleSP == "new") {
+            console.log(image);
+            console.log(DataPost);
+            if (image == null && DataPost.thongSoTong.anh == "") { alert("thiếu ảnh..."); setLoadingALL(false); return false }
 
 
 
+
+            let imageUrl
             try {
-                // Upload ảnh
-                const imageUrl = await handleImageUpload();
-                if (!imageUrl) {
-                    // setLoading(false);
-                    return;
+                if (DataPost.thongSoTong.anh.startsWith("https")) {
+                    console.log("Chuỗi bắt đầu bằng https");
+                } else {
+                    // Upload ảnh
+                    imageUrl = await handleImageUpload();
+                    if (!imageUrl) {
+                        alert("lỗi up ảnh");
+                        return;
+                    }
+                    DataPost.thongSoTong.anh = imageUrl;
                 }
-                console.log(DataPost);
 
 
-                DataPost.thongSoTong.anh = imageUrl;
-                let ID_Messenger = await createChatLark(imageUrl, DataPost.thongSoTong.type);
-                DataPost.thongSoTong.idChat = ID_Messenger;
+
+                if (checkNewMessenger(DataPost)) {
+
+                    let ID_Messenger = await createChatLark((imageUrl) ? imageUrl : DataPost.thongSoTong.anh, DataPost.thongSoTong.type);
+                    DataPost.thongSoTong.idChat = ID_Messenger;
+                } else {
+
+                    let dataF = {
+                        ID_Messenger: DataPost.thongSoTong.idChat,
+                        userMess: await Get_MongoDB_UserCongDoan(DataPost.thongSoTong.type),
+                        type: DataPost.thongSoTong.type
+
+                    }
+
+                    let response = await fetch("/api/lark/tagUserType", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(dataF),
+                    });
+
+                }
+
                 const response = await fetch("/api/sanpham", {
                     method: "POST",
                     headers: {
@@ -235,7 +273,7 @@ export default function ThemSanPham(props) {
 
             }
         }
-        else if (typeCPN == "editProduct") {
+        else if (styleSP == "old") {
             if (DataPost.namecode !== ItemSua.namecode) {
                 // đổi product và 
             }
@@ -245,12 +283,12 @@ export default function ThemSanPham(props) {
 
 
             if (DataPost.thongSoTong.type !== ItemSua.thongSoTong.type) {
-                let userMess = await Get_MongoDB_UserCongDoan(DataPost.thongSoTong.type);
-                console.log(userMess);
+
+
 
                 let dataF = {
                     ID_Messenger: DataPost.thongSoTong.idChat,
-                    userMess: userMess,
+                    userMess: await Get_MongoDB_UserCongDoan(DataPost.thongSoTong.type),
                     type: DataPost.thongSoTong.type
 
                 }
@@ -262,7 +300,7 @@ export default function ThemSanPham(props) {
                     },
                     body: JSON.stringify(dataF),
                 });
-                console.log(response);
+
 
 
             }
@@ -297,7 +335,7 @@ export default function ThemSanPham(props) {
         props.dongCTN();
         if (typeCPN == "editProduct")
             props.closeProduct();
-
+        setLoadingALL(false)
     };
     useEffect(() => {
         if (lop.length > 0) {
@@ -334,12 +372,11 @@ export default function ThemSanPham(props) {
     }, [lop, thongSoTong]);
     useEffect(() => {
         if (lop.length > 0) {
-
-            setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong)) })
+            if (thongSoTong.canChageTST) setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong)) })
         }
 
     }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.chieuNgang]);
-    console.log(thongSoTong);
+
 
 
     function tongTien() {
@@ -368,6 +405,13 @@ export default function ThemSanPham(props) {
     const handleChangeThongSoTong = (type, value) => {
         let typeName = type;
         let val = value;
+        if (
+            !statuscanChageTST &&
+            (typeName == "chieuDai" || typeName == "chieuRong")
+        ) {
+            console.log("Không được thay đổi giá trị khi canChageTST = false và typeName là chieuDai hoặc chieuRong");
+            return; // Dừng hàm nếu điều kiện không thỏa mãn
+        }
 
         if (typeName == "chieuDai") {
             typeName = "chieuNgang";
@@ -401,7 +445,23 @@ export default function ThemSanPham(props) {
         }));
     };
 
+    function handleCanChageTST() {
+        let status = thongSoTong.canChageTST;
 
+        handleChangeThongSoTong("canChageTST", !status)
+
+
+    }
+    let statuscanChageTST = thongSoTong.canChageTST;
+
+
+    function handleDeletePhuKien(key) {
+        let phuKienTST = thongSoTong.phuKien;
+        phuKienTST.splice(key, 1);
+        handleChangeThongSoTong("phuKien", phuKienTST)
+
+
+    }
     return (
 
 
@@ -425,8 +485,11 @@ export default function ThemSanPham(props) {
                         <Button variant="contained" onClick={() => setisOpenSelectPK(true)} >Thêm Phụ Kiện</Button>
                         <div className="row">
                             {(thongSoTong.phuKien.length > 0) && thongSoTong.phuKien.map((item, key) => <div className="col-2" key={key}>
-                                sdsvs
-                                <div className="divtongvl">
+
+                                <div className="divtongvl vsdv">
+                                    <IconButton aria-label="delete" className='iconbtdlelepk' onClick={() => handleDeletePhuKien(key)}>
+                                        <DeleteIcon />
+                                    </IconButton>
                                     <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
                                     <div className="anhpkvl">
                                         {item.imageUrl ? <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpkvl" /> : <></>}
@@ -485,7 +548,8 @@ export default function ThemSanPham(props) {
                                     value={thongSoTong[item.valueSTT]}
                                     onChange={(e) => handleChangeThongSoTong(item.valueSTT, e.target.value)}
                                     placeholder="Nhập số"
-                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">cm</InputAdornment>, }, }}
+                                    disabled={!statuscanChageTST}
+                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">{item.dv}</InputAdornment>, }, }}
                                 />
                             </Box>
                         </div>)}
@@ -503,12 +567,19 @@ export default function ThemSanPham(props) {
                             </Box>
                         </div>)}
 
+                        <div className="col-3">
+                            <FormGroup>
+                                <FormControlLabel control={<Switch color="warning" onChange={handleCanChageTST} checked={thongSoTong.canChageTST} />} label="Tự Động" />
+
+                            </FormGroup>
+                        </div>
                     </div>
-                    initialVIP
+
 
                     <div className="row">
                         <div className="col-6">
                             <div className="row">
+
                                 <div className="col-12">
                                     <TextField
                                         label="Product"
@@ -518,9 +589,8 @@ export default function ThemSanPham(props) {
                                         value={thongSoTong.product || ''}
                                         onChange={(e) => handleChangeThongSoTong("product", e.target.value)}
                                         placeholder="Nhập Product Name"
+                                        fullWidth
                                     />
-                                </div>
-                                <div className="col-12">
                                     <TextField
                                         label="Variant"
                                         variant="standard"
@@ -529,7 +599,7 @@ export default function ThemSanPham(props) {
                                         value={thongSoTong.variant || ''}
                                         onChange={(e) => handleChangeThongSoTong("variant", e.target.value)}
                                         placeholder="Nhập Variant Name"
-
+                                        fullWidth
                                     />
                                 </div>
                                 <div className="col-12">
@@ -541,7 +611,7 @@ export default function ThemSanPham(props) {
                                         value={thongSoTong.note || ''}
                                         onChange={(e) => handleChangeThongSoTong("note", e.target.value)}
                                         placeholder="Nhập note"
-
+                                        fullWidth
                                     />
                                 </div>
 
@@ -603,12 +673,18 @@ export default function ThemSanPham(props) {
                                             />
                                         </Button>
 
-                                        {image && (
+                                        {/* {image && (
                                             <div className="anhtailen">
                                                 <img src={image} alt="Uploaded" className='amttt' />
                                             </div>
 
-                                        )}
+                                        )} */}
+
+                                        <div className="anhtailen">
+                                            <img src={(image) ? image : (thongSoTong.anh !== "") ? thongSoTong.anh : null} alt="Uploaded" className='amttt' />
+                                        </div>
+
+
                                     </Box>
                                 </div>
                             </div>
@@ -626,11 +702,11 @@ export default function ThemSanPham(props) {
                                     {Object.entries(tienVL).map(([key, value], index) => (
                                         <div key={index} className="thongtina">
                                             <span>{key.replace(/([A-Z])/g, " $1")}: </span>
-                                            <span className="giatiensp">{isNaN(value) ? "0" : value}</span>
+                                            <span className="giatiensp">{isNaN(value) ? "0" : (value).toLocaleString("en-US")}</span>
                                         </div>
                                     ))}
                                     <div className="tongtien">
-                                        Tổng Tiền:    {tongTien()}
+                                        Tổng Tiền:    {tongTien().toLocaleString("en-US")}
                                     </div>
                                 </div>
                             </div>
@@ -643,7 +719,7 @@ export default function ThemSanPham(props) {
 
                 <div className="container">
                     <div className="row">
-                        <Button variant="contained" endIcon={<SendIcon />} onClick={themSanPham}>
+                        <Button variant="contained" endIcon={<SendIcon />} onClick={HandlethemSanPham}>
                             Send
                         </Button>
 

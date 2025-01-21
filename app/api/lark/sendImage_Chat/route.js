@@ -7,7 +7,7 @@ import fs from 'fs';
 export async function POST(req) {
   let chatId = process.env.LARK_CHAT_ID;
   const { imageUrl, product, type, userMess } = await req.json(); // Lấy URL ảnh và chat ID từ body request
-  console.log(userMess);
+  
 
   const imagePath = path.join(process.cwd(), 'public', 'downloads', 'downloaded_image.jpg');
 

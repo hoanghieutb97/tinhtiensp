@@ -62,25 +62,27 @@ function ModalThemPK(props) {
     };
 
     const handleSubmit = async () => {
-        if (!item.name || !item.price || !item.note || !item.canNang) {
-            alert("Vui lòng nhập đầy đủ thông tin!");
-            return;
-        }
+
 
         props.setLoadingALL(true); // Bắt đầu trạng thái loading
         try {
-            // Upload ảnh
-            let imageUrl = ""
-            if (item.image) {
-                imageUrl = await handleImageUpload(item.image);
-                if (!imageUrl) {
-                    props.setLoadingALL(false);
-                    return;
-                }
-            }
+
 
             let response;
             if (item._id == null) {
+                if (!item.name || !item.price || !item.note || !item.canNang) {
+                    alert("Vui lòng nhập đầy đủ thông tin!");
+                    return;
+                }
+                // Upload ảnh
+                let imageUrl = ""
+                if (item.image) {
+                    imageUrl = await handleImageUpload(item.image);
+                    if (!imageUrl) {
+                        props.setLoadingALL(false);
+                        return;
+                    }
+                }
                 let { image, ...updateFields } = item;
                 response = await fetch("/api/vatlieu", {
                     method: "POST",
@@ -99,7 +101,7 @@ function ModalThemPK(props) {
 
             else {
                 let { _id, image, ...updateFields } = item;
-                
+
 
                 response = await fetch("/api/vatlieu", {
                     method: "PUT",

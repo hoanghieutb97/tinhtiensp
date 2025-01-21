@@ -74,7 +74,7 @@ export function tinhTienVatLieu(lop, giaVatLieu) {
             let slHight = Math.floor(91 / (hight + 0.2));
             var vlThuaW = 91 - (slWidth * (width + 0.2));
             var vlThuaH = 91 - (slHight * (hight + 0.2));
-            console.log(vlThuaW, vlThuaH);
+   
 
 
             if (vlThuaW > 10) {
@@ -105,7 +105,7 @@ export function tinhTienVatLieu(lop, giaVatLieu) {
 
 export function tinhTienMuc(lop, giaVatLieu) {
     let tongtien = 0;
-    console.log(giaVatLieu);
+
 
     let muc = giaVatLieu.filter(item => item.nameCode == "tienmuc")[0].price;
     let mucM2 = muc / 30;
@@ -445,8 +445,7 @@ export function tinhCanNang(lop, giaVatLieu, thongSoTong) {
             canNangXop = canNangXop / 5
             break;
     }
-    console.log(canNangXop);
-    console.log(tongCan);
+
     tongCan = tongCan + canNangXop
     return tongCan
 }

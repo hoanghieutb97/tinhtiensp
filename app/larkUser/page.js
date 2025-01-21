@@ -108,7 +108,7 @@ function page(props) {
 
   };
 
-  console.log(UserCongDoan);
+  
 
   return (
     <div>

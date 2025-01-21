@@ -39,8 +39,6 @@ export async function PUT(req) {
   try {
     const { id, updateData } = await req.json(); // Lấy ID và dữ liệu cần cập nhật từ body
 
-    console.log(id);
-    console.log(updateData);
 
     if (!id || !updateData) {
       return new Response(

@@ -26,7 +26,7 @@ export default function ProductList() {
   useEffect(() => {
     getItemsByQuery("/vatlieu", "");
   }, []);
-console.log(activeItems);
+
 
   function handlesetIsModalOpen(params) {
     setIsModalOpen(params);
@@ -58,6 +58,7 @@ console.log(activeItems);
 
 
 
+
   if (loading) {
     return <AllLoading />;
   }
@@ -72,13 +73,14 @@ console.log(activeItems);
             <div className="row">
               {
                 activeItems.map((item, key) =>
+
                   <div className={("pkhh col-3")} key={key} onClick={() => handleClickItem(item, key)} >
                     <div className={("ctnbtnrrrr") + ((key == numberItem) ? " borderactive" : "")}>
 
                       <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
-                      <div className="tenpk">  Giá tiền: <span className="hhhg">{item.price}</span></div>
-                      <div className="tenpk">  Cân Nặng: <span className="hhhg">{item.canNang}</span></div>
-                      <div className="anhpk"> <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /></div>
+                      <div className="tenpk">  Giá tiềnaaaa: <span className="hhhg">{(+item.price).toLocaleString("en-US")}</span></div>
+                      <div className="tenpk">  Cân Nặng: <span className="hhhg">{(+item.canNang).toLocaleString("en-US")}  (g)</span></div>
+                      <div className="anhpk"> {item.imageUrl && <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" />}</div>
                       <div className="divsuabtn" onClick={() => handleChangeActiveItem(item, key)}>
                         <Button
                           variant="contained"
@@ -101,10 +103,10 @@ console.log(activeItems);
               <div className="ctnbtnrrrr ">
 
                 <div className="tenpk">Tên: <span className="hhhg">{selectItem.name}</span></div>
-                <div className="tenpk">  Giá tiền: <span className="hhhg">{selectItem.price}</span></div>
+                <div className="tenpk">  Giá tiền: <span className="hhhg">{(+selectItem.price).toLocaleString("en-US")}</span></div>
 
                 <p className="tenpk">Ghi chú: <span className="hhhg notepk">{selectItem.note}</span></p>
-                <div className="anhpk">   {selectItem.imageUrl ? <Image priority src={selectItem.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /> : <></>}</div>
+                <div className="anhpk">   {selectItem.imageUrl && <Image priority src={selectItem.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" />}</div>
 
               </div>
             </div>}

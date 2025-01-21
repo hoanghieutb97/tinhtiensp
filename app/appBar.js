@@ -36,7 +36,7 @@ export default function PrimarySearchAppBar() {
     const handleKeyDown = async (event) => {
         if (event.key === "Enter") {
             getItemsByQuery(pathname, searchText)
-            console.log("Tìm kiếm:", pathname, searchText);
+            
 
         }
     };

@@ -6,10 +6,7 @@ export async function POST(req) {
 
   const { type, ID_Messenger, userMess } = await req.json(); // Lấy URL ảnh và chat ID từ body request
 
-  console.log( ".....................................");
-  console.log( ID_Messenger);
-  console.log(type );
-  console.log( userMess);
+
 
 
   try {
