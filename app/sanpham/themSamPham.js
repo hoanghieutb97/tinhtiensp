@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import LayerThemVL from "./layerThemVL";
-import { tinhTienVatLieu, tinhCanNang, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "./tinhtien";
+import { tinhTienVatLieu, tinhCanNang, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "./tinhtien";
 import { usePhukien } from "../context/PhukienContext";
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -77,6 +77,7 @@ export default function ThemSanPham(props) {
         tienKeoDan: 0,
         tienXop: 0,
         tienMangBoc: 0,
+        tienPhuKien: 0,
     }
     const defaultThongSoTong = {
         doCao: 2.5,
@@ -353,8 +354,8 @@ export default function ThemSanPham(props) {
                 TienBangDinh: Math.floor(tinhTienBangDinh(lop, vatLieu, thongSoTong)),
                 tienThungDongHang: Math.floor(tinhTienThungDongHang(lop, vatLieu, thongSoTong)),
                 tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
-                tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong))
-
+                tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong)),
+                tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong)),
             })
 
 
@@ -366,16 +367,19 @@ export default function ThemSanPham(props) {
             tienThungDongHang: Math.floor(tinhTienThungDongHang(lop, vatLieu, thongSoTong)),
             TienBangDinh: Math.floor(tinhTienBangDinh(lop, vatLieu, thongSoTong)),
             tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
-            tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong))
+            tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong)),
+            tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong)),
         });
 
     }, [lop, thongSoTong]);
     useEffect(() => {
         if (lop.length > 0) {
+
+
             if (thongSoTong.canChageTST) setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong)) })
         }
 
-    }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.chieuNgang]);
+    }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.chieuNgang, thongSoTong.phuKien]);
 
 
 

@@ -3,6 +3,28 @@
   padding: 0;
 }
 
+.vsvsdve {
+  background: #ffffff;
+  border-radius: 5px;
+}
+
+.row.fvvsdvds {
+  justify-content: center;
+  align-items: center;
+}
+
+.bthtyth {
+  position: sticky;
+  top: -29px;
+  background: #dbdbdb;
+}
+
+p.title.pk {
+  font-size: 2rem;
+  font-family: monospace;
+  text-align: center;
+}
+
 .iconbtdlelepk {
   position: absolute;
   right: 0;
@@ -203,6 +225,7 @@ img.anhpksp {
 
 .tytytyty {
   width: 80%;
+  /* position: relative; */
 }
 
 .yyb {
