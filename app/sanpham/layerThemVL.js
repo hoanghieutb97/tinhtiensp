@@ -97,7 +97,7 @@ export default function LayerThemVL(props) {
                                     right: 8,
                                     zIndex: 99,
                                 }}
-                            >
+                            > 
                                 <CloseIcon />
                             </IconButton>
                             <SelectChatLieuLop onClose={setChatLieuNgoai} />

@@ -74,8 +74,8 @@ export const PhukienProvider = ({ children }) => {
         fetchVatlieu();
         fetchLakUser();
     }, []);
-    console.log("phukien...", phukien);
-    console.log("vatLieu...", vatLieu);
+    // console.log("phukien...", phukien);
+    // console.log("vatLieu...", vatLieu);
 
 
     function setLoadingALL(params) {

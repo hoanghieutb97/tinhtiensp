@@ -95,13 +95,14 @@ export default function ThemSanPham(props) {
         vip2: 0,
         vip3: 0,
         canChageTST: true,
-        idChat: ""
+        idChat: "",
+        dateCreate: Date.now()
     }
-    const { vatLieu, getItemsByQuery, setLoadingALL } = usePhukien();
+    const { vatLieu, getItemsByQuery, setLoadingALL, phukien } = usePhukien();
     const [lop, setlop] = useState((typeCPN != "editProduct") ? [] : ItemSua.lop);
     const [isOpenSelectPK, setisOpenSelectPK] = useState(false);
     const [tienVL, setTienVL] = useState(initialStateVL);
-    const [thongSoTong, setThongSoTong] = useState((typeCPN != "editProduct") ? defaultThongSoTong : { ...defaultThongSoTong, ...ItemSua.thongSoTong });
+    const [thongSoTong, setThongSoTong] = useState((typeCPN != "editProduct") ? defaultThongSoTong : { ...defaultThongSoTong, ...ItemSua.thongSoTong, canChageTST: (typeCPN == "editProduct" && styleSP == "new") ? true : false });
     const [image, setImage] = useState(null);
     function CloseSelectPK(item) {
 
@@ -200,18 +201,13 @@ export default function ThemSanPham(props) {
             namecode: thongSoTong.product.normalize("NFD") // Chuyển các ký tự có dấu thành dạng kết hợp (e.g., 'Hiếu' -> 'Hiếu')
                 .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
                 .replace(/[^a-zA-Z]/g, "") // Giữ lại các ký tự a-z, A-Z
-                .toLowerCase()
+                .toLowerCase(),
+
 
         }
         setLoadingALL(true)
         if (styleSP == "new") {
-            console.log(image);
-            console.log(DataPost);
             if (image == null && DataPost.thongSoTong.anh == "") { alert("thiếu ảnh..."); setLoadingALL(false); return false }
-
-
-
-
             let imageUrl
             try {
                 if (DataPost.thongSoTong.anh.startsWith("https")) {
@@ -225,11 +221,7 @@ export default function ThemSanPham(props) {
                     }
                     DataPost.thongSoTong.anh = imageUrl;
                 }
-
-
-
                 if (checkNewMessenger(DataPost)) {
-
                     let ID_Messenger = await createChatLark((imageUrl) ? imageUrl : DataPost.thongSoTong.anh, DataPost.thongSoTong.type);
                     DataPost.thongSoTong.idChat = ID_Messenger;
                 } else {
@@ -238,7 +230,6 @@ export default function ThemSanPham(props) {
                         ID_Messenger: DataPost.thongSoTong.idChat,
                         userMess: await Get_MongoDB_UserCongDoan(DataPost.thongSoTong.type),
                         type: DataPost.thongSoTong.type
-
                     }
 
                     let response = await fetch("/api/lark/tagUserType", {
@@ -248,9 +239,7 @@ export default function ThemSanPham(props) {
                         },
                         body: JSON.stringify(dataF),
                     });
-
                 }
-
                 const response = await fetch("/api/sanpham", {
                     method: "POST",
                     headers: {
@@ -332,8 +321,11 @@ export default function ThemSanPham(props) {
                 console.error("Cập nhật thất bại:", result.error);
             }
         }
+
         getItemsByQuery("/sanpham", "");
         props.dongCTN();
+
+
         if (typeCPN == "editProduct")
             props.closeProduct();
         setLoadingALL(false)
@@ -466,6 +458,15 @@ export default function ThemSanPham(props) {
 
 
     }
+    console.log(thongSoTong);
+    let ListPhuKien = thongSoTong.phuKien.map(item => {
+        let arrPK = phukien.filter(itemF => itemF._id == item)
+        if (arrPK.length > 0) return arrPK[0]
+
+    });
+    
+    console.log(ListPhuKien);
+
     return (
 
 
@@ -488,7 +489,7 @@ export default function ThemSanPham(props) {
                     <div className="col-12">
                         <Button variant="contained" onClick={() => setisOpenSelectPK(true)} >Thêm Phụ Kiện</Button>
                         <div className="row">
-                            {(thongSoTong.phuKien.length > 0) && thongSoTong.phuKien.map((item, key) => <div className="col-2" key={key}>
+                            {(ListPhuKien.length > 0) && ListPhuKien.map((item, key) => <div className="col-2" key={key}>
 
                                 <div className="divtongvl vsdv">
                                     <IconButton aria-label="delete" className='iconbtdlelepk' onClick={() => handleDeletePhuKien(key)}>

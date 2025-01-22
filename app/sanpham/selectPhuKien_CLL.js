@@ -15,7 +15,7 @@ export default function SelectPhuKien_CLL({ onClose }) {
     const [textSearch, settextSearch] = useState("");
     const handleSave = () => {
 
-        closePopUp(activeItem)
+        closePopUp(activeItem._id)
     };
     function SelectChatLieuLop(item, key) {
         setactiveCL(key);
@@ -38,6 +38,7 @@ export default function SelectPhuKien_CLL({ onClose }) {
     const fuse = new Fuse(phukien, options);
     // const searchResult = fuse.search(textSearch);
     const searchResult = textSearch ? fuse.search(textSearch).map(result => result.item) : phukien; // Nếu textSearch rỗng, trả về toàn bộ mảng
+    console.log(searchResult);
 
 
     return (
@@ -51,11 +52,11 @@ export default function SelectPhuKien_CLL({ onClose }) {
                         <p className='title pk'>Danh sách phụ kiện</p>
                         <div className="col-6">
                             <Button variant="contained" onClick={handleSave} fullWidth > Lưu</Button>
-                        </div>  
+                        </div>
                         <div className="col-6">
                             <Box className='vsvsdve'
                                 component="form"
-                              
+
                                 noValidate
                                 autoComplete="off"
                             >

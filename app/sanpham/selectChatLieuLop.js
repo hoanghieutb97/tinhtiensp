@@ -19,6 +19,7 @@ export default function SelectChatLieuLop({ onClose }) {
     function SelectChatLieuLop(item, key) {
         setactiveCL(key);
         setactiveItem(item);
+        console.log(item);
 
 
     }

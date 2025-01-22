@@ -15,6 +15,7 @@ function ShowVariant(props) {
     const [activeSuaSP, setactiveSuaSP] = useState([]);
     const [addNewStatus, setaddNewStatus] = useState(false);
     const [styleSP, setstyleSP] = useState("new");
+
     function dongCTN(params) {
         sethandleAddSP(false);
         setaddNewStatus(false);
@@ -42,6 +43,11 @@ function ShowVariant(props) {
 
 
     }
+    function closeProduct() {
+        // props.closeProduct();
+        console.log("close Product......................................");
+
+    }
 
     async function handleDeleteItem(item) {
         const response = await fetch(`/api/sanpham?id=${item._id}`, {
@@ -66,12 +72,12 @@ function ShowVariant(props) {
     return (
 
         <>
-            {handleAddSP && <ThemSanPham dongCTN={dongCTN} closeProduct={props.closeProduct} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} />}
+            {handleAddSP && <ThemSanPham dongCTN={dongCTN} closeProduct={closeProduct} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} />}
 
 
             <div className="clickshowprd">
                 <Button variant="contained" color="success" onClick={themSPMoi}>
-                    Thêm Sản Phẩm
+                    Thêm Sản Phẩm variant
                 </Button>
                 <div className="container-fluid">
                     <div className="row">
@@ -79,7 +85,7 @@ function ShowVariant(props) {
                             {/* <Button variant="contained" onClick={props.closeProduct} className="btn btn-danger btvrrr"  >Xxx </Button> */}
 
 
-
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
                         </div>
 

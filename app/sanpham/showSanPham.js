@@ -42,11 +42,27 @@ function ShowSanPham(props) {
             }
         }
 
-        return Object.entries(grouped).map(([productName, { data, image }]) => ({
-            productName,
-            data,
-            image,
-        }));
+        // return Object.entries(grouped).map(([productName, { data, image }]) => ({
+        //     productName,
+        //     data,
+        //     image,
+        // }));
+        return Object.entries(grouped)
+            .map(([productName, { data, image }]) => ({
+                productName,
+                data: data.sort((a, b) => {
+                    const dateA = a.thongSoTong.dateCreate ?? -Infinity; // `undefined` sẽ là -Infinity
+                    const dateB = b.thongSoTong.dateCreate ?? -Infinity; // `undefined` sẽ là -Infinity
+                    return dateB - dateA; // Sắp xếp giảm dần
+                }),
+                image,
+            }))
+            .sort((a, b) => {
+                const dateA = a.data[0]?.thongSoTong?.dateCreate ?? -Infinity; // `undefined` là -Infinity
+                const dateB = b.data[0]?.thongSoTong?.dateCreate ?? -Infinity; // `undefined` là -Infinity
+                return dateB - dateA; // Sắp xếp nhóm giảm dần
+            });
+
     };
     function handleClickProduct(item) {
         setshowProduct(true);
@@ -79,6 +95,7 @@ function ShowSanPham(props) {
     function handleSetStatusActive(params) {
         settypeSanPham(params);
     }
+
 
     return (
         <div className="container-fluid">
