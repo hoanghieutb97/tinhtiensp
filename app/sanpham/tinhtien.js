@@ -16,7 +16,7 @@ export function tinhTienVatLieu(lop, giaVatLieu) {
             tenChatLieu = tenChatLieu.replace(/^custom/, "").trim();
 
 
-            return Math.floor(giaVatLieu.filter(item => item.nameCode == tenChatLieu)[0].price);
+            return Math.floor(giaVatLieu.filter(item => item._id == tenChatLieu)[0].price);
         }
 
 
@@ -355,7 +355,7 @@ export function tinhCanNang(lop, giaVatLieu, thongSoTong) {
         let tenChatLieu = lop[i].chatLieu;
         if (tenChatLieu.startsWith("custom")) {
             tenChatLieu = tenChatLieu.replace(/^custom/, "").trim();
-            tongCan = tongCan + (+(giaVatLieu.filter(item => item.nameCode == tenChatLieu)[0].canNang));
+            tongCan = tongCan + (+(giaVatLieu.filter(item => item._id == tenChatLieu)[0].canNang));
         }
 
 
@@ -449,14 +449,47 @@ export function tinhCanNang(lop, giaVatLieu, thongSoTong) {
     tongCan = tongCan + canNangXop
     return tongCan
 }
-export function tinhTienPhuKien(lop, giaVatLieu, thongSoTong) {
-    let phuKien = thongSoTong.phuKien;
+export function tinhTienPhuKien(lop, giaVatLieu, thongSoTong, giaPhuKien) {
+
+
+    let activePK = thongSoTong.phuKien.map(item => {
+        let arr = giaPhuKien.filter(itemPK => itemPK._id == item)
+
+        if (arr.length == 1) return arr[0]
+        return undefined;
+    }).filter(item => item !== undefined)
+
+
+
     let tongtien = 0;
-    for (let i = 0; i < phuKien.length; i++) {
-        tongtien = tongtien + (+phuKien[i].price)
+    for (let i = 0; i < activePK.length; i++) {
+        tongtien = tongtien + (+activePK[i].price)
 
     }
-    
+
+
 
     return tongtien
+}
+
+export function tinhTienDongGoi(lop, giaVatLieu, thongSoTong) {
+    var heso = 1;
+
+
+    for (let i = 0; i < lop.length; i++) {
+
+        let chieuDai = (+ lop[i].chieuDai);
+        let chieuRong = (+lop[i].chieuRong);
+        let maxLength = chieuDai * chieuRong;
+
+
+        heso = Math.sqrt(maxLength) / Math.sqrt(16)
+
+    }
+
+    let tongtien = heso * ((lop.length > 1) ? (3000 + (lop.length - 1) * 1000) : 3000);
+
+
+
+    return (tongtien < 3000) ? 3000 : tongtien
 }

@@ -3,6 +3,17 @@
   padding: 0;
 }
 
+img.anhpkvs {
+  height: 100px;
+  width: 100px;
+  object-fit: contain;
+}
+
+.svsvdsvvvvvss {
+  /* width: 136px; */
+  /* height: 50px; */
+}
+
 .vsvsdve {
   background: #ffffff;
   border-radius: 5px;
@@ -208,7 +219,7 @@ img.anhpksp {
 }
 
 .ggg {
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
   background: #ffffff;
@@ -216,6 +227,17 @@ img.anhpksp {
   border-radius: 10px;
   margin: 10px;
   border: 1px solid #8d8d8d;
+}
+
+.svsvdsvss {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+  /* margin: 10px; */
+  /* border: 1px solid #8d8d8d; */
 }
 
 .vdsdvs {

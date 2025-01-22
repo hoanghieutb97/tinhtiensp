@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import LayerThemVL from "./layerThemVL";
-import { tinhTienVatLieu, tinhCanNang, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "./tinhtien";
+import { tinhTienVatLieu, tinhCanNang, tinhTienDongGoi, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "./tinhtien";
 import { usePhukien } from "../context/PhukienContext";
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -78,6 +78,7 @@ export default function ThemSanPham(props) {
         tienXop: 0,
         tienMangBoc: 0,
         tienPhuKien: 0,
+        tienDongGoi: 0
     }
     const defaultThongSoTong = {
         doCao: 2.5,
@@ -347,7 +348,8 @@ export default function ThemSanPham(props) {
                 tienThungDongHang: Math.floor(tinhTienThungDongHang(lop, vatLieu, thongSoTong)),
                 tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
                 tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong)),
-                tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong)),
+                tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong, phukien)),
+                tienDongGoi: Math.floor(tinhTienDongGoi(lop, vatLieu, thongSoTong))
             })
 
 
@@ -360,7 +362,7 @@ export default function ThemSanPham(props) {
             TienBangDinh: Math.floor(tinhTienBangDinh(lop, vatLieu, thongSoTong)),
             tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
             tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong)),
-            tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong)),
+            tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong, phukien)),
         });
 
     }, [lop, thongSoTong]);
@@ -458,14 +460,14 @@ export default function ThemSanPham(props) {
 
 
     }
-    console.log(thongSoTong);
+
     let ListPhuKien = thongSoTong.phuKien.map(item => {
         let arrPK = phukien.filter(itemF => itemF._id == item)
         if (arrPK.length > 0) return arrPK[0]
 
     });
-    
-    console.log(ListPhuKien);
+
+
 
     return (
 

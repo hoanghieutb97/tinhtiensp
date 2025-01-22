@@ -65,8 +65,7 @@ function ShowVariant(props) {
 
 
     }
-    console.log(listItems);
-    console.log(activeSuaSP);
+   
 
 
     return (
@@ -85,7 +84,7 @@ function ShowVariant(props) {
                             {/* <Button variant="contained" onClick={props.closeProduct} className="btn btn-danger btvrrr"  >Xxx </Button> */}
 
 
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
 
                         </div>
 
