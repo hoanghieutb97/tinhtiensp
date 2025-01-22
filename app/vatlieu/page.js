@@ -78,7 +78,7 @@ export default function ProductList() {
                     <div className={("ctnbtnrrrr") + ((key == numberItem) ? " borderactive" : "")}>
 
                       <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
-                      <div className="tenpk">  Giá tiềnaaaa: <span className="hhhg">{(+item.price).toLocaleString("en-US")}</span></div>
+                      <div className="tenpk">  Giá tiền: <span className="hhhg">{(+item.price).toLocaleString("en-US")}</span></div>
                       <div className="tenpk">  Cân Nặng: <span className="hhhg">{(+item.canNang).toLocaleString("en-US")}  (g)</span></div>
                       <div className="anhpk"> {item.imageUrl && <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" />}</div>
                       <div className="divsuabtn" onClick={() => handleChangeActiveItem(item, key)}>

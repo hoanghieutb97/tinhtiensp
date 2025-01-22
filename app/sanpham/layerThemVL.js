@@ -26,7 +26,7 @@ export default function LayerThemVL(props) {
     }
     function changeThongtinLop(name, value) {
         if (name == "chatLieu" && value == "custom") {
-            setIsCustomOpen(true); // Mở cửa sổ component tùy chỉnh
+            // khong lam gi ca vi co ham xu ly rieng roi
         }
         else {
             if (value == "true") value = true;
@@ -51,7 +51,10 @@ export default function LayerThemVL(props) {
         setIsCustomOpen(false);
     }
     let custom_chatLieu = vatLieu.filter(item => item._id == props.item.chatLieu.replace(/^custom/, ""));
-    
+    function handleChonValLieu(params) {
+        setIsCustomOpen(true); // Mở cửa sổ component tùy chỉnh
+
+    }
 
     return (
         <>
@@ -73,7 +76,7 @@ export default function LayerThemVL(props) {
                                 <MenuItem value="mica15mm">Mica 15mm</MenuItem>
                                 <MenuItem value="go3mm">Gỗ 3mm</MenuItem>
                                 <MenuItem value="go5mm">Gỗ 5mm</MenuItem>
-                                <MenuItem value="custom">Phôi sẵn</MenuItem>
+                                <MenuItem value="custom" onClick={handleChonValLieu}>Phôi sẵn</MenuItem>
                             </Select>
 
                         </FormControl>

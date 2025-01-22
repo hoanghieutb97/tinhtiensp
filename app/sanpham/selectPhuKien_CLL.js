@@ -70,15 +70,10 @@ export default function SelectPhuKien_CLL({ onClose }) {
 
                             </Box>
                         </div>
-
-
-
                     </div>
-
-                    {/* <button onClick={onClose} className='btn btn-danger'>
-                        Đóng
-                    </button> */}
                 </div>
+
+                
                 <div className="container">
                     <div className="row">
                         {
