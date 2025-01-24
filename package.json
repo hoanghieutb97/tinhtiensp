@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env PORT=3457 next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "cross-env PORT=3457 next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.1.2",
     "postcss": "^8",
