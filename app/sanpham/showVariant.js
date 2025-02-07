@@ -15,6 +15,7 @@ function ShowVariant(props) {
     const [activeSuaSP, setactiveSuaSP] = useState([]);
     const [addNewStatus, setaddNewStatus] = useState(false);
     const [styleSP, setstyleSP] = useState("new");
+    console.log(props);
 
     function dongCTN(params) {
         sethandleAddSP(false);
@@ -43,51 +44,45 @@ function ShowVariant(props) {
 
 
     }
-    function closeProduct() {
-        // props.closeProduct();
-        console.log("close Product......................................");
 
-    }
 
     async function handleDeleteItem(item) {
+        props.setLoading(true)
         const response = await fetch(`/api/sanpham?id=${item._id}`, {
             method: 'DELETE',
         });
         let result = await response.json();
         if (result.success) {
-            getItemsByQuery("/sanpham", "");
-
-            // props.setValueItem("default");
+            props.getItemsAll("sanpham");
         } else {
             console.error("Lỗi khi xóa:", result.error);
         }
 
-
+        props.setLoading(false)
 
     }
-   
 
+    function chuyen(params) {
+        console.log(listItems);
+
+    }
 
     return (
 
         <>
-            {handleAddSP && <ThemSanPham dongCTN={dongCTN} closeProduct={closeProduct} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} />}
+            {handleAddSP && <ThemSanPham dongCTN={dongCTN} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} />}
 
 
             <div className="clickshowprd">
                 <Button variant="contained" color="success" onClick={themSPMoi}>
                     Thêm Sản Phẩm variant
                 </Button>
+
+                <Button variant="contained" color="success" onClick={chuyen} >
+                    Chuyển
+                </Button>
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-12 ">
-                            {/* <Button variant="contained" onClick={props.closeProduct} className="btn btn-danger btvrrr"  >Xxx </Button> */}
-
-
-
-
-                        </div>
-
                         <div className="col-12">
                             <div className="row">
                                 {listItems.map((item, key) => <div className="col-3 motproduct11" key={key} >

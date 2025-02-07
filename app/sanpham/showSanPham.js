@@ -7,20 +7,18 @@ import ThemSanPham from './themSamPham';
 import { Box, Modal, Button, IconButton, Badge } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { filter, functions } from 'lodash';
+import { tongTienLop } from "@/lib/utils";
 
 
 function ShowSanPham(props) {
     const [activeProduct, setactiveProduct] = useState();
     const [showProduct, setshowProduct] = useState(false);
     const [typeSanPham, settypeSanPham] = useState("all");
+    const [ACtiveItem, setACtiveItem] = useState();
     const ListStatusActive = ["all", "demo", "test", "publish"]
     const groupByProduct = (list) => {
         const grouped = {};
-
-
         list.forEach((item) => {
-
-
             const productName = item.thongSoTong.product.trim().toLowerCase();
 
             if (!grouped[productName]) {
@@ -41,12 +39,6 @@ function ShowSanPham(props) {
                 grouped[product].image = grouped[product].data[1]?.thongSoTong?.anh || "";
             }
         }
-
-        // return Object.entries(grouped).map(([productName, { data, image }]) => ({
-        //     productName,
-        //     data,
-        //     image,
-        // }));
         return Object.entries(grouped)
             .map(([productName, { data, image }]) => ({
                 productName,
@@ -64,6 +56,7 @@ function ShowSanPham(props) {
             });
 
     };
+
     function handleClickProduct(item) {
         setshowProduct(true);
         setactiveProduct(item)
@@ -95,7 +88,10 @@ function ShowSanPham(props) {
     function handleSetStatusActive(params) {
         settypeSanPham(params);
     }
-
+    function handleShowItem(item) {
+        console.log(item);
+        setACtiveItem(item)
+    }
 
     return (
         <div className="container-fluid">
@@ -133,12 +129,12 @@ function ShowSanPham(props) {
                         >
                             <CloseIcon />
                         </IconButton>
-                        <ShowVariant activeProduct={activeProduct} closeProduct={() => setshowProduct(false)} />
+                        <ShowVariant activeProduct={activeProduct} closeProduct={() => setshowProduct(false)} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} />
                     </Box>
                 </Modal>
             </div>
 
-            {handleAddSP && <ThemSanPham dongCTN={dongCTN} closeProduct={() => setshowProduct(false)} styleSP="new" />}
+            {handleAddSP && <ThemSanPham dongCTN={dongCTN}  styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} />}
 
             <Button variant="contained" color="success" onClick={() => sethandleAddSP(true)}>
                 Thêm Sản Phẩm
@@ -162,19 +158,34 @@ function ShowSanPham(props) {
             <div className="row">
                 <div className="col-8">
                     <div className="row">
-                        {listSP_XL.map((item, key) => <div className=" pkhh col-3 motproduct11" key={key} onClick={() => handleClickProduct(item)}>
+                        {listSP_XL.map((item, key) => <div className=" pkhh col-3 motproduct11" key={key} >
                             <div className="ctnbtnrrrr">
-                                <div className="tenpk">product: <span className="hhhg">{item.productName}</span></div>
-                                <div className="tenpk">Số lượng:<span className="hhhg">{item.data.length}</span></div>
+                                <div className="sgvjndsvd" onClick={() => handleShowItem(item)}>
+                                    <div className="tenpk">product: <span className="hhhg">{item.productName}</span></div>
+                                    <div className="tenpk">Số lượng:<span className="hhhg">{item.data.length}</span></div>
+                                    <div className="anhpk"> <Image priority src={item.image} alt="My GIF" width={500} height={300} className="anhpk" /></div>
+                                </div>
 
-                                <div className="anhpk"> <Image priority src={item.image} alt="My GIF" width={500} height={300} className="anhpk" /></div>
+                                <div className="ctnbthgjf">
+                                    <Button variant="contained" color="success" className=' w-100 dvsdv' onClick={() => handleClickProduct(item)}>
+                                        Xem thêm
+                                    </Button>
+                                </div>
 
                             </div>
                         </div>)}
                     </div>
 
                 </div>
+                {ACtiveItem && <div className="col-4 col4-thongtin ghrh">
+                    <div className="ctnbtnrrrrsa ">
+                        <div className="tenpk">Product: <span className="hhhg">{ACtiveItem.productName}</span></div>
+                        <div className="tenpk">Số lượng: <span className="hhhg">{ACtiveItem.data.length}</span></div>
+                        {ACtiveItem.data.map((itemxx, keyxx) => <div className="tenpk" key={keyxx}>{itemxx.thongSoTong.variant}: <span className="hhhg">{tongTienLop(itemxx.lop, props.vatLieu, itemxx.thongSoTong, props.phuKien).toLocaleString("en-US")} đ</span></div>)}
 
+                        <div className="anhpk">   {<Image priority src={ACtiveItem.image} alt="My GIF" width={500} height={300} className="anhpk" />}</div>
+                    </div>
+                </div>}
 
 
             </div>

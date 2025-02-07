@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import LayerThemVL from "./layerThemVL";
-import { tinhTienVatLieu, tinhCanNang, tinhTienDongGoi, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "./tinhtien";
+import { tinhTienVatLieu, tinhCanNang, tinhTienDongGoi, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "@/lib/utils";
 import { usePhukien } from "../context/PhukienContext";
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -20,6 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Image from "next/image";
 import axios from "axios";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { sanpham_larkUser, createChatLark, URL_upload_cloudinary, initialWHZ, initialVIP, initialStateVL, tagUserType, postSanPham, putSanPham } from "@/lib/utils";
 
 
 export default function ThemSanPham(props) {
@@ -27,59 +28,7 @@ export default function ThemSanPham(props) {
     let ItemSua = props.data;
     let styleSP = props.styleSP;
 
-    const initialWHZ = [
-        {
-            nameSTT: "Chiều Ngắn Hộp",
-            valueSTT: "chieuNgang",
-            dv: "cm"
-        },
-        {
-            nameSTT: "Chiều Dài Hộp",
-            valueSTT: "chieuDoc",
-            dv: "cm"
-        },
-        {
-            nameSTT: "Độ Cao Hộp",
-            valueSTT: "doCao",
-            dv: "cm"
-        },
-        {
-            nameSTT: "Cân Nặng Hộp",
-            valueSTT: "canNang",
-            dv: "gam"
-        }]
-    const initialVIP = [
-        {
-            nameSTT: "VIP 1",
-            valueSTT: "vip1"
-        },
-        {
-            nameSTT: "VIP 2",
-            valueSTT: "vip2",
-        },
-        {
-            nameSTT: "VIP 3",
-            valueSTT: "vip3",
-        }]
-    const initialStateVL = {
-        tienVatLieu: 0, // có thể chọn ngoài
-        tienMuc: 0,
-        tienThietke: 0,
-        tienIn: 0,
-        tienCat: 0,
-        tienDien: 0,
-        tienChietKhauMay: 0,
-        tienHop: 0, // có thể chọn ngoài
-        tienThungDongHang: 0,
-        tienMatBang: 766,
-        tienTemNhan: 400,
-        TienBangDinh: 0,
-        tienKeoDan: 0,
-        tienXop: 0,
-        tienMangBoc: 0,
-        tienPhuKien: 0,
-        tienDongGoi: 0
-    }
+
     const defaultThongSoTong = {
         doCao: 2.5,
         chieuNgang: 0,
@@ -99,7 +48,10 @@ export default function ThemSanPham(props) {
         idChat: "",
         dateCreate: Date.now()
     }
-    const { vatLieu, getItemsByQuery, setLoadingALL, phukien } = usePhukien();
+    const vatLieu = props.vatLieu;
+    const phuKien = props.phuKien;
+
+
     const [lop, setlop] = useState((typeCPN != "editProduct") ? [] : ItemSua.lop);
     const [isOpenSelectPK, setisOpenSelectPK] = useState(false);
     const [tienVL, setTienVL] = useState(initialStateVL);
@@ -111,32 +63,15 @@ export default function ThemSanPham(props) {
         handleChangeThongSoTong("phuKien", [...thongSoTong.phuKien, ...item])
 
     }
-    async function Get_MongoDB_UserCongDoan(type) {
-        let items = await axios.get(`/api/larkUser`)
-            .then(response => {
-                return response.data.data[0].data
-            })
-            .catch(error => {
-                return false
-            });
-
-
-        return items.filter((item => item.type == type))[0].value.map(item => item.member_id)
-    }
 
     const handleChonAnh = (event) => {
-
-
         const file = event.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setImage(imageUrl);
-            // Chuyển đổi ảnh sang Base64
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result;
-
-                // Lưu Base64 vào state hoặc xử lý tiếp
                 setThongSoTong({ ...thongSoTong, anh: base64String }); // Cần định nghĩa setBase64Image trước
             };
             reader.readAsDataURL(file); // Đọc file dưới dạng Data URL (Base64)
@@ -144,54 +79,16 @@ export default function ThemSanPham(props) {
         else {
             setImage(null);
             setThongSoTong({ ...thongSoTong, anh: "" }); // Cần định nghĩa setBase64Image trước
-
-
         }
     };
 
     function checkNewMessenger(DataPost) {
-        console.log(DataPost);
+
         if (DataPost.thongSoTong.idChat == "") return true
         return false
 
     }
-    const handleImageUpload = async () => {
-        try {
-            const response = await fetch("/api/cloudinary", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ base64File: thongSoTong.anh }),
-            });
 
-            const data = await response.json();
-            if (data.success) {
-                return data.url; // URL ảnh từ Cloudinary
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            console.error("Image Upload Error:", error);
-            alert("Không thể tải ảnh lên!");
-            return null;
-        }
-    };
-    async function createChatLark(urlCloudinary, type) {
-        try {
-            const response = await axios.post('/api/lark/sendImage_Chat', {
-                imageUrl: urlCloudinary,
-                product: thongSoTong.product,
-                type: type,
-                userMess: await Get_MongoDB_UserCongDoan(type)
-            });
-            return response.data.ID_Messenger;
-
-
-        } catch (error) {
-
-            console.error('Error posting data:', error);
-            return false
-        }
-    };
 
     const HandlethemSanPham = async () => {
         let DataPost = {
@@ -203,60 +100,37 @@ export default function ThemSanPham(props) {
                 .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
                 .replace(/[^a-zA-Z]/g, "") // Giữ lại các ký tự a-z, A-Z
                 .toLowerCase(),
-
-
         }
-        setLoadingALL(true)
+
+        props.setLoading(true);
+
         if (styleSP == "new") {
-            if (image == null && DataPost.thongSoTong.anh == "") { alert("thiếu ảnh..."); setLoadingALL(false); return false }
+            if (image == null && DataPost.thongSoTong.anh == "") { alert("thiếu ảnh..."); props.setLoading(false); return false }
             let imageUrl
             try {
-                if (DataPost.thongSoTong.anh.startsWith("https")) {
-                    console.log("Chuỗi bắt đầu bằng https");
-                } else {
-                    // Upload ảnh
-                    imageUrl = await handleImageUpload();
+
+                // kiểm tra xem up ảnh chưa, chưa up thì up
+                if (!DataPost.thongSoTong.anh.startsWith("https")) {
+                    imageUrl = await URL_upload_cloudinary(thongSoTong.anh);
                     if (!imageUrl) {
                         alert("lỗi up ảnh");
-                        return;
+                        return false;
                     }
                     DataPost.thongSoTong.anh = imageUrl;
                 }
+
+                // nếu chưa tạo tin nhắn, thì giờ tạo
                 if (checkNewMessenger(DataPost)) {
-                    let ID_Messenger = await createChatLark((imageUrl) ? imageUrl : DataPost.thongSoTong.anh, DataPost.thongSoTong.type);
+                    let ID_Messenger = await createChatLark((imageUrl) ? imageUrl : DataPost.thongSoTong.anh, DataPost.thongSoTong.type, thongSoTong.product);
                     DataPost.thongSoTong.idChat = ID_Messenger;
                 } else {
-
-                    let dataF = {
-                        ID_Messenger: DataPost.thongSoTong.idChat,
-                        userMess: await Get_MongoDB_UserCongDoan(DataPost.thongSoTong.type),
-                        type: DataPost.thongSoTong.type
-                    }
-
-                    let response = await fetch("/api/lark/tagUserType", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(dataF),
-                    });
+                    const StatusTagUserType = await tagUserType(DataPost.thongSoTong);
                 }
-                const response = await fetch("/api/sanpham", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(DataPost),
-                });
 
-                const result = await response.json();
-                if (result.success) {
-                    props.dongCTN();
-                    getItemsByQuery("/sanpham", "");
+                let statusPostSanPham = await postSanPham(DataPost);
 
-                } else {
-                    alert(`Có lỗi xảy ra: ${result.error}`);
-                }
+
+
             } catch (error) {
                 console.error("Error:", error);
                 alert("Không thể thêm phụ kiện!");
@@ -271,66 +145,20 @@ export default function ThemSanPham(props) {
             if (DataPost.thongSoTong.variant !== ItemSua.thongSoTong.variant) {
                 // đổi product và 
             }
-
-
             if (DataPost.thongSoTong.type !== ItemSua.thongSoTong.type) {
-
-
-
-                let dataF = {
-                    ID_Messenger: DataPost.thongSoTong.idChat,
-                    userMess: await Get_MongoDB_UserCongDoan(DataPost.thongSoTong.type),
-                    type: DataPost.thongSoTong.type
-
-                }
-
-                let response = await fetch("/api/lark/tagUserType", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(dataF),
-                });
-
-
-
+                const StatusTagUserType = await tagUserType(DataPost.thongSoTong);
             }
 
+            let statusPutSanPham = await putSanPham(ItemSua._id, DataPost)
 
-
-            let DataPut = {
-                id: ItemSua._id, // ID tài liệu bạn muốn sửa
-                updateData: DataPost
-            };
-
-
-
-            const response = await fetch("/api/sanpham", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(DataPut), // Gửi dữ liệu PUT
-            });
-
-            const result = await response.json(); // Lấy phản hồi từ server
-            if (result.success) {
-                props.dongCTN();
-                getItemsByQuery("/sanpham", "");
-
-            } else {
-                console.error("Cập nhật thất bại:", result.error);
-            }
         }
 
-        getItemsByQuery("/sanpham", "");
-        props.dongCTN();
 
-
-        if (typeCPN == "editProduct")
-            props.closeProduct();
-        setLoadingALL(false)
+        props.getItemsAll("sanpham");
+        props.setLoading(false)
     };
+
+
     useEffect(() => {
         if (lop.length > 0) {
             setTienVL({
@@ -348,7 +176,7 @@ export default function ThemSanPham(props) {
                 tienThungDongHang: Math.floor(tinhTienThungDongHang(lop, vatLieu, thongSoTong)),
                 tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
                 tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong)),
-                tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong, phukien)),
+                tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong, phuKien)),
                 tienDongGoi: Math.floor(tinhTienDongGoi(lop, vatLieu, thongSoTong))
             })
 
@@ -362,7 +190,7 @@ export default function ThemSanPham(props) {
             TienBangDinh: Math.floor(tinhTienBangDinh(lop, vatLieu, thongSoTong)),
             tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
             tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong)),
-            tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong, phukien)),
+            tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong, phuKien)),
         });
 
     }, [lop, thongSoTong]);
@@ -380,7 +208,8 @@ export default function ThemSanPham(props) {
     function tongTien() {
         return Object.values(tienVL).reduce((sum, value) => sum + value, 0);
     }
-    function handleAddLayer(params) {
+
+    function handleAddLayer() {
         var item = {
             chatLieu: "mica3mm",
             chieuDai: 0,
@@ -462,12 +291,15 @@ export default function ThemSanPham(props) {
     }
 
     let ListPhuKien = thongSoTong.phuKien.map(item => {
-        let arrPK = phukien.filter(itemF => itemF._id == item)
+        let arrPK = phuKien.filter(itemF => itemF._id == item)
         if (arrPK.length > 0) return arrPK[0]
 
     });
 
 
+    console.log(thongSoTong);
+    let canNangTheTich = thongSoTong.chieuDoc * thongSoTong.chieuNgang * thongSoTong.doCao / 5000
+    console.log(thongSoTong.chieuDoc * thongSoTong.chieuNgang * thongSoTong.doCao);
 
     return (
 
@@ -573,7 +405,11 @@ export default function ThemSanPham(props) {
                                 />
                             </Box>
                         </div>)}
+                        <div className="col-3">
+                            <div className="tenpk">Cân thể tích: <span className="hhhg">{canNangTheTich} (g)</span></div>
+                            <div className="tenpk">Cân Tiền: <span className="hhhg re">{(thongSoTong.canNang > canNangTheTich) ? thongSoTong.canNang : canNangTheTich} (g)</span></div>
 
+                        </div>
                         <div className="col-3">
                             <FormGroup>
                                 <FormControlLabel control={<Switch color="warning" onChange={handleCanChageTST} checked={thongSoTong.canChageTST} />} label="Tự Động" />
