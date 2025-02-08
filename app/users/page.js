@@ -30,15 +30,15 @@ export default function CreateUserForm() {
       setMessage(data.message || "Lỗi khi tạo user.");
     }
   };
-  function generatePassword(length = 12) {
+  function generatepassWord(length = 12) {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-    let password = "";
+    let passWord = "";
     for (let i = 0; i < length; i++) {
-      password += charset[Math.floor(Math.random() * charset.length)];
+      passWord += charset[Math.floor(Math.random() * charset.length)];
     }
-    return password;
+    return passWord;
   }
-  console.log(passWord ? generatePassword() : passWord);
+  console.log(passWord ? generatepassWord() : passWord);
 
 
   return (
@@ -65,7 +65,7 @@ export default function CreateUserForm() {
         <input
           type="text"
           placeholder="pass"
-          value={passWord == undefined ? generatePassword() : passWord}
+          value={passWord == undefined ? generatepassWord() : passWord}
           onChange={(e) => setpassWord(e.target.value)}
           className="w-full p-2 border rounded"
           required

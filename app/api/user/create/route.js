@@ -1,16 +1,16 @@
 import clientPromise from "@/lib/mongodb";
-
+import bcrypt from "bcryptjs";
 export async function POST(req) {
   try {
     const body = await req.json(); // Lấy dữ liệu từ request
-    const { name, email } = body;
+    const { name, email, passWord, status } = body;
 
     if (!name || !email) {
       return new Response(JSON.stringify({ message: "Tên và email là bắt buộc!" }), {
         status: 400,
       });
     }
-
+    const hashedPassWord = await bcrypt.hash(passWord, 10);
     const client = await clientPromise; // Kết nối MongoDB
     const db = client.db();
 
@@ -26,6 +26,8 @@ export async function POST(req) {
     const newUser = {
       name,
       email,
+      passWord: hashedPassWord,
+      status,
       createdAt: new Date(),
     };
 
@@ -36,6 +38,8 @@ export async function POST(req) {
       { status: 201 }
     );
   } catch (error) {
+    console.log(error);
+    
     return new Response(JSON.stringify({ message: "Lỗi khi tạo user", error }), {
       status: 500,
     });
