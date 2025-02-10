@@ -25,6 +25,7 @@ export default function LoginPage() {
 
     if (res.ok) {
       setMessage("Đăng nhập thành công!");
+      localStorage.setItem("userStatus", data.status);
       router.push("/sanpham"); // Chuyển hướng sau khi đăng nhập
     } else {
       setMessage(data.message || "Đăng nhập thất bại");

@@ -21,10 +21,10 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import { usePhukien } from "./context/PhukienContext";
 import Button from '@mui/material/Button';
 import Link from 'next/link';
-
+import { useRouter } from "next/navigation";
 export default function PrimarySearchAppBar() {
     const pathname = usePathname(); // Lấy đường dẫn hiện tại
-
+    const router = useRouter();
 
     const { getItemsByQuery } = usePhukien();
 
@@ -36,7 +36,7 @@ export default function PrimarySearchAppBar() {
     const handleKeyDown = async (event) => {
         if (event.key === "Enter") {
             getItemsByQuery(pathname, searchText)
-            
+
 
         }
     };
@@ -54,6 +54,12 @@ export default function PrimarySearchAppBar() {
         typeLink: 'larkUser',
         nameLink: "lark User"
     }];
+    const handleLogout = async () => {
+        await fetch("/api/auth/logout", { method: "GET" });
+        localStorage.removeItem("userStatus");
+        router.push("/login");
+    };
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -100,7 +106,11 @@ export default function PrimarySearchAppBar() {
                             </Link>
                         ))}
                     </Box>
-
+                    <Button className={"vsdvdsvdsvds"} onClick={handleLogout}
+                        sx={{ my: 2, color: 'white', display: 'block', textTransform: 'none' }}
+                    >
+                        Đăng xuất
+                    </Button>
 
                 </Toolbar>
             </AppBar>

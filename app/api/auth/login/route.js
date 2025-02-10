@@ -27,7 +27,7 @@ export async function POST(req) {
     console.log("passWord nhận từ client:", passWord);
     console.log("passWord trong database:", user.passWord);
     console.log("User tìm thấy:", user);
-    const isMatch = await bcrypt.compare(passWord, user.passWord);
+    const isMatch = await bcrypt.compare(passWord, user.passWord); 
 
     if (!isMatch) {
       console.log("Mật khẩu không khớp");
@@ -39,7 +39,7 @@ export async function POST(req) {
     });
 
     console.log("Tạo token thành công:", token);
-    const response = Response.json({ message: "Đăng nhập thành công!" }, { status: 200 });
+    const response = Response.json({ message: "Đăng nhập thành công!",status: user.status }, { status: 200 });
     response.headers.append("Set-Cookie", `authToken=${token}; Path=/; HttpOnly; Secure`);
     return response;
   } catch (error) {
