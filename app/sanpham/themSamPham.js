@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import LayerThemVL from "./layerThemVL";
-import { tongTienLop, tinhTienVatLieu, tinhCanNang, tinhTienDongGoi, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "@/lib/utils";
+import { caculator_ShipingCost, tongTienLop, tinhTienVatLieu, tinhCanNang, tinhTienDongGoi, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "@/lib/utils";
 
 import { usePhukien } from "../context/PhukienContext";
 import Box from '@mui/material/Box';
@@ -33,6 +33,7 @@ export default function ThemSanPham(props) {
     let ItemSua = props.data;
     let styleSP = props.styleSP;
     let Rate = props.Rate;
+    let ShippingCost = props.ShippingCost;
 
 
     const defaultThongSoTong = {
@@ -343,342 +344,371 @@ export default function ThemSanPham(props) {
         }));
     }
     let TongTienSX = tongTienLop(lop, vatLieu, thongSoTong, phuKien);
+    let canTien = (thongSoTong.canNang > canNangTheTich) ? thongSoTong.canNang : canNangTheTich;
 
     return (
+        <div className="cngjgfh">
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-8">
+                        <div className="themspsss">
+                            <Button variant="contained" onClick={props.dongCTN} className="btn btn-danger btvrrr"  >X </Button>
+                            <div className="container">
 
-
-        <div className="themspsss">
-            <Button variant="contained" onClick={props.dongCTN} className="btn btn-danger btvrrr"  >X </Button>
-            <div className="container">
-
-                <div className="row mt-2 mb-3 glrsjngsl">
-                    <div className="col-12">
-                        <Button variant="contained" onClick={handleAddLayer} >Thêm lớp chất liệu </Button>
-                    </div>
-                    <div className="col-12">
-                        {lop.map((item, key) => <LayerThemVL key={key} item={item} handleChangeThongSoTong={handleChangeThongSoTong} changeLopCL={changeLopCL} stt={key} xoaLayer={xoaLayer} />)}
-                    </div>
-
-                </div>
-
-
-                <div className="row glrsjngsl">
-                    <div className="col-12">
-                        <Button variant="contained" onClick={() => setisOpenSelectPK(true)} >Thêm Phụ Kiện</Button>
-                        <div className="row">
-                            {(ListPhuKien.length > 0) && ListPhuKien.map((item, key) => <div className="col-2" key={key}>
-
-                                <div className="divtongvl vsdv">
-                                    <IconButton aria-label="delete" className='iconbtdlelepk' onClick={() => handleDeletePhuKien(key)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                    <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
-                                    <div className="anhpkvl">
-                                        {item.imageUrl ? <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpkvl" /> : <></>}
+                                <div className="row mt-2 mb-3 glrsjngsl">
+                                    <div className="col-12">
+                                        <Button variant="contained" onClick={handleAddLayer} >Thêm lớp chất liệu </Button>
+                                    </div>
+                                    <div className="col-12">
+                                        {lop.map((item, key) => <LayerThemVL key={key} item={item} handleChangeThongSoTong={handleChangeThongSoTong} changeLopCL={changeLopCL} stt={key} xoaLayer={xoaLayer} />)}
                                     </div>
 
                                 </div>
-                            </div>)
-                            }
-
-                        </div>
-
-                        <Modal
-                            open={isOpenSelectPK}
-                            onClose={CloseSelectPK}
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    width: '94vw',
-                                    height: '90vh',
-                                    bgcolor: 'background.paper',
-                                    boxShadow: 24,
-                                    p: 4,
-                                    overflow: 'auto', position: 'relative', // Để định vị button trong modal
-                                    background: "#dfdfdf"
-                                }}
-                            >
-
-                                <IconButton
-                                    onClick={CloseSelectPK}
-                                    sx={{
-                                        position: 'absolute',
-                                        top: 8,
-                                        right: 8,
-                                        zIndex: 99,
-                                    }}
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                                <SelectPhuKien_CLL onClose={CloseSelectPK} />
-                            </Box>
-                        </Modal>
-                    </div>
-                </div>
 
 
-                <div className="container">
-                    <div className="row">
-                        {initialWHZ.map((item, key) => <div className="col-3" key={key}>
-                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                                <TextField id="outlined-basic" label={item.nameSTT} variant="outlined" type="number" size="small"
-                                    value={thongSoTong[item.valueSTT]}
-                                    onChange={(e) => handleChangeThongSoTong(item.valueSTT, e.target.value)}
-                                    placeholder="Nhập số"
-                                    disabled={!statuscanChageTST}
-                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">{item.dv}</InputAdornment>, }, }}
-                                />
-                            </Box>
-                        </div>)}
+                                <div className="row glrsjngsl">
+                                    <div className="col-12">
+                                        <Button variant="contained" onClick={() => setisOpenSelectPK(true)} >Thêm Phụ Kiện</Button>
+                                        <div className="row">
+                                            {(ListPhuKien.length > 0) && ListPhuKien.map((item, key) => <div className="col-2" key={key}>
 
-                    </div>
+                                                <div className="divtongvl vsdv">
+                                                    <IconButton aria-label="delete" className='iconbtdlelepk' onClick={() => handleDeletePhuKien(key)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                    <div className="tenpk">Tên: <span className="hhhg">{item.name}</span></div>
+                                                    <div className="anhpkvl">
+                                                        {item.imageUrl ? <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpkvl" /> : <></>}
+                                                    </div>
 
-                    <div className="row">
-                        <div className="col-12">
-                            VIP Anh Tuấn
-                            <div className="row">
-                                {thongSoTong.vipaTuan.map((item, key) => <div className="col-3" key={key}>
-                                    <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                                        <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="number" size="small"
-                                            value={item}
-                                            onChange={(e) => changeVipAll(e.target.value, key, "vipaTuan")}
-                                            placeholder="Nhập số"
-                                            slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
-                                        />
-                                    </Box>
-                                </div>)}
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            VIP Chốt
-                            <div className="row">
-                                {thongSoTong.vipChot.map((item, key) => <div className="col-3" key={key}>
-                                    <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                                        <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="number" size="small"
-                                            value={item}
-                                            onChange={(e) => changeVipAll(e.target.value, key, "vipChot")}
-                                            placeholder="Nhập số"
-                                            slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
-                                        />
-                                    </Box>
-                                </div>)}
+                                                </div>
+                                            </div>)
+                                            }
 
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            VIP Sale
-                            <Button
-                                variant="contained"
-                                component="label"
-                                startIcon={<Add />}
-                                color="primary"
-                                onClick={addVipSale}
-                            >
-                                thêm
+                                        </div>
 
-                            </Button>
-                            {thongSoTong.vipSale.map((itemxx, keyxx) => <div className="row vtnvipsl" key={keyxx}>
-                                {itemxx.map((item, key) => <div className="col-3" key={key}>
-                                    <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                                        <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="number" size="small"
-                                            value={item}
-                                            onChange={(e) => changeVipAll(e.target.value, key, "vipSale", keyxx)}
-                                            placeholder="Nhập số"
-                                            slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
-                                        />
-                                    </Box>
-                                </div>)}
-                                <div className="xoavipsal">
-                                    <DeleteIcon onClick={() => xoaVipSale(keyxx)} />
-                                </div>
-
-                            </div>)}
-                        </div>
-                        {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
-                        {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
-                        {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
-                        <div className="col-12">
-                            <p className="vdsfvfs">Chi Phí / giá bán:<span className="dfdfeee"> {(TongTienSX * 100 / (Rate * thongSoTong.vipChot[3])).toFixed(3)}</span> %</p>
-                            <p className="vdsfvfs">Tổng lợi nhuận:<span className="dfdfeee">  {((thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(3)}</span> $</p>
-                            <p className="vdsfvfs">Lợi nhuận sản xuất:<span className="dfdfeee">  {(0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate)).toFixed(3)}</span> $</p>
-
-                        </div>
-                        {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
-
-                    </div>
-
-                    <div className="row">
-                        <div className="col-3">
-                            <div className="tenpk">Cân thể tích: <span className="hhhg">{canNangTheTich} (g)</span></div>
-                            <div className="tenpk">Cân Tiền: <span className="hhhg re">{(thongSoTong.canNang > canNangTheTich) ? thongSoTong.canNang : canNangTheTich} (g)</span></div>
-
-                        </div>
-                        <div className="col-3">
-                            <FormGroup>
-                                <FormControlLabel control={<Switch color="warning" onChange={handleCanChageTST} checked={thongSoTong.canChageTST} />} label="Tự Động" />
-
-                            </FormGroup>
-                        </div>
-                    </div>
-
-
-                    <div className="row">
-                        <div className="col-6">
-                            <div className="row">
-
-                                <div className="col-12">
-                                    <TextField
-                                        label="Product"
-                                        variant="standard"
-                                        color="warning"
-                                        focused
-                                        value={thongSoTong.product || ''}
-                                        onChange={(e) => handleChangeThongSoTong("product", e.target.value)}
-                                        placeholder="Nhập Product Name"
-                                        fullWidth
-                                    />
-                                    <TextField
-                                        label="Variant"
-                                        variant="standard"
-                                        color="warning"
-                                        focused
-                                        value={thongSoTong.variant || ''}
-                                        onChange={(e) => handleChangeThongSoTong("variant", e.target.value)}
-                                        placeholder="Nhập Variant Name"
-                                        fullWidth
-                                    />
-                                </div>
-                                <div className="col-12">
-                                    <TextField
-                                        label="note"
-                                        variant="standard"
-
-                                        focused
-                                        value={thongSoTong.note || ''}
-                                        onChange={(e) => handleChangeThongSoTong("note", e.target.value)}
-                                        placeholder="Nhập note"
-                                        fullWidth
-                                    />
-                                </div>
-
-                                <div className="col-12">
-                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                                        <InputLabel id="demo-simple-select-standard-label">Chất Liệu</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-standard-label"
-                                            id="demo-simple-select-standard"
-                                            value={thongSoTong.xop}
-                                            onChange={(e) => handleChangeThongSoTong("xop", e.target.value)}
-                                            label="Chọn Loại Xôp"
+                                        <Modal
+                                            open={isOpenSelectPK}
+                                            onClose={CloseSelectPK}
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}
                                         >
-                                            <MenuItem value="xopmong">xốp 0.5mm</MenuItem>
-                                            <MenuItem value="xop3mm">xốp 3mm</MenuItem>
-                                            <MenuItem value="xop5mm">xốp 5mm</MenuItem>
-                                            <MenuItem value="xop10mm">xốp 10mm</MenuItem>
-                                            <MenuItem value="xop20mm">xốp 20mm</MenuItem>
-                                            <MenuItem value="xopno">xốp nổ</MenuItem>
+                                            <Box
+                                                sx={{
+                                                    width: '94vw',
+                                                    height: '90vh',
+                                                    bgcolor: 'background.paper',
+                                                    boxShadow: 24,
+                                                    p: 4,
+                                                    overflow: 'auto', position: 'relative', // Để định vị button trong modal
+                                                    background: "#dfdfdf"
+                                                }}
+                                            >
 
-
-                                        </Select>
-                                    </FormControl>
+                                                <IconButton
+                                                    onClick={CloseSelectPK}
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        top: 8,
+                                                        right: 8,
+                                                        zIndex: 99,
+                                                    }}
+                                                >
+                                                    <CloseIcon />
+                                                </IconButton>
+                                                <SelectPhuKien_CLL onClose={CloseSelectPK} />
+                                            </Box>
+                                        </Modal>
+                                    </div>
                                 </div>
 
-                                <div className="col-12">
-                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                                        <InputLabel id="demo-simple-select-standard-label">Loại thẻ</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-standard-label"
-                                            id="demo-simple-select-standard"
-                                            value={thongSoTong.type}
-                                            onChange={(e) => handleChangeThongSoTong("type", e.target.value)}
-                                            label="Loại thẻ"
-                                        >
-                                            <MenuItem value="demo">demo</MenuItem>
-                                            <MenuItem value="test">test</MenuItem>
-                                            <MenuItem value="publish">publish</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div className="col-12">
-                                    <Box>
-                                        <Typography variant="h6" gutterBottom>
-                                            Tải lên ảnh:
-                                        </Typography>
-                                        <Button
-                                            variant="contained"
-                                            component="label"
-                                            startIcon={<PhotoCamera />}
-                                            color="primary"
-                                        >
-                                            Chọn ảnh
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={handleChonAnh}
-                                                hidden
-                                            />
-                                        </Button>
 
-                                        {/* {image && (
+                                <div className="container">
+                                    <div className="row">
+                                        {initialWHZ.map((item, key) => <div className="col-3" key={key}>
+                                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                                                <TextField id="outlined-basic" label={item.nameSTT} variant="outlined" type="number" size="small"
+                                                    value={thongSoTong[item.valueSTT]}
+                                                    onChange={(e) => handleChangeThongSoTong(item.valueSTT, e.target.value)}
+                                                    placeholder="Nhập số"
+                                                    disabled={!statuscanChageTST}
+                                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">{item.dv}</InputAdornment>, }, }}
+                                                />
+                                            </Box>
+                                        </div>)}
+
+                                    </div>
+
+
+
+                                    <div className="row">
+
+                                        <div className="col-3">
+                                            <FormGroup>
+                                                <FormControlLabel control={<Switch color="warning" onChange={handleCanChageTST} checked={thongSoTong.canChageTST} />} label="Tự Động" />
+
+                                            </FormGroup>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <div className="row">
+
+                                                <div className="col-12">
+                                                    <TextField
+                                                        label="Product"
+                                                        variant="standard"
+                                                        color="warning"
+                                                        focused
+                                                        value={thongSoTong.product || ''}
+                                                        onChange={(e) => handleChangeThongSoTong("product", e.target.value)}
+                                                        placeholder="Nhập Product Name"
+                                                        fullWidth
+                                                    />
+                                                    <TextField
+                                                        label="Variant"
+                                                        variant="standard"
+                                                        color="warning"
+                                                        focused
+                                                        value={thongSoTong.variant || ''}
+                                                        onChange={(e) => handleChangeThongSoTong("variant", e.target.value)}
+                                                        placeholder="Nhập Variant Name"
+                                                        fullWidth
+                                                    />
+                                                </div>
+                                                <div className="col-12">
+                                                    <TextField
+                                                        label="note"
+                                                        variant="standard"
+
+                                                        focused
+                                                        value={thongSoTong.note || ''}
+                                                        onChange={(e) => handleChangeThongSoTong("note", e.target.value)}
+                                                        placeholder="Nhập note"
+                                                        fullWidth
+                                                    />
+                                                </div>
+
+                                                <div className="col-12">
+                                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                                        <InputLabel id="demo-simple-select-standard-label">Chất Liệu</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-standard-label"
+                                                            id="demo-simple-select-standard"
+                                                            value={thongSoTong.xop}
+                                                            onChange={(e) => handleChangeThongSoTong("xop", e.target.value)}
+                                                            label="Chọn Loại Xôp"
+                                                        >
+                                                            <MenuItem value="xopmong">xốp 0.5mm</MenuItem>
+                                                            <MenuItem value="xop3mm">xốp 3mm</MenuItem>
+                                                            <MenuItem value="xop5mm">xốp 5mm</MenuItem>
+                                                            <MenuItem value="xop10mm">xốp 10mm</MenuItem>
+                                                            <MenuItem value="xop20mm">xốp 20mm</MenuItem>
+                                                            <MenuItem value="xopno">xốp nổ</MenuItem>
+
+
+                                                        </Select>
+                                                    </FormControl>
+                                                </div>
+
+                                                <div className="col-12">
+                                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                                        <InputLabel id="demo-simple-select-standard-label">Loại thẻ</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-standard-label"
+                                                            id="demo-simple-select-standard"
+                                                            value={thongSoTong.type}
+                                                            onChange={(e) => handleChangeThongSoTong("type", e.target.value)}
+                                                            label="Loại thẻ"
+                                                        >
+                                                            <MenuItem value="demo">demo</MenuItem>
+                                                            <MenuItem value="test">test</MenuItem>
+                                                            <MenuItem value="publish">publish</MenuItem>
+                                                        </Select>
+                                                    </FormControl>
+                                                </div>
+                                                <div className="col-12">
+                                                    <Box>
+                                                        <Typography variant="h6" gutterBottom>
+                                                            Tải lên ảnh:
+                                                        </Typography>
+                                                        <Button
+                                                            variant="contained"
+                                                            component="label"
+                                                            startIcon={<PhotoCamera />}
+                                                            color="primary"
+                                                        >
+                                                            Chọn ảnh
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                onChange={handleChonAnh}
+                                                                hidden
+                                                            />
+                                                        </Button>
+
+                                                        {/* {image && (
                                             <div className="anhtailen">
                                                 <img src={image} alt="Uploaded" className='amttt' />
                                             </div>
 
                                         )} */}
 
-                                        <div className="anhtailen">
-                                            <img src={(image) ? image : (thongSoTong.anh !== "") ? thongSoTong.anh : null} alt="Uploaded" className='amttt' />
+                                                        <div className="anhtailen">
+                                                            <img src={(image) ? image : (thongSoTong.anh !== "") ? thongSoTong.anh : null} alt="Uploaded" className='amttt' />
+                                                        </div>
+
+
+                                                    </Box>
+                                                </div>
+                                            </div>
+
+
+
+
                                         </div>
 
 
-                                    </Box>
+
+                                    </div>
+                                </div>
+
+
+
+
+                                <div className="container">
+                                    <div className="row">
+                                        <Button variant="contained" endIcon={<SendIcon />} onClick={HandlethemSanPham}>
+                                            Send
+                                        </Button>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
+                    {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
+                    {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
+                    <div className="col-4">
+                        <div className="row">
+                            <div className="col-12">
+                                VIP Chốt:
+                                <div className="row">
+                                    {thongSoTong.vipChot.map((item, key) => <div className="col-3" key={key}>
+                                        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '100%' } }} noValidate autoComplete="off">
+                                            <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="number" size="small"
+                                                value={item}
+                                                onChange={(e) => changeVipAll(e.target.value, key, "vipChot")}
+                                                placeholder="Nhập số"
+                                                slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
+                                            />
+                                        </Box>
+                                    </div>)}
+
+                                </div>
+                            </div>
+
+
+                            <div className="col-12">
+                                VIP Anh Tuấn Đưa:
+                                <div className="row">
+                                    {thongSoTong.vipaTuan.map((item, key) => <div className="col-3" key={key}>
+                                        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '100%' } }} noValidate autoComplete="off">
+                                            <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="number" size="small"
+                                                value={item}
+                                                onChange={(e) => changeVipAll(e.target.value, key, "vipaTuan")}
+                                                placeholder="Nhập số"
+                                                slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
+                                            />
+                                        </Box>
+                                    </div>)}
                                 </div>
                             </div>
 
 
 
+                            <div className="col-12">
+                                VIP Sale Đưa:
+                                <Button
+                                    variant="contained"
+                                    component="label"
+                                    startIcon={<Add />}
+                                    color="primary"
+                                    onClick={addVipSale}
+                                >
+                                    thêm
+
+                                </Button>
+                                {thongSoTong.vipSale.map((itemxx, keyxx) => <div className="row vtnvipsl" key={keyxx}>
+                                    {itemxx.map((item, key) => <div className="col-3" key={key}>
+                                        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '100%' } }} noValidate autoComplete="off">
+                                            <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="number" size="small"
+                                                value={item}
+                                                onChange={(e) => changeVipAll(e.target.value, key, "vipSale", keyxx)}
+                                                placeholder="Nhập số"
+                                                slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
+                                            />
+                                        </Box>
+                                    </div>)}
+
+                                    {(keyxx !== 0) && <div className="xoavipsal">
+                                        <DeleteIcon onClick={() => xoaVipSale(keyxx)} />
+                                    </div>}
+
+                                </div>)}
+                            </div>
+
+
+
+                            <div className="col-12">
+                                <p className="vdsfvfs">Chi Phí / giá bán:<span className="dfdfeee"> {(TongTienSX * 100 / (Rate * thongSoTong.vipChot[3])).toFixed(3)}</span> %</p>
+                                <p className="vdsfvfs">Tổng lợi nhuận:<span className="dfdfeee">  {((thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(3)}</span> $</p>
+                                <p className="vdsfvfs">Lợi nhuận sản xuất:<span className="dfdfeee">  {(0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate)).toFixed(3)}</span> $</p>
+
+                                <div className="tenpk">Cân thể tích: <span className={"hhhg " + ((thongSoTong.canNang < canNangTheTich) ? "re" : "")}>{canNangTheTich} (g)</span></div>
+                                <div className="tenpk">Cân thực tế: <span className={"hhhg " + ((thongSoTong.canNang > canNangTheTich) ? "re" : "")}>{thongSoTong.canNang} (g)</span></div>
+
+
+
+                                <p className="vdsfvfs">Shipping Cost:<span className="dfdfeee">  {caculator_ShipingCost(ShippingCost, canTien)}</span> $</p>
+
+                            </div>
+
 
                         </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <div>
 
-
-                        <div className="col-6">
-                            <div>
-
-                                <div className="thoingtintien">
-                                    {Object.entries(tienVL).map(([key, value], index) => (
-                                        <div key={index} className="thongtina">
-                                            <span>{key.replace(/([A-Z])/g, " $1")}: </span>
-                                            <span className="giatiensp">{isNaN(value) ? "0" : (value).toLocaleString("en-US")}</span>
+                                    <div className="thoingtintien">
+                                        {Object.entries(tienVL).map(([key, value], index) => (
+                                            <div key={index} className="thongtina">
+                                                <span>{key.replace(/([A-Z])/g, " $1")}: </span>
+                                                <span className="giatiensp">{isNaN(value) ? "0" : (value).toLocaleString("en-US")}</span>
+                                            </div>
+                                        ))}
+                                        <div className="tongtien">
+                                            Tổng Tiền:    {tongTien().toLocaleString("en-US")}
                                         </div>
-                                    ))}
-                                    <div className="tongtien">
-                                        Tổng Tiền:    {tongTien().toLocaleString("en-US")}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-
-
-                <div className="container">
-                    <div className="row">
-                        <Button variant="contained" endIcon={<SendIcon />} onClick={HandlethemSanPham}>
-                            Send
-                        </Button>
-
-                    </div>
-                </div>
             </div>
-
         </div>
+
+
 
 
 

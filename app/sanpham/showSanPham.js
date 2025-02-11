@@ -129,12 +129,12 @@ function ShowSanPham(props) {
                         >
                             <CloseIcon />
                         </IconButton>
-                        <ShowVariant activeProduct={activeProduct} closeProduct={() => setshowProduct(false)} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate}  />
+                        <ShowVariant activeProduct={activeProduct} closeProduct={() => setshowProduct(false)} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost}  />
                     </Box>
                 </Modal>
             </div>
 
-            {handleAddSP && <ThemSanPham dongCTN={dongCTN} styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} />}
+            {handleAddSP && <ThemSanPham dongCTN={dongCTN} styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />}
 
             <Button variant="contained" color="success" onClick={() => sethandleAddSP(true)}>
                 Thêm Sản Phẩm

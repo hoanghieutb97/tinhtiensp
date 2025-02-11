@@ -15,7 +15,7 @@ function ShowVariant(props) {
     const [activeSuaSP, setactiveSuaSP] = useState([]);
     const [addNewStatus, setaddNewStatus] = useState(false);
     const [styleSP, setstyleSP] = useState("new");
-    console.log(props);
+  
 
     function dongCTN(params) {
         sethandleAddSP(false);
@@ -70,7 +70,7 @@ function ShowVariant(props) {
     return (
 
         <>
-            {handleAddSP && <ThemSanPham dongCTN={dongCTN} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} />}
+            {handleAddSP && <ThemSanPham dongCTN={dongCTN} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate}  ShippingCost={props.ShippingCost} />}
 
 
             <div className="clickshowprd">

@@ -6,6 +6,8 @@ import { Box, TextField, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import InputAdornment from '@mui/material/InputAdornment';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {  get_ShipingCost } from "@/lib/utils";
+
 const _id = process.env.NEXT_PUBLIC_ID_PARTNERSHIP;
 
 function page(props) {
@@ -16,7 +18,7 @@ function page(props) {
   const [ItemsCost, setItemsCost] = useState([defaultValue]);
   useEffect(() => {
     async function getitems() {
-      let items = await Get_ItemsCost();
+      let items = await get_ShipingCost();
       setItemsCost(items)
     }
     getitems();
@@ -37,7 +39,7 @@ function page(props) {
         }
       });
       
-      let items = await Get_ItemsCost();
+      let items = await get_ShipingCost();
       setItemsCost(items)
 
     } catch (error) {
@@ -50,19 +52,6 @@ function page(props) {
   }
 
 
-  async function Get_ItemsCost() {
-    let items = [];
-    await axios.get("/api/partnerShip?q=" + _id)
-      .then(response => {
-        items = response.data.data.items;
-      })
-      .catch(error => {
-        items = [defaultValue]
-        console.error('Lỗi:', error.response?.data || error.message);
-      });
-
-    return items
-  }
   function handleChangeItems(value, key, type) {
     let items = [...ItemsCost];
     items[key] = { ...items[key], [type]: value }; // Cập nhật giá trị đúng cách

@@ -299,7 +299,7 @@ img.anhpksp {
 }
 
 .themspsss {
-  position: absolute;
+  position: relative;
   width: 100%;
   height: auto;
   overflow: hidden;

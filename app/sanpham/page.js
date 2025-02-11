@@ -8,13 +8,14 @@ import Image from "next/image";
 import ShowSanPham from './showSanPham';
 import Button from '@mui/material/Button';
 import { logging } from '@/next.config';
-import { getItemsByQuery, fetchPhuKien, fetchVatLieu } from "@/lib/utils";
+import { getItemsByQuery, fetchPhuKien, fetchVatLieu, get_ShipingCost } from "@/lib/utils";
 function page(props) {
     const [loading, setLoading] = useState(false); // Thêm trạng thái loading
     const [activeItems, setactiveItems] = useState([]);
     const [phuKien, setPhuKien] = useState([]);
     const [vatLieu, setVatLieu] = useState([]);
     const [Rate, setRate] = useState(0);
+    const [ShippingCost, setShippingCost] = useState([]);
     async function fetchExchangeRate() {
         try {
             const response = await fetch(
@@ -37,6 +38,11 @@ function page(props) {
     }
     useEffect(() => {
         fetchSanPham();
+        async function getitems() {
+            let items = await get_ShipingCost();
+            setShippingCost(items)
+        }
+        getitems();
     }, []);
 
     var fetchSanPham = async () => {
@@ -67,7 +73,7 @@ function page(props) {
         <div className='vdsdvs'>
 
 
-            <ShowSanPham listSP={activeItems} phuKien={phuKien} vatLieu={vatLieu} setLoading={(param) => setLoading(param)} getItemsAll={getItemsAll} Rate={Rate} />
+            <ShowSanPham listSP={activeItems} phuKien={phuKien} vatLieu={vatLieu} setLoading={(param) => setLoading(param)} getItemsAll={getItemsAll} Rate={Rate} ShippingCost={ShippingCost}/>
 
         </div>
     );
