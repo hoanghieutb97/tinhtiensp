@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import LayerThemVL from "./layerThemVL";
-import { tinhTienVatLieu, tinhCanNang, tinhTienDongGoi, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "@/lib/utils";
+import { tongTienLop, tinhTienVatLieu, tinhCanNang, tinhTienDongGoi, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "@/lib/utils";
+
 import { usePhukien } from "../context/PhukienContext";
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -14,6 +15,10 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import { Typography, IconButton, FormControlLabel, FormGroup, Switch } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import Add from "@mui/icons-material/Add";
+
+
+
 import SelectPhuKien_CLL from './selectPhuKien_CLL';
 import { Modal } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -27,6 +32,7 @@ export default function ThemSanPham(props) {
     let typeCPN = props.typeCPN;
     let ItemSua = props.data;
     let styleSP = props.styleSP;
+    let Rate = props.Rate;
 
 
     const defaultThongSoTong = {
@@ -41,9 +47,9 @@ export default function ThemSanPham(props) {
         type: "demo",
         canNang: 0,
         phuKien: [],
-        vip1: 0,
-        vip2: 0,
-        vip3: 0,
+        vipaTuan: [0, 0, 0, 0],
+        vipChot: [0, 0, 0, 0],
+        vipSale: [[0, 0, 0, 0]],
         canChageTST: true,
         idChat: "",
         dateCreate: Date.now()
@@ -295,11 +301,48 @@ export default function ThemSanPham(props) {
         if (arrPK.length > 0) return arrPK[0]
 
     });
+    let canNangTheTich = thongSoTong.chieuDoc * thongSoTong.chieuNgang * thongSoTong.doCao / 5
+    function changeVipAll(param, key, type, keyxx) {
+        if (type !== "vipSale") {
+            let item = thongSoTong[type];
 
 
-    console.log(thongSoTong);
-    let canNangTheTich = thongSoTong.chieuDoc * thongSoTong.chieuNgang * thongSoTong.doCao / 5000
-    console.log(thongSoTong.chieuDoc * thongSoTong.chieuNgang * thongSoTong.doCao);
+            item[key] = param;
+            setThongSoTong((prevState) => ({
+                ...prevState,
+                [type]: item,
+            }));
+        }
+        else {
+            let item = thongSoTong.vipSale;
+            item[keyxx][key] = param;
+            setThongSoTong((prevState) => ({
+                ...prevState,
+                [type]: item,
+            }));
+        }
+
+    }
+    function addVipSale() {
+        let item = thongSoTong.vipSale;
+        item.push([0, 0, 0, 0])
+
+
+        setThongSoTong((prevState) => ({
+            ...prevState,
+            vipSale: item,
+        }));
+    }
+    function xoaVipSale(keyxx) {
+        let item = thongSoTong.vipSale;
+        let newArr = item.filter((_, index) => index !== keyxx);
+
+        setThongSoTong((prevState) => ({
+            ...prevState,
+            vipSale: newArr,
+        }));
+    }
+    let TongTienSX = tongTienLop(lop, vatLieu, thongSoTong, phuKien);
 
     return (
 
@@ -394,17 +437,82 @@ export default function ThemSanPham(props) {
                         </div>)}
 
                     </div>
+
                     <div className="row">
-                        {initialVIP.map((item, key) => <div className="col-3" key={key}>
-                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                                <TextField id="outlined-basic" label={item.nameSTT} variant="outlined" type="number" size="small"
-                                    value={thongSoTong[item.valueSTT]}
-                                    onChange={(e) => handleChangeThongSoTong(item.valueSTT, e.target.value)}
-                                    placeholder="Nhập số"
-                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
-                                />
-                            </Box>
-                        </div>)}
+                        <div className="col-12">
+                            VIP Anh Tuấn
+                            <div className="row">
+                                {thongSoTong.vipaTuan.map((item, key) => <div className="col-3" key={key}>
+                                    <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                                        <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="number" size="small"
+                                            value={item}
+                                            onChange={(e) => changeVipAll(e.target.value, key, "vipaTuan")}
+                                            placeholder="Nhập số"
+                                            slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
+                                        />
+                                    </Box>
+                                </div>)}
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            VIP Chốt
+                            <div className="row">
+                                {thongSoTong.vipChot.map((item, key) => <div className="col-3" key={key}>
+                                    <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                                        <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="number" size="small"
+                                            value={item}
+                                            onChange={(e) => changeVipAll(e.target.value, key, "vipChot")}
+                                            placeholder="Nhập số"
+                                            slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
+                                        />
+                                    </Box>
+                                </div>)}
+
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            VIP Sale
+                            <Button
+                                variant="contained"
+                                component="label"
+                                startIcon={<Add />}
+                                color="primary"
+                                onClick={addVipSale}
+                            >
+                                thêm
+
+                            </Button>
+                            {thongSoTong.vipSale.map((itemxx, keyxx) => <div className="row vtnvipsl" key={keyxx}>
+                                {itemxx.map((item, key) => <div className="col-3" key={key}>
+                                    <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                                        <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="number" size="small"
+                                            value={item}
+                                            onChange={(e) => changeVipAll(e.target.value, key, "vipSale", keyxx)}
+                                            placeholder="Nhập số"
+                                            slotProps={{ input: { endAdornment: <InputAdornment position="end">USD</InputAdornment>, }, }}
+                                        />
+                                    </Box>
+                                </div>)}
+                                <div className="xoavipsal">
+                                    <DeleteIcon onClick={() => xoaVipSale(keyxx)} />
+                                </div>
+
+                            </div>)}
+                        </div>
+                        {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
+                        {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
+                        {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
+                        <div className="col-12">
+                            <p className="vdsfvfs">Chi Phí / giá bán:<span className="dfdfeee"> {(TongTienSX * 100 / (Rate * thongSoTong.vipChot[3])).toFixed(3)}</span> %</p>
+                            <p className="vdsfvfs">Tổng lợi nhuận:<span className="dfdfeee">  {((thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(3)}</span> $</p>
+                            <p className="vdsfvfs">Lợi nhuận sản xuất:<span className="dfdfeee">  {(0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate)).toFixed(3)}</span> $</p>
+
+                        </div>
+                        {/* //////////////////////////////////////////////////////////////////////////////////////////////////// */}
+
+                    </div>
+
+                    <div className="row">
                         <div className="col-3">
                             <div className="tenpk">Cân thể tích: <span className="hhhg">{canNangTheTich} (g)</span></div>
                             <div className="tenpk">Cân Tiền: <span className="hhhg re">{(thongSoTong.canNang > canNangTheTich) ? thongSoTong.canNang : canNangTheTich} (g)</span></div>

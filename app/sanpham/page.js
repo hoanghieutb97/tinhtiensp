@@ -14,7 +14,27 @@ function page(props) {
     const [activeItems, setactiveItems] = useState([]);
     const [phuKien, setPhuKien] = useState([]);
     const [vatLieu, setVatLieu] = useState([]);
+    const [Rate, setRate] = useState(0);
+    async function fetchExchangeRate() {
+        try {
+            const response = await fetch(
+                "https://open.er-api.com/v6/latest/USD?apikey=11742cfd1de9c29694fc8053 "
+            );
 
+            if (!response.ok) {
+                throw new Error("Không thể lấy dữ liệu tỷ giá.");
+            }
+
+            const data = await response.json();
+
+
+            return (data.rates.VND); // Lấy tỷ giá USD → VND
+        } catch (err) {
+            return 0.01
+        } finally {
+
+        }
+    }
     useEffect(() => {
         fetchSanPham();
     }, []);
@@ -24,9 +44,11 @@ function page(props) {
         await getItemsAll("sanpham");
         let ItemsPK = await fetchPhuKien();
         let ItemsVL = await fetchVatLieu();
+        let rate = await fetchExchangeRate();
 
         setPhuKien(ItemsPK);
         setVatLieu(ItemsVL);
+        setRate(rate)
         setLoading(false); // Bắt đầu trạng thái loading
 
     }
@@ -34,7 +56,8 @@ function page(props) {
         let items = await getItemsByQuery("/" + param, "");
         setactiveItems(items);
     }
-    console.log(activeItems);
+
+
     if (loading) {
         return <AllLoading />;
     }
@@ -44,7 +67,7 @@ function page(props) {
         <div className='vdsdvs'>
 
 
-            <ShowSanPham listSP={activeItems} phuKien={phuKien} vatLieu={vatLieu} setLoading={(param) => setLoading(param)} getItemsAll={getItemsAll} />
+            <ShowSanPham listSP={activeItems} phuKien={phuKien} vatLieu={vatLieu} setLoading={(param) => setLoading(param)} getItemsAll={getItemsAll} Rate={Rate} />
 
         </div>
     );

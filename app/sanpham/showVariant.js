@@ -70,7 +70,7 @@ function ShowVariant(props) {
     return (
 
         <>
-            {handleAddSP && <ThemSanPham dongCTN={dongCTN} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} />}
+            {handleAddSP && <ThemSanPham dongCTN={dongCTN} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} />}
 
 
             <div className="clickshowprd">

@@ -53,6 +53,10 @@ export default function PrimarySearchAppBar() {
     }, {
         typeLink: 'larkUser',
         nameLink: "lark User"
+    },
+    {
+        typeLink: 'partnerShip',
+        nameLink: "partnerShip"
     }];
     const handleLogout = async () => {
         await fetch("/api/auth/logout", { method: "GET" });
