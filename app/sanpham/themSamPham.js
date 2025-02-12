@@ -48,9 +48,9 @@ export default function ThemSanPham(props) {
         type: "demo",
         canNang: 0,
         phuKien: [],
-        vipaTuan: [0, 0, 0, 0],
-        vipChot: [0, 0, 0, 0],
-        vipSale: [[0, 0, 0, 0]],
+        vipaTuan: [0, 0, 0, 0, 0],
+        vipChot: [0, 0, 0, 0, 0],
+        vipSale: [[0, 0, 0, 0, 0]],
         canChageTST: true,
         idChat: "",
         dateCreate: Date.now()
@@ -674,12 +674,15 @@ export default function ThemSanPham(props) {
                                 <p className="vdsfvfs">Tổng lợi nhuận:<span className="dfdfeee">  {((thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(3)}</span> $</p>
                                 <p className="vdsfvfs">Lợi nhuận sản xuất:<span className="dfdfeee">  {(0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate)).toFixed(3)}</span> $</p>
 
+                                <div className="tenpk">giá bán FullFill: <span className="hhhg ">{(TongTienSX * 100 / (Rate * thongSoTong.vipChot[3])).toFixed(3) + (0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate)).toFixed(3)}</span></div>
                                 <div className="tenpk">Cân thể tích: <span className={"hhhg " + ((thongSoTong.canNang < canNangTheTich) ? "re" : "")}>{canNangTheTich} (g)</span></div>
                                 <div className="tenpk">Cân thực tế: <span className={"hhhg " + ((thongSoTong.canNang > canNangTheTich) ? "re" : "")}>{thongSoTong.canNang} (g)</span></div>
 
 
+                                <div className="tenpk">Shipping cost: <span className="hhhg"> {caculator_ShipingCost(ShippingCost, canTien)}$</span></div>
+                                <div className="tenpk">Shipping fee *10%: <span className="hhhg"> {caculator_ShipingCost(ShippingCost, canTien) * 1.1}$</span></div>
 
-                                <p className="vdsfvfs">Shipping Cost:<span className="dfdfeee">  {caculator_ShipingCost(ShippingCost, canTien)}</span> $</p>
+
 
                             </div>
 

@@ -50,7 +50,10 @@ function page(props) {
         await getItemsAll("sanpham");
         let ItemsPK = await fetchPhuKien();
         let ItemsVL = await fetchVatLieu();
-        let rate = await fetchExchangeRate();
+
+        let rate = 23000;
+        // let rate = await fetchExchangeRate();
+console.log(rate);
 
         setPhuKien(ItemsPK);
         setVatLieu(ItemsVL);
