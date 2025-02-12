@@ -6,7 +6,7 @@ import { Box, Modal, IconButton, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { functions } from 'lodash';
 import { usePhukien } from "../context/PhukienContext";
-
+import AddIcon from '@mui/icons-material/Add';
 function ShowVariant(props) {
     const { getItemsByQuery } = usePhukien();
 
@@ -15,7 +15,7 @@ function ShowVariant(props) {
     const [activeSuaSP, setactiveSuaSP] = useState([]);
     const [addNewStatus, setaddNewStatus] = useState(false);
     const [styleSP, setstyleSP] = useState("new");
-  
+
 
     function dongCTN(params) {
         sethandleAddSP(false);
@@ -61,16 +61,31 @@ function ShowVariant(props) {
         props.setLoading(false)
 
     }
+    async function addDuplicate(item) {
+        const res = await fetch('/api/sanpham/duplicate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: item._id })
+        });
 
-    function chuyen(params) {
-        console.log(listItems);
+        const data = await res.json();
+        if (data.success) {
+
+            console.log("Nhân đôi thành công, ID mới:", data.newId);
+        } else {
+            console.error("Lỗi:", data.error);
+        }
+        props.getItemsAll("sanpham");
+    }
+    async function chuyen(id) {
+
 
     }
 
     return (
 
         <>
-            {handleAddSP && <ThemSanPham dongCTN={dongCTN} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate}  ShippingCost={props.ShippingCost} />}
+            {handleAddSP && <ThemSanPham dongCTN={dongCTN} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />}
 
 
             <div className="clickshowprd">
@@ -89,6 +104,9 @@ function ShowVariant(props) {
                                     <div className="divtongsp">
                                         <IconButton aria-label="delete" className='iconbtdlele' onClick={() => handleDeleteItem(item)}>
                                             <DeleteIcon />
+                                        </IconButton>
+                                        <IconButton aria-label="delete" className='iconbtdleleadd' onClick={() => addDuplicate(item)}>
+                                            <AddIcon />
                                         </IconButton>
                                         <div className="tenpk">product: <span className="hhhg"> {item.thongSoTong.product}</span></div>
                                         <div className="tenpk">variant:<span className="hhhg">{item.thongSoTong.variant} </span> </div>

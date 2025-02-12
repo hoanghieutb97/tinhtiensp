@@ -53,7 +53,7 @@ function page(props) {
 
         let rate = 23000;
         // let rate = await fetchExchangeRate();
-console.log(rate);
+        console.log(rate);
 
         setPhuKien(ItemsPK);
         setVatLieu(ItemsVL);
@@ -62,8 +62,10 @@ console.log(rate);
 
     }
     async function getItemsAll(param) {
+        setLoading(true); // Bắt đầu trạng thái loading
         let items = await getItemsByQuery("/" + param, "");
         setactiveItems(items);
+        setLoading(false); // Bắt đầu trạng thái loading
     }
 
 
@@ -76,7 +78,7 @@ console.log(rate);
         <div className='vdsdvs'>
 
 
-            <ShowSanPham listSP={activeItems} phuKien={phuKien} vatLieu={vatLieu} setLoading={(param) => setLoading(param)} getItemsAll={getItemsAll} Rate={Rate} ShippingCost={ShippingCost}/>
+            <ShowSanPham listSP={activeItems} phuKien={phuKien} vatLieu={vatLieu} setLoading={(param) => setLoading(param)} getItemsAll={getItemsAll} Rate={Rate} ShippingCost={ShippingCost} />
 
         </div>
     );
