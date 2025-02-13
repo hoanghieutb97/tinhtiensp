@@ -170,17 +170,18 @@ function ModalThemPK(props) {
         }
     }
     return (
-        <div className="container mt-4">
+        <div className="container-fluid mt-4">
             {/* Button mở modal */}
-            <button
-                className="btn btn-primary"
-                onClick={() => props.handlesetIsModalOpen(true)}
-                data-bs-toggle="modal"
-                data-bs-target="#addAccessoryModal"
-            >
-                Thêm phụ kiện
-            </button>
-
+            <div className="col-8">
+                <button
+                    className="btn btn-primary w-100"
+                    onClick={() => props.handlesetIsModalOpen(true)}
+                    data-bs-toggle="modal"
+                    data-bs-target="#addAccessoryModal"
+                >
+                    Thêm phụ kiện
+                </button>
+            </div>
             {/* Modal */}
             <div
                 className={`modal fade ${props.isModalOpen ? "show d-block" : ""}`}

@@ -4,18 +4,57 @@
   margin: 0;
   padding: 0;
 }
+
+.row.dpnam {
+  display: flex;
+}
+
+.sdvdsvsdvsdlaoding {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pnampt {
+  width: 20% !important;
+  padding: 2px !important;
+}
+
+
+.row.vtnvipsl.dpnam {
+  border-bottom: 1px solid #474747;
+  border-left: 1px solid #474747;
+  border-radius: 4px;
+}
+
 .xoavipsal {
-  width: 100px !important;
+  width: 0 !important;
   position: absolute;
-  right: 0;
+  right: -27px;
   display: flex;
   height: 100%;
   justify-content: center;
   align-items: center;
   cursor: pointer;
 }
+
 .vtnvipsl {
   position: relative;
+}
+
+.col-12.mtcontainer {
+  background: #fff;
+  padding: 10px;
+  border-radius: 11px;
+}
+
+.vvdvssdvsdvsdv {
+  position: sticky;
+  top: 0;
+  height: 90vh;
+
 }
 
 .ctnbthgjf {
@@ -30,8 +69,6 @@ img.anhpkvs {
   width: 100px;
   object-fit: contain;
 }
-
-
 
 .vsvsdve {
   background: #ffffff;
@@ -210,6 +247,7 @@ img.amttt {
   background: #fff;
   padding: 10px;
   border-radius: 9px;
+  /* height: 397px; */
   position: relative;
 }
 
@@ -225,7 +263,7 @@ img.amttt {
 .pkhh {
   margin: 15px 0px;
   border-radius: 6px;
-  height: 350px;
+  height: 330px;
   overflow: hidden;
   cursor: pointer;
 }
@@ -309,6 +347,7 @@ img.anhpksp {
   left: 0;
   top: 0;
 }
+
 .iconbtdleleadd {
   position: absolute;
   bottom: 0;

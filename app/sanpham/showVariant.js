@@ -22,10 +22,10 @@ function ShowVariant(props) {
         setaddNewStatus(false);
 
     }
-    function handleSuaSP(params) {
+    function handleSuaSP(item) {
         setstyleSP("old");
         sethandleAddSP(true);
-        setactiveSuaSP(params)
+        setactiveSuaSP(item)
     }
     function themSPMoi(params) {
         setstyleSP("new");
@@ -52,13 +52,9 @@ function ShowVariant(props) {
             method: 'DELETE',
         });
         let result = await response.json();
-        if (result.success) {
-            props.getItemsAll("sanpham");
-        } else {
-            console.error("Lỗi khi xóa:", result.error);
-        }
 
-        props.setLoading(false)
+        props.getItemsAll("sanpham");
+        // props.setLoading(false)
 
     }
     async function addDuplicate(item) {
@@ -88,7 +84,7 @@ function ShowVariant(props) {
             {handleAddSP && <ThemSanPham dongCTN={dongCTN} data={activeSuaSP} typeCPN={!addNewStatus ? "editProduct" : ""} styleSP={styleSP} phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />}
 
 
-            <div className="clickshowprd">
+            {!handleAddSP && <div className="clickshowprd">
                 <Button variant="contained" color="success" onClick={themSPMoi}>
                     Thêm Sản Phẩm variant
                 </Button>
@@ -100,7 +96,7 @@ function ShowVariant(props) {
                     <div className="row">
                         <div className="col-12">
                             <div className="row">
-                                {listItems.map((item, key) => <div className="col-3 motproduct11" key={key} >
+                                {listItems.map((item, key) => <div className="col-2 motproduct11" key={key} >
                                     <div className="divtongsp">
                                         <IconButton aria-label="delete" className='iconbtdlele' onClick={() => handleDeleteItem(item)}>
                                             <DeleteIcon />
@@ -129,7 +125,7 @@ function ShowVariant(props) {
 
 
 
-            </div>
+            </div>}
 
         </>
     );

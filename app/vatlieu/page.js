@@ -66,8 +66,8 @@ export default function ProductList() {
 
     <div>
       <ModalThemPK setLoadingALL={setLoadingALL} handlesetIsModalOpen={handlesetIsModalOpen} isModalOpen={isModalOpen} item={Items} setValueItem={setValueItem} />
-      <h1>Danh sách sản phẩm</h1>
-      <div className="container-fluid">
+
+      <div className="container-fluid mt-2">
         <div className="row">
           <div className="col-8">
             <div className="row">

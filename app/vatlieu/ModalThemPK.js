@@ -171,16 +171,20 @@ function ModalThemPK(props) {
         }
     }
     return (
-        <div className="container mt-4">
+        <div className="container-fluid mt-4">
             {/* Button mở modal */}
-            <button
-                className="btn btn-primary"
-                onClick={() => props.handlesetIsModalOpen(true)}
-                data-bs-toggle="modal"
-                data-bs-target="#addAccessoryModal"
-            >
-                Thêm phụ kiện
-            </button>
+            <div className="col-8">
+                <button
+                    className="btn btn-primary w-100"
+                    onClick={() => props.handlesetIsModalOpen(true)}
+                    data-bs-toggle="modal"
+                    data-bs-target="#addAccessoryModal"
+                >
+                    Thêm Vật Liệu
+                </button>
+            </div>
+
+
 
             {/* Modal */}
             <div
@@ -196,7 +200,7 @@ function ModalThemPK(props) {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="addAccessoryModalLabel">
-                                Thêm phụ kiện mới
+                                Thêm Vật Liệu mới
                             </h5>
                             <button
                                 type="button"
