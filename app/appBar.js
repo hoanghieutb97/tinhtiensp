@@ -22,6 +22,7 @@ import { usePhukien } from "./context/PhukienContext";
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
+import { cal_Status } from "@/lib/utils";
 export default function PrimarySearchAppBar() {
     const pathname = usePathname(); // Lấy đường dẫn hiện tại
     const router = useRouter();
@@ -40,24 +41,36 @@ export default function PrimarySearchAppBar() {
 
         }
     };
+    const STATUS_ADMIN = cal_Status(localStorage.getItem("userStatus"))
 
-    const pages = [{
-        typeLink: 'sanpham',
-        nameLink: "Sản Phẩm"
-    }, {
-        typeLink: 'vatlieu',
-        nameLink: "Vật Liệu"
-    }, {
-        typeLink: 'phukien',
-        nameLink: "Phụ Kiện"
-    }, {
-        typeLink: 'larkUser',
-        nameLink: "lark User"
-    },
-    {
-        typeLink: 'partnerShip',
-        nameLink: "partnerShip"
-    }];
+    console.log(STATUS_ADMIN);
+
+    const pages = [
+        {
+            typeLink: 'sanpham',
+            nameLink: "Sản Phẩm"
+        },
+        STATUS_ADMIN != 4 && {
+            typeLink: 'vatlieu',
+            nameLink: "Vật Liệu"
+        },
+        STATUS_ADMIN != 4 && {
+            typeLink: 'phukien',
+            nameLink: "Phụ Kiện"
+        },
+        STATUS_ADMIN == 1 && {
+            typeLink: 'larkUser',
+            nameLink: "lark User"
+        },
+        STATUS_ADMIN == 1 && {
+            typeLink: 'partnerShip',
+            nameLink: "partnerShip"
+        }
+        ,
+        STATUS_ADMIN == 1 && {
+            typeLink: 'editUsers',
+            nameLink: "tài khoản đăng nhập"
+        }];
     const handleLogout = async () => {
         await fetch("/api/auth/logout", { method: "GET" });
         localStorage.removeItem("userStatus");
