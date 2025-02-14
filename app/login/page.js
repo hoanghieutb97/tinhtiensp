@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { Container, TextField, Button, Typography, Box, Checkbox, FormControlLabel } from "@mui/material";
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [passWord, setpassWord] = useState("");
@@ -26,40 +28,60 @@ export default function LoginPage() {
     if (res.ok) {
       setMessage("Đăng nhập thành công!");
       localStorage.setItem("userStatus", data.status);
-      router.push("/sanpham"); // Chuyển hướng sau khi đăng nhập
+      window.location.href = "/sanpham";
+      // router.push("/sanpham"); // Chuyển hướng sau khi đăng nhập
     } else {
       setMessage(data.message || "Đăng nhập thất bại");
     }
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h1 className="text-xl font-bold mb-4">Đăng Nhập</h1>
-      <form onSubmit={handleLogin} className="space-y-4">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Mật khẩu"
-          value={passWord}
-          onChange={(e) => setpassWord((e.target.value).toString())}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+    <>
+
+
+      <Container maxWidth="xs">
+        <Box
+          sx={{
+            mt: 10,
+            p: 4,
+            bgcolor: "white",
+            borderRadius: 2,
+            boxShadow: 3,
+            textAlign: "center",
+          }}
         >
-          Đăng Nhập
-        </button>
-      </form>
-      {message && <p className="mt-4 text-red-600">{message}</p>}
-    </div>
+          {/* <Typography variant="h5" fontWeight="bold">Đăng nhập</Typography> */}
+          
+          <Typography color="textSecondary" sx={{ mb: 2 }}>Liên hệ Admin để cấp tài khoản mới ! </Typography>
+
+          <form onSubmit={handleLogin}>
+            <TextField
+              label="Email"
+              fullWidth
+              margin="normal"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              label="Mật Khẩu"
+              type="password"
+              fullWidth
+              margin="normal"
+              required
+              onChange={(e) => setpassWord(e.target.value)}
+            />
+
+            {/* <FormControlLabel control={<Checkbox />} label="Remember me" /> */}
+
+            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2, bgcolor: "#1976d2" }}>
+              Đăng nhập
+            </Button>
+          </form>
+        </Box>
+        {message && <p className="mt-4 text-red-600">{message}</p>}
+      </Container>
+
+
+    </>
   );
 }

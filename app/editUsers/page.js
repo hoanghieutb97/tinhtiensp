@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Button } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Button, Container, Box, Typography, TextField } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 export default function CreateUserForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
-  const [passWord, setpassWord] = useState();
+  const [passWord, setpassWord] = useState(generatepassWord);
   const [users, setUsers] = useState([]);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,8 +28,16 @@ export default function CreateUserForm() {
       setName("");
       setEmail("");
     } else {
+      console.log(data);
+
       setMessage(data.message || "Lỗi khi tạo user.");
     }
+
+
+    const res2 = await fetch("/api/user/getAll");
+    const dat2a = await res2.json();
+    setUsers(dat2a);
+
   };
 
   // Lấy danh sách user từ API
@@ -51,10 +59,7 @@ export default function CreateUserForm() {
     }
     return passWord;
   }
-  const rows = [
-    { col1: "Dữ liệu 1", col2: "Dữ liệu 2" },
-    { col1: "Dữ liệu 3", col2: "Dữ liệu 4" },
-  ];
+
 
   const statusOptions = ["admin", "pro", "kho", "taosp"];
   const handleStatusChange = (value, key) => {
@@ -107,8 +112,63 @@ export default function CreateUserForm() {
     <div className="container">
       <div className="row">
 
-        <div className="col-12">
-          <div className="p-4 max-w-md mx-auto">
+        <div className="col-4">
+
+          <Container maxWidth="xs">
+            <Box sx={{ mt: 5, p: 4, bgcolor: "white", borderRadius: 2, boxShadow: 3, textAlign: "center" }}>
+              <Typography variant="h5" fontWeight="bold">Tạo User</Typography>
+
+              <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
+                <TextField
+                  label="Tên"
+                  fullWidth
+                  margin="normal"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <TextField
+                  label="Email"
+                  type="email"
+                  fullWidth
+                  margin="normal"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <TextField
+                  label="Mật khẩu"
+                  fullWidth
+                  margin="normal"
+                  required
+                  value={passWord}
+                  onChange={(e) => setpassWord(e.target.value)}
+                />
+                <TextField
+                  select
+                  label="Chọn trạng thái"
+                  fullWidth
+                  margin="normal"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
+                  <MenuItem value="admin">Admin</MenuItem>
+                  <MenuItem value="pro">Pro</MenuItem>
+                  <MenuItem value="kho">Kho</MenuItem>
+                  <MenuItem value="taosp">Tạo SP</MenuItem>
+                </TextField>
+
+                <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+                  Tạo User
+                </Button>
+              </form>
+
+              {message && <Typography color="green" sx={{ mt: 2 }}>{message}</Typography>}
+            </Box>
+          </Container>
+
+
+          {/* <div className="p-4 max-w-md mx-auto">
             <h1 className="text-xl font-bold mb-4">Tạo User</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
@@ -157,10 +217,10 @@ export default function CreateUserForm() {
               </button>
             </form>
             {message && <p className="mt-4 text-green-600">{message}</p>}
-          </div>
+          </div> */}
         </div>
 
-        <div className="col-12">
+        <div className="col-8">
           <TableContainer component={Paper} sx={{ width: "100%", margin: "auto", mt: 4, boxShadow: 3 }}>
             <Table>
               <TableHead>

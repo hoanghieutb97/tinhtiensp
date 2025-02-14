@@ -24,8 +24,7 @@
 import { NextResponse } from "next/server";
 
 export function middleware(req) {
-  console.log("Incoming request:", req.nextUrl.pathname);
-  console.log("Cookies:", req.cookies.get("authToken")); // Debug cookies
+
 
   const token = req.cookies.get("authToken")?.value;
   const publicRoutes = ["/login", "/api/auth/login", "/api/auth/logout"];

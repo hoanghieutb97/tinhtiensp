@@ -16,7 +16,17 @@ function ShowSanPham(props) {
     const [typeSanPham, settypeSanPham] = useState("all");
     const [ACtiveItem, setACtiveItem] = useState();
     const ListStatusActive = ["all", "demo", "test", "publish"];
-    const STATUS_ADMIN = cal_Status(localStorage.getItem("userStatus"))
+    const [STATUS_ADMIN, setStatusAdmin] = useState(5);
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const userStatus = localStorage.getItem("userStatus");
+            if (userStatus !== null) {
+                setStatusAdmin(cal_Status(userStatus));
+            }
+        }
+    }, []);
+
+    // const STATUS_ADMIN = cal_Status(localStorage.getItem("userStatus"))
     const groupByProduct = (list) => {
         const grouped = {};
         list.forEach((item) => {
@@ -159,7 +169,7 @@ function ShowSanPham(props) {
 
 
                 <div className="row">
-                    <div className={STATUS_ADMIN == 1?"col-8":"col-12"}>
+                    <div className={STATUS_ADMIN == 1 ? "col-8" : "col-12"}>
                         <div className="row">
                             {listSP_XL.map((item, key) => <div className=" pkhh col-3 motproduct11" key={key} >
                                 <div className="ctnbtnrrrr">

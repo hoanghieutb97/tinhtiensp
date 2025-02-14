@@ -117,7 +117,7 @@ a.linkfv {
 }
 
 .activenavc {
-  background: #000000b0;
+  background: #000000b0 !important;
   text-decoration: none !important;
 }
 

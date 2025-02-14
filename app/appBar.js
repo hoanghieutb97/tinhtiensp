@@ -27,6 +27,7 @@ export default function PrimarySearchAppBar() {
     const pathname = usePathname(); // Lấy đường dẫn hiện tại
     const router = useRouter();
 
+    const [STATUS_ADMIN, setStatusAdmin] = useState(5);
     const { getItemsByQuery } = usePhukien();
 
     const [searchText, setSearchText] = useState("");
@@ -41,11 +42,46 @@ export default function PrimarySearchAppBar() {
 
         }
     };
-    const STATUS_ADMIN = cal_Status(localStorage.getItem("userStatus"))
+    
 
-    console.log(STATUS_ADMIN);
+    // const STATUS_ADMIN = (typeof window) == undefined ? 5:cal_Status(localStorage.getItem("userStatus"))
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const userStatus = localStorage.getItem("userStatus");
+            if (userStatus !== null) {
+                setStatusAdmin(cal_Status(userStatus));
+            }
+        }
+    }, []);
 
-    const pages = [
+    // let pages = [
+    //     {
+    //         typeLink: 'sanpham',
+    //         nameLink: "Sản Phẩm"
+    //     },
+    //     {
+    //         typeLink: 'vatlieu',
+    //         nameLink: "Vật Liệu"
+    //     },
+    //     {
+    //         typeLink: 'phukien',
+    //         nameLink: "Phụ Kiện"
+    //     },
+    //     {
+    //         typeLink: 'larkUser',
+    //         nameLink: "lark User"
+    //     },
+    //     {
+    //         typeLink: 'partnerShip',
+    //         nameLink: "partnerShip"
+    //     }
+    //     ,
+    //     {
+    //         typeLink: 'editUsers',
+    //         nameLink: "tài khoản đăng nhập"
+    //     }];
+
+    let pages = [
         {
             typeLink: 'sanpham',
             nameLink: "Sản Phẩm"
@@ -71,11 +107,17 @@ export default function PrimarySearchAppBar() {
             typeLink: 'editUsers',
             nameLink: "tài khoản đăng nhập"
         }];
+
     const handleLogout = async () => {
-        await fetch("/api/auth/logout", { method: "GET" });
+        await fetch("/api/auth/logout", { method: "GET", credentials: "include" });
         localStorage.removeItem("userStatus");
+        // Xóa cookie trên trình duyệt (tránh bị cache)
+        document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
         router.push("/login");
     };
+    pages = pages.filter(item => item !== false)
+    console.log(pages);
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -111,14 +153,14 @@ export default function PrimarySearchAppBar() {
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page, key) => (
-                            <Link className='linkfv' href={"/" + page.typeLink} key={key} passHref onClick={() => getItemsByQuery("/" + page.typeLink, "activeItemsToDedault")} >
-                                <Button className={(pathname == ("/" + page.typeLink)) ? "activenavc" : "noactivenavc"}
+                        {pages.map((itemkk, key) => (
+                            <Link className='linkfv' href={"/" + itemkk.typeLink} key={key} passHref onClick={() => getItemsByQuery("/" + itemkk.typeLink, "activeItemsToDedault")} >
+                                <Button className={(pathname == ("/" + itemkk.typeLink)) ? "activenavc" : "noactivenavc"}
 
 
                                     sx={{ my: 2, color: 'white', display: 'block', textTransform: 'none' }}
                                 >
-                                    {page.nameLink}
+                                    {itemkk.nameLink}
                                 </Button>
                             </Link>
                         ))}
