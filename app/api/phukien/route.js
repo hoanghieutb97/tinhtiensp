@@ -80,7 +80,7 @@ export async function DELETE(req) {
         { status: 400 }
       );
     }
-    
+
 
     const client = await clientPromise;
     const db = client.db("test"); // Tên database
@@ -123,14 +123,15 @@ export async function GET(req) {
       // Nếu có tham số tìm kiếm
       data = await collection
         .find({ name: { $regex: searchQuery, $options: "i" } }) // Tìm kiếm theo trường "name"
+        .sort({ dateCreate: 1 }) // Sắp xếp giảm dần theo dateCreate
         .toArray();
 
 
     } else {
 
       // Nếu không có tham số, trả về toàn bộ dữ liệu
-      data = await collection.find({}).toArray();
-      
+      data = await collection.find({}).sort({ dateCreate: -1 }).toArray();
+
 
     }
 

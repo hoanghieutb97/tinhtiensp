@@ -14,11 +14,13 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import _ from 'lodash';
 import { Box, Modal, Typography, IconButton } from '@mui/material';
-import { usePhukien } from "../context/PhukienContext";
+
 
 import CloseIcon from '@mui/icons-material/Close';
 export default function LayerThemVL(props) {
-    const { vatLieu } = usePhukien();
+
+    const vatLieu = props.vatLieu;
+
 
     const [isCustomOpen, setIsCustomOpen] = useState(false);
     function xoaLayer() {
@@ -113,7 +115,7 @@ export default function LayerThemVL(props) {
                                 >
                                     <CloseIcon />
                                 </IconButton>
-                                <SelectChatLieuLop onClose={setChatLieuNgoai} />
+                                <SelectChatLieuLop onClose={setChatLieuNgoai} vatLieu={vatLieu} />
                             </Box>
                         </Modal>
                         {/* {isCustomOpen && <SelectChatLieuLop onClose={setChatLieuNgoai} />} */}

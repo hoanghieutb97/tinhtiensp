@@ -1,7 +1,6 @@
 'use client';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -9,16 +8,8 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import { usePhukien } from "./context/PhukienContext";
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
@@ -28,23 +19,6 @@ export default function PrimarySearchAppBar() {
     const router = useRouter();
 
     const [STATUS_ADMIN, setStatusAdmin] = useState(5);
-    const { getItemsByQuery } = usePhukien();
-
-    const [searchText, setSearchText] = useState("");
-    const handleSearchChange = (event) => {
-        setSearchText(event.target.value); // Cập nhật state khi người dùng nhập
-
-    };
-    const handleKeyDown = async (event) => {
-        if (event.key === "Enter") {
-            getItemsByQuery(pathname, searchText)
-
-
-        }
-    };
-    
-
-    // const STATUS_ADMIN = (typeof window) == undefined ? 5:cal_Status(localStorage.getItem("userStatus"))
     useEffect(() => {
         if (typeof window !== "undefined") {
             const userStatus = localStorage.getItem("userStatus");
@@ -53,33 +27,6 @@ export default function PrimarySearchAppBar() {
             }
         }
     }, []);
-
-    // let pages = [
-    //     {
-    //         typeLink: 'sanpham',
-    //         nameLink: "Sản Phẩm"
-    //     },
-    //     {
-    //         typeLink: 'vatlieu',
-    //         nameLink: "Vật Liệu"
-    //     },
-    //     {
-    //         typeLink: 'phukien',
-    //         nameLink: "Phụ Kiện"
-    //     },
-    //     {
-    //         typeLink: 'larkUser',
-    //         nameLink: "lark User"
-    //     },
-    //     {
-    //         typeLink: 'partnerShip',
-    //         nameLink: "partnerShip"
-    //     }
-    //     ,
-    //     {
-    //         typeLink: 'editUsers',
-    //         nameLink: "tài khoản đăng nhập"
-    //     }];
 
     let pages = [
         {
@@ -117,7 +64,7 @@ export default function PrimarySearchAppBar() {
         router.push("/login");
     };
     pages = pages.filter(item => item !== false)
-    console.log(pages);
+
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -140,21 +87,10 @@ export default function PrimarySearchAppBar() {
                     >
                         Hehe
                     </Typography>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                            value={searchText} // Gắn state vào input
-                            onChange={handleSearchChange} // Hàm xử lý khi giá trị thay đổi
-                            onKeyDown={handleKeyDown} // Xử lý khi nhấn Enter
-                        />
-                    </Search>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+
+                    <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
                         {pages.map((itemkk, key) => (
-                            <Link className='linkfv' href={"/" + itemkk.typeLink} key={key} passHref onClick={() => getItemsByQuery("/" + itemkk.typeLink, "activeItemsToDedault")} >
+                            <Link className='linkfv' href={"/" + itemkk.typeLink} key={key} passHref >
                                 <Button className={(pathname == ("/" + itemkk.typeLink)) ? "activenavc" : "noactivenavc"}
 
 

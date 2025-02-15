@@ -1,17 +1,17 @@
 "use client";
-
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-
+import AllLoading from "../allLoading";
 import { Container, TextField, Button, Typography, Box, Checkbox, FormControlLabel } from "@mui/material";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [passWord, setpassWord] = useState("");
   const [message, setMessage] = useState("");
-  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
+    setLoading(true)
     e.preventDefault();
 
     console.log("Gửi request đến /api/auth/login:", { email, passWord });
@@ -29,12 +29,15 @@ export default function LoginPage() {
       setMessage("Đăng nhập thành công!");
       localStorage.setItem("userStatus", data.status);
       window.location.href = "/sanpham";
-      // router.push("/sanpham"); // Chuyển hướng sau khi đăng nhập
+
     } else {
       setMessage(data.message || "Đăng nhập thất bại");
     }
+    setLoading(false)
   };
-
+  if (loading) {
+    return <AllLoading />;
+  }
   return (
     <>
 
@@ -51,7 +54,7 @@ export default function LoginPage() {
           }}
         >
           {/* <Typography variant="h5" fontWeight="bold">Đăng nhập</Typography> */}
-          
+
           <Typography color="textSecondary" sx={{ mb: 2 }}>Liên hệ Admin để cấp tài khoản mới ! </Typography>
 
           <form onSubmit={handleLogin}>

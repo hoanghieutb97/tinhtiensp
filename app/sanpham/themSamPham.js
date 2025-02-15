@@ -1,34 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
-import LayerThemVL from "./layerThemVL";
-import { caculator_ShipingCost, tongTienLop, tinhTienVatLieu, tinhCanNang, tinhTienDongGoi, tinhTienPhuKien, tinhTienBangDinh, tinhTienXop, tinhTienMuc, tinhTienMangBoc, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDIen, tinhTienChietKhau, tinhTienHop, tinhTienThungDongHang, tinhTienKeoDan } from "@/lib/utils";
-
-import { usePhukien } from "../context/PhukienContext";
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import Button from '@mui/material/Button';
-import SendIcon from '@mui/icons-material/Send';
-import { Typography, IconButton, FormControlLabel, FormGroup, Switch } from "@mui/material";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import Add from "@mui/icons-material/Add";
-
-
-
+import LayerThemVL from './layerThemVL';
+import { caculator_ShipingCost, tongTienLop, tinhCanNang, cal_Status, tinhTienVL, createChatLark, URL_upload_cloudinary, initialWHZ, tagUserType, postSanPham, putSanPham } from '@/lib/utils';
+import { Box, InputLabel, MenuItem, FormControl, Select, TextField, InputAdornment, Button, Typography, IconButton, FormControlLabel, FormGroup, Switch, Modal } from '@mui/material';
+import { Send as SendIcon, PhotoCamera, Add, Close as CloseIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import Image from 'next/image';
 import SelectPhuKien_CLL from './selectPhuKien_CLL';
-import { Modal } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import Image from "next/image";
-import axios from "axios";
-import DeleteIcon from '@mui/icons-material/Delete';
-import { sanpham_larkUser, createChatLark, URL_upload_cloudinary, initialWHZ, initialVIP, initialStateVL, tagUserType, postSanPham, putSanPham } from "@/lib/utils";
-import { cal_Status } from "@/lib/utils";
-import { functions } from 'lodash';
-
 
 export default function ThemSanPham(props) {
     let typeCPN = props.typeCPN;
@@ -64,10 +41,13 @@ export default function ThemSanPham(props) {
 
     const [lop, setlop] = useState((typeCPN != "editProduct") ? [] : ItemSua.lop);
     const [isOpenSelectPK, setisOpenSelectPK] = useState(false);
-    const [tienVL, setTienVL] = useState(initialStateVL);
+
     const [thongSoTong, setThongSoTong] = useState((typeCPN != "editProduct") ? defaultThongSoTong : { ...defaultThongSoTong, ...ItemSua.thongSoTong });
     // const [thongSoTong, setThongSoTong] = useState((typeCPN != "editProduct") ? defaultThongSoTong : { ...defaultThongSoTong, ...ItemSua.thongSoTong, canChageTST: (typeCPN == "editProduct" && styleSP == "new") ? true : false });
     const [image, setImage] = useState(null);
+
+    const tienVL = tinhTienVL(lop, vatLieu, thongSoTong, phuKien)
+
     function CloseSelectPK(item) {
 
         setisOpenSelectPK(false);
@@ -105,7 +85,6 @@ export default function ThemSanPham(props) {
         let DataPost = {
             thongSoTong: thongSoTong,
             lop: lop,
-            // tienVL: tienVL,
             name: thongSoTong.product,
             namecode: thongSoTong.product.normalize("NFD") // Chuyển các ký tự có dấu thành dạng kết hợp (e.g., 'Hiếu' -> 'Hiếu')
                 .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
@@ -172,41 +151,6 @@ export default function ThemSanPham(props) {
 
     useEffect(() => {
         if (lop.length > 0) {
-            setTienVL({
-                ...tienVL,
-                tienVatLieu: Math.floor(tinhTienVatLieu(lop, vatLieu)),
-                tienMuc: Math.floor(tinhTienMuc(lop, vatLieu)),
-                tienThietke: Math.floor(tinhTienTK(lop, vatLieu)),
-                tienIn: Math.floor(tinhTienIn(lop, vatLieu)),
-                tienDien: Math.floor(tinhTienDIen(lop, vatLieu)),
-                tienChietKhauMay: Math.floor(tinhTienChietKhau(lop, vatLieu)),
-                tienCat: Math.floor(tinhTienCat(lop, vatLieu)),
-                tienKeoDan: Math.floor(tinhTienKeoDan(lop, vatLieu, thongSoTong)),
-                tienHop: Math.floor(tinhTienHop(lop, vatLieu, thongSoTong)),
-                TienBangDinh: Math.floor(tinhTienBangDinh(lop, vatLieu, thongSoTong)),
-                tienThungDongHang: Math.floor(tinhTienThungDongHang(lop, vatLieu, thongSoTong)),
-                tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
-                tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong)),
-                tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong, phuKien)),
-                tienDongGoi: Math.floor(tinhTienDongGoi(lop, vatLieu, thongSoTong))
-            })
-
-
-            // setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong)) })
-        }
-        else setTienVL({
-            ...initialStateVL,
-            tienHop: Math.floor(tinhTienHop(lop, vatLieu, thongSoTong)),
-            tienThungDongHang: Math.floor(tinhTienThungDongHang(lop, vatLieu, thongSoTong)),
-            TienBangDinh: Math.floor(tinhTienBangDinh(lop, vatLieu, thongSoTong)),
-            tienXop: Math.floor(tinhTienXop(lop, vatLieu, thongSoTong)),
-            tienMangBoc: Math.floor(tinhTienMangBoc(lop, vatLieu, thongSoTong)),
-            tienPhuKien: Math.floor(tinhTienPhuKien(lop, vatLieu, thongSoTong, phuKien)),
-        });
-
-    }, [lop, thongSoTong]);
-    useEffect(() => {
-        if (lop.length > 0) {
 
 
             if (thongSoTong.canChageTST) setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong)) })
@@ -214,11 +158,6 @@ export default function ThemSanPham(props) {
 
     }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.chieuNgang, thongSoTong.phuKien]);
 
-
-
-    function tongTien() {
-        return Object.values(tienVL).reduce((sum, value) => sum + value, 0);
-    }
 
     function handleAddLayer() {
         var item = {
@@ -377,7 +316,7 @@ export default function ThemSanPham(props) {
                                         <Button variant="contained" onClick={handleAddLayer} >Thêm lớp chất liệu </Button>
                                     </div>
                                     <div className="col-12">
-                                        {lop.map((item, key) => <LayerThemVL key={key} item={item} handleChangeThongSoTong={handleChangeThongSoTong} changeLopCL={changeLopCL} stt={key} xoaLayer={xoaLayer} />)}
+                                        {lop.map((item, key) => <LayerThemVL vatLieu={vatLieu} phuKien={phuKien} key={key} item={item} handleChangeThongSoTong={handleChangeThongSoTong} changeLopCL={changeLopCL} stt={key} xoaLayer={xoaLayer} />)}
                                     </div>
 
                                 </div>
@@ -722,13 +661,13 @@ export default function ThemSanPham(props) {
                                 <div className="tenpk">Tiền thiết kế: <span className="hhhg">{isNaN(tienVL.tienThietke) ? "0" : (tienVL.tienThietke).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền đóng gói: <span className="hhhg">{isNaN(tienVL.tienDongGoi) ? "0" : (tienVL.tienDongGoi).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền điện: <span className="hhhg">{isNaN(tienVL.tienDien) ? "0" : (tienVL.tienDien).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền băng dính: <span className="hhhg">{isNaN(tienVL.TienBangDinh) ? "0" : (tienVL.TienBangDinh).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền băng dính: <span className="hhhg">{isNaN(tienVL.tienBangDinh) ? "0" : (tienVL.tienBangDinh).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền keo dán: <span className="hhhg">{isNaN(tienVL.tienKeoDan) ? "0" : (tienVL.tienKeoDan).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền màng bọc: <span className="hhhg">{isNaN(tienVL.tienMangBoc) ? "0" : (tienVL.tienMangBoc).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền xốp: <span className="hhhg">{isNaN(tienVL.tienXop) ? "0" : (tienVL.tienXop).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền chiết khấu máy: <span className="hhhg">{isNaN(tienVL.tienChietKhauMay) ? "0" : (tienVL.tienChietKhauMay).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">
-                                    Tổng chi phí:    {tongTien().toLocaleString("en-US")} (đ)
+                                    Tổng chi phí:    {TongTienSX.toLocaleString("en-US")} (đ)
                                 </div>
 
                             </div>}

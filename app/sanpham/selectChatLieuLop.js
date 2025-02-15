@@ -1,14 +1,15 @@
 'use client';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { usePhukien } from "../context/PhukienContext";
+
 import Image from "next/image";
 const Fuse = require('fuse.js');
-import {  TextField, Box, Button } from "@mui/material";
+import { TextField, Box, Button } from "@mui/material";
 
 
-export default function SelectChatLieuLop({ onClose }) {
-    const { vatLieu } = usePhukien();
+export default function SelectChatLieuLop(props) {
+    const vatLieu = props.vatLieu;
+    const onClose = props.onClose;
 
     const [customValue, setCustomValue] = useState("");
     const [activeCL, setactiveCL] = useState(false);

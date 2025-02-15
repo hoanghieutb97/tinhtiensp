@@ -2,46 +2,59 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ModalThemPK from "./ModalThemPK";
+import ModalThemPK from "../components/ModalThemPK";
 import Image from "next/image";
-import { usePhukien } from "../context/PhukienContext";
+import { usePathname } from "next/navigation";
 import AllLoading from "../allLoading";
 import { Box, Typography, Button } from '@mui/material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import { getItemsByQuery, fetchPhuKien, fetchVatLieu, get_ShipingCost } from "@/lib/utils";
+const defauState = {
+  name: "",
+  price: "",
+  note: "",
+  nameCode: "",
+  image: null,
+  _id: null,
+  change: true,
+  canNang: 0,
+  dateCreate: Date.now()
+}
 export default function ProductList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [numberItem, setnumberItem] = useState(false);
-  const defauState = {
-    name: "",
-    price: "",
-    note: "",
-    nameCode: "",
-    image: null,
-    _id: null,
-    change: true,
-    canNang: 0,
-    dateCreate: Date.now()
-  }
-  const { loading, phukien, setLoadingALL, getItemsByQuery, activeItems } = usePhukien();
+  const [Items, setItems] = useState(defauState);
+  const [activeItems, setactiveItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const pathname = usePathname(); // Lấy đường dẫn hiện tại
+  const path = pathname.split("/").pop();
+
+
+
   useEffect(() => {
-    getItemsByQuery("/phukien", "");
+    fetchSanPham();
   }, []);
+
+  var fetchSanPham = async () => {
+    await getItemsAll(path);
+  }
 
   function handlesetIsModalOpen(params) {
     setIsModalOpen(params);
     setItems(defauState)
   }
-  const [Items, setItems] = useState(defauState);
-  function setValueItem(target, value) {
-    if (target == "default") {
-      setItems(defauState)
-    } else {
-      let itemxx = { ...Items };
-      itemxx[target] = value;
-      setItems(itemxx)
-    }
 
+  async function getItemsAll(param) {
+    setLoading(true);
+    let items = await getItemsByQuery("/" + param, "");
+    setactiveItems(items);
+    setItems(defauState);
+    setLoading(false);
+    if (isModalOpen) setIsModalOpen(false);
+    console.log("fetch......................");
   }
+
   function handleChangeActiveItem(item, key) {
     handlesetIsModalOpen(true);
     setnumberItem(key)
@@ -57,17 +70,34 @@ export default function ProductList() {
 
 
 
+
   if (loading) {
     return <AllLoading />;
   }
   return (
 
     <div>
-      <ModalThemPK setLoadingALL={setLoadingALL} handlesetIsModalOpen={handlesetIsModalOpen} isModalOpen={isModalOpen} item={Items} setValueItem={setValueItem} />
-  
+      {isModalOpen && <ModalThemPK setLoadingALL={(xx) => setLoading(xx)} handlesetIsModalOpen={handlesetIsModalOpen} isModalOpen={isModalOpen} item={Items} getItemsAll={getItemsAll} typeLink={path} />}
+
       <div className="container-fluid mt-2">
         <div className="row">
-          <div className="col-8">
+          <div className="col-12">
+            <div className="row">
+              <div className="col-8">
+                <button
+                  className="btn btn-primary w-100"
+                  onClick={() => handlesetIsModalOpen(true)}
+                  data-bs-toggle="modal"
+                  data-bs-target="#addAccessoryModal"
+                >
+                  Thêm phụ kiện
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="col-8 mt-3">
             <div className="row">
               {
                 activeItems.map((item, key) =>
@@ -78,17 +108,13 @@ export default function ProductList() {
                       <div className="tenpk">  Giá tiền: <span className="hhhg">{(+item.price).toLocaleString("en-US")}</span></div>
                       <div className="tenpk">  Cân Nặng: <span className="hhhg">{(+item.canNang).toLocaleString("en-US")}  (g)</span></div>
                       <div className="anhpk"> <Image priority src={item.imageUrl} alt="My GIF" width={500} height={300} className="anhpk" /></div>
-                      <div className="divsuabtn" onClick={() => handleChangeActiveItem(item, key)}>
-                        <Button
-                          variant="contained"
-                          startIcon={<BorderColorIcon />}
-                          color="primary"
-                          className="btnsuapk"
-                          size="small"
-                        >
-                          sửa
+                      <div className="ctnbthgjf">
+                        <Button variant="contained" color="success" className=' w-100 dvsdv' onClick={() => handleChangeActiveItem(item, key)}>
+                          Sửa
                         </Button>
                       </div>
+
+
                     </div>
 
                   </div>)
