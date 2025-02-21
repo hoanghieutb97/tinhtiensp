@@ -1,13 +1,16 @@
 'use client';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { usePhukien } from "../context/PhukienContext";
+
 import Image from "next/image";
 import { Typography, IconButton, TextField, Box, Button } from "@mui/material";
 const Fuse = require('fuse.js');
 
-export default function SelectPhuKien_CLL({ onClose }) {
-    let { phukien } = usePhukien();
+export default function SelectPhuKien_CLL(props) {
+    let onClose = props.onClose;
+    let phuKien = props.phuKien;
+    
+console.log(props);
 
     const [customValue, setCustomValue] = useState("");
     const [activeCL, setactiveCL] = useState(false);
@@ -35,9 +38,9 @@ export default function SelectPhuKien_CLL({ onClose }) {
         threshold: 0.3 // Mức độ chính xác (0 là chính xác hoàn toàn, 1 là chấp nhận sai lệch lớn)
     };
 
-    const fuse = new Fuse(phukien, options);
+    const fuse = new Fuse(phuKien, options);
     // const searchResult = fuse.search(textSearch);
-    const searchResult = textSearch ? fuse.search(textSearch).map(result => result.item) : phukien; // Nếu textSearch rỗng, trả về toàn bộ mảng
+    const searchResult = textSearch ? fuse.search(textSearch).map(result => result.item) : phuKien; // Nếu textSearch rỗng, trả về toàn bộ mảng
     console.log(searchResult);
 
 
@@ -73,7 +76,7 @@ export default function SelectPhuKien_CLL({ onClose }) {
                     </div>
                 </div>
 
-                
+
                 <div className="container">
                     <div className="row">
                         {

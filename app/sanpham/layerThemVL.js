@@ -125,8 +125,8 @@ export default function LayerThemVL(props) {
 
                     {/* Chiều dài */}
                     <div className="kvsvlsvlffs">
-                        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                            <TextField id="outlined-basic" label="Chiều ngang" variant="outlined" type="text" size="small"
+                        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
+                            <TextField id="outlined-basic" label="Chiều ngang" variant="outlined" type="number" size="small"
                                 value={props.item.chieuDai || ''}
                                 onChange={(e) => changeThongtinLop("chieuDai", e.target.value)}
                                 placeholder="Nhập số"
@@ -137,7 +137,7 @@ export default function LayerThemVL(props) {
 
                     {/* chiều rộng */}
                     <div className="kvsvlsvlffs">
-                        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
                             <TextField id="outlined-basic" label="Chiều dọc" variant="outlined" type="number" size="small"
                                 value={props.item.chieuRong || ''}
                                 onChange={(e) => changeThongtinLop("chieuRong", _.toNumber(e.target.value))}
@@ -153,7 +153,7 @@ export default function LayerThemVL(props) {
 
                     {/* số mặt */}
                     <div>{/* vật liệu */}
-                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                        <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
                             <InputLabel id="demo-simple-select-standard-label">Số mặt in</InputLabel>
                             <Select
                                 labelId="demo-simple-select-standard-label"
@@ -175,7 +175,7 @@ export default function LayerThemVL(props) {
 
                     {/* có cắt không */}
                     <div>
-                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                        <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
                             <InputLabel id="demo-simple-select-standard-label">Cut Laze</InputLabel>
                             <Select
                                 labelId="demo-simple-select-standard-label"
@@ -196,7 +196,7 @@ export default function LayerThemVL(props) {
 
                     {/* có khắc không */}
                     <div>
-                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                        <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
                             <InputLabel id="demo-simple-select-standard-label">Khắc</InputLabel>
                             <Select
                                 labelId="demo-simple-select-standard-label"

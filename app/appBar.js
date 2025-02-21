@@ -85,7 +85,7 @@ export default function PrimarySearchAppBar() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
-                        Hehe
+                        TÍnh Tiền SP
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>

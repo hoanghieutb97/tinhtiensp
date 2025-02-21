@@ -16,6 +16,8 @@ function page(props) {
     const [vatLieu, setVatLieu] = useState([]);
     const [Rate, setRate] = useState(0);
     const [ShippingCost, setShippingCost] = useState([]);
+    console.log(activeItems);
+
     async function fetchExchangeRate() {
         try {
             const response = await fetch(

@@ -375,7 +375,7 @@ export default function ThemSanPham(props) {
                                                 >
                                                     <CloseIcon />
                                                 </IconButton>
-                                                <SelectPhuKien_CLL onClose={CloseSelectPK} />
+                                                <SelectPhuKien_CLL onClose={CloseSelectPK} phuKien={props.phuKien} />
                                             </Box>
                                         </Modal>
                                     </div>
@@ -554,7 +554,7 @@ export default function ThemSanPham(props) {
 
                             {STATUS_ADMIN < 3 && <div className="prostt">
                                 <div className="col-12">
-                                    VIP Chốt:
+                                    Giá Chốt:
                                     <div className="row dpnam">
                                         {thongSoTong.vipChot.map((item, key) => <div className="pnampt" key={key}>
                                             <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '100%' } }} noValidate autoComplete="off">
@@ -579,7 +579,7 @@ export default function ThemSanPham(props) {
 
 
                                 <div className="col-12">
-                                    VIP Anh Tuấn Đưa:
+                                    Giá Anh Tuấn Đưa:
                                     <div className="row dpnam">
                                         {thongSoTong.vipaTuan.map((item, key) => <div className="pnampt" key={key}>
                                             <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '100%' } }} noValidate autoComplete="off">
@@ -597,7 +597,7 @@ export default function ThemSanPham(props) {
 
 
                                 <div className="col-12">
-                                    VIP Sale Đưa:
+                                    Giá Sale Đưa:
 
 
                                     {thongSoTong.vipSale.map((itemxx, keyxx) => <div className="row vtnvipsl dpnam mt-2" key={keyxx}>
@@ -647,7 +647,7 @@ export default function ThemSanPham(props) {
                                 <div className="tenpk">Cân thể tích: <span className={"hhhg " + ((thongSoTong.canNang < canNangTheTich) ? "re" : "")}>{canNangTheTich.toFixed(2)} (g)</span></div>
                                 <div className="tenpk">Cân thực tế: <span className={"hhhg " + ((thongSoTong.canNang > canNangTheTich) ? "re" : "")}>{thongSoTong.canNang} (g)</span></div>
                                 <div className="tenpk">Shipping cost: <span className="hhhg"> {(caculator_ShipingCost(ShippingCost, canTien)).toFixed(2)} ($)</span></div>
-                                <div className="tenpk">Shipping fee *10%: <span className="hhhg"> {(caculator_ShipingCost(ShippingCost, canTien) * 1.1).toFixed(2)} ($)</span></div>
+                                <div className="tenpk">Shipping fee: <span className="hhhg"> {(caculator_ShipingCost(ShippingCost, canTien) * 1.1).toFixed(2)} ($)</span></div>
 
                             </div>
                             {STATUS_ADMIN == 1 && <div className="col-12 mtcontainer mt-2">
@@ -666,6 +666,7 @@ export default function ThemSanPham(props) {
                                 <div className="tenpk">Tiền màng bọc: <span className="hhhg">{isNaN(tienVL.tienMangBoc) ? "0" : (tienVL.tienMangBoc).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền xốp: <span className="hhhg">{isNaN(tienVL.tienXop) ? "0" : (tienVL.tienXop).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền chiết khấu máy: <span className="hhhg">{isNaN(tienVL.tienChietKhauMay) ? "0" : (tienVL.tienChietKhauMay).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền Phụ Phí: <span className="hhhg">{(TongTienSX / 10).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">
                                     Tổng chi phí:    {TongTienSX.toLocaleString("en-US")} (đ)
                                 </div>

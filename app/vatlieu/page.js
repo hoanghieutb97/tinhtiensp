@@ -91,7 +91,7 @@ export default function ProductList() {
                   data-bs-toggle="modal"
                   data-bs-target="#addAccessoryModal"
                 >
-                  Thêm phụ kiện
+                  Thêm Vật Liệu
                 </button>
               </div>
             </div>

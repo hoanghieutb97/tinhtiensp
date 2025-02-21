@@ -50,7 +50,7 @@ export default function SelectChatLieuLop(props) {
 
                 <div className='bthtyth'>
                     <div className="row fvvsdvds">
-                        <p className='title pk'>Danh sách phụ kiện</p>
+                        <p className='title pk'>Danh sách chất liệu</p>
                         <div className="col-6">
                             <Button variant="contained" onClick={handleSave} fullWidth > Lưu</Button>
                         </div>
