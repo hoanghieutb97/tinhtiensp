@@ -128,7 +128,7 @@ export default function LayerThemVL(props) {
                         <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
                             <TextField id="outlined-basic" label="Chiều ngang" variant="outlined" type="number" size="small"
                                 value={props.item.chieuDai || ''}
-                                onChange={(e) => changeThongtinLop("chieuDai", e.target.value)}
+                                onChange={(e) => changeThongtinLop("chieuDai", _.toNumber(e.target.value))}
                                 placeholder="Nhập số"
                                 slotProps={{ input: { endAdornment: <InputAdornment position="end">inch</InputAdornment>, }, }}
                             />

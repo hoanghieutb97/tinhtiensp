@@ -36,7 +36,10 @@ export function middleware(req) {
   ) {
     return NextResponse.next();
   }
-
+  // ✅ Nếu đã đăng nhập mà vào trang login, redirect về home
+  if (token && req.nextUrl.pathname === "/login") {
+    return NextResponse.redirect(new URL("/sanpham", req.url));
+  }
   if (!token && !publicRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
     if (req.nextUrl.pathname.startsWith("/api")) {
       return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });

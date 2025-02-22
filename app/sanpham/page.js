@@ -1,14 +1,12 @@
 'use client';
 import React from 'react';
-import ThemSanPham from './themSamPham';
 import AllLoading from "../allLoading";
-import { usePhukien } from "../context/PhukienContext";
 import { useState, useEffect } from 'react';
-import Image from "next/image";
 import ShowSanPham from './showSanPham';
-import Button from '@mui/material/Button';
-import { logging } from '@/next.config';
+import { TextField, InputAdornment } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { getItemsByQuery, fetchPhuKien, fetchVatLieu, get_ShipingCost } from "@/lib/utils";
+const Fuse = require('fuse.js');
 function page(props) {
     const [loading, setLoading] = useState(false); // Thêm trạng thái loading
     const [activeItems, setactiveItems] = useState([]);
@@ -16,7 +14,12 @@ function page(props) {
     const [vatLieu, setVatLieu] = useState([]);
     const [Rate, setRate] = useState(0);
     const [ShippingCost, setShippingCost] = useState([]);
-    console.log(activeItems);
+    const [query, setQuery] = useState("");
+    const handleChangeSearch = (event) => {
+        const value = event.target.value;
+        setQuery(value);
+
+    };
 
     async function fetchExchangeRate() {
         try {
@@ -67,8 +70,20 @@ function page(props) {
         setLoading(true); // Bắt đầu trạng thái loading
         let items = await getItemsByQuery("/" + param, "");
         setactiveItems(items);
+        setQuery("")
         setLoading(false); // Bắt đầu trạng thái loading
+
     }
+    const options = {
+        keys: ['name'], // Trường cần tìm kiếm
+        threshold: 0.3 // Mức độ chính xác (0 là chính xác hoàn toàn, 1 là chấp nhận sai lệch lớn)
+    };
+
+    const fuse = new Fuse(activeItems, options);
+    // const searchResult = fuse.search(textSearch);
+    const searchResult = query ? fuse.search(query).map(result => result.item) : activeItems; // Nếu textSearch rỗng, trả về toàn bộ mảng
+    console.log(searchResult);
+
 
 
     if (loading) {
@@ -78,9 +93,30 @@ function page(props) {
 
     return (
         <div className='vdsdvs'>
+            <div className="timkiemheh">
+                <TextField
+                    label="Tìm kiếm..."
+                    variant="outlined"
+                    fullWidth
+                    sx={{
+                        "& .MuiInputBase-root": {
+                            height: "40px", // Chiều cao input
+                        },
+                    }}
+                    value={query}
+                    onChange={handleChangeSearch}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+            </div>
 
 
-            <ShowSanPham listSP={activeItems} phuKien={phuKien} vatLieu={vatLieu} setLoading={(param) => setLoading(param)} getItemsAll={getItemsAll} Rate={Rate} ShippingCost={ShippingCost} />
+            <ShowSanPham listSP={searchResult} phuKien={phuKien} vatLieu={vatLieu} setLoading={(param) => setLoading(param)} getItemsAll={getItemsAll} Rate={Rate} ShippingCost={ShippingCost} />
 
         </div>
     );

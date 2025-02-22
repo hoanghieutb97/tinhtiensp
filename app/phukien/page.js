@@ -7,8 +7,12 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import AllLoading from "../allLoading";
 import { Box, Typography, Button } from '@mui/material';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
+import { TextField, InputAdornment } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+
 import { getItemsByQuery, fetchPhuKien, fetchVatLieu, get_ShipingCost } from "@/lib/utils";
+const Fuse = require('fuse.js');
+
 const defauState = {
   name: "",
   price: "",
@@ -31,6 +35,12 @@ export default function ProductList() {
   const path = pathname.split("/").pop();
 
 
+  const [query, setQuery] = useState("");
+  const handleChangeSearch = (event) => {
+    const value = event.target.value;
+    setQuery(value);
+
+  };
 
   useEffect(() => {
     fetchSanPham();
@@ -50,6 +60,7 @@ export default function ProductList() {
     let items = await getItemsByQuery("/" + param, "");
     setactiveItems(items);
     setItems(defauState);
+    setQuery("")
     setLoading(false);
     if (isModalOpen) setIsModalOpen(false);
     console.log("fetch......................");
@@ -68,6 +79,14 @@ export default function ProductList() {
   }
 
 
+  const options = {
+    keys: ['name'], // Trường cần tìm kiếm
+    threshold: 0.3 // Mức độ chính xác (0 là chính xác hoàn toàn, 1 là chấp nhận sai lệch lớn)
+  };
+
+  const fuse = new Fuse(activeItems, options);
+
+  const searchResult = query ? fuse.search(query).map(result => result.item) : activeItems; // Nếu textSearch rỗng, trả về toàn bộ mảng
 
 
 
@@ -81,6 +100,28 @@ export default function ProductList() {
 
       <div className="container-fluid mt-2">
         <div className="row">
+          <div className="timkiemheh">
+            <TextField
+              label="Tìm kiếm..."
+              variant="outlined"
+              fullWidth
+              sx={{
+                "& .MuiInputBase-root": {
+                  height: "40px", // Chiều cao input
+                },
+              }}
+              value={query}
+              onChange={handleChangeSearch}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
+
           <div className="col-12">
             <div className="row">
               <div className="col-8">
@@ -90,7 +131,7 @@ export default function ProductList() {
                   data-bs-toggle="modal"
                   data-bs-target="#addAccessoryModal"
                 >
-                  Thêm phụ kiện
+                  Thêm Phụ Kiện
                 </button>
               </div>
             </div>
@@ -100,7 +141,7 @@ export default function ProductList() {
           <div className="col-8 mt-3">
             <div className="row">
               {
-                activeItems.map((item, key) =>
+                searchResult.map((item, key) =>
                   <div className={("pkhh col-3")} key={key} onClick={() => handleClickItem(item, key)} >
                     <div className={("ctnbtnrrrr") + ((key == numberItem) ? " borderactive" : "")}>
 

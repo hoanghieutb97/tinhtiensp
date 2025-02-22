@@ -44,6 +44,11 @@
   position: relative;
 }
 
+.timkiemheh {
+  width: 500px !important;
+  margin: 20px;
+}
+
 .col-12.mtcontainer {
   background: #fff;
   padding: 10px;
@@ -54,7 +59,7 @@
   position: sticky;
   top: 0;
   height: 90vh;
-
+  overflow: auto;
 }
 
 .ctnbthgjf {

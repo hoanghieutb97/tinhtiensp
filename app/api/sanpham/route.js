@@ -17,7 +17,11 @@ clientPromise = globalThis._mongoClientPromise;
 
 export async function POST(req) {
   try {
-    const data = await req.json(); // Lấy dữ liệu từ body request
+    let data = await req.json(); // Lấy dữ liệu từ body request
+    let anh = data.thongSoTong.anh;
+    if (anh.startsWith("data:image")) data.thongSoTong.anh = "https://res.cloudinary.com/dxrfvjrq8/image/upload/v1738575736/vatlieu/ehnfajfbvybsb0xty3ic.png"
+
+
     const client = await clientPromise; // Sử dụng kết nối đã tái sử dụng
     const db = client.db("test"); // Tên database
     const collection = db.collection("sanpham"); // Tên collection
@@ -33,7 +37,7 @@ export async function POST(req) {
 export async function PUT(req) {
 
   try {
-    const { id, updateData } = await req.json(); // Lấy ID và dữ liệu cần cập nhật từ body
+    let { id, updateData } = await req.json(); // Lấy ID và dữ liệu cần cập nhật từ body
 
 
     if (!id || !updateData) {
@@ -42,7 +46,8 @@ export async function PUT(req) {
         { status: 400 }
       );
     }
-
+    let anh = updateData.thongSoTong.anh;
+    if (anh.startsWith("data:image")) updateData.thongSoTong.anh = "https://res.cloudinary.com/dxrfvjrq8/image/upload/v1738575736/vatlieu/ehnfajfbvybsb0xty3ic.png"
     const client = await clientPromise;
     const db = client.db("test"); // Tên database
     const collection = db.collection("sanpham"); // Tên collection
@@ -85,7 +90,7 @@ export async function GET(req) {
       data = await collection
         .find({ name: { $regex: searchQuery, $options: "i" } }) // Tìm kiếm theo trường "name"
         .toArray();
-   
+
     } else {
       // Nếu không có tham số, trả về toàn bộ dữ liệu
       data = await collection.find({}).toArray();
@@ -111,7 +116,7 @@ export async function DELETE(req) {
       );
     }
 
-    
+
 
     const client = await clientPromise;
     const db = client.db("test"); // Tên database
