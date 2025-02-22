@@ -637,7 +637,7 @@ export default function ThemSanPham(props) {
                                     <div className="tenpk">Chi phí / giá bán: <span className="hhhg">{(TongTienSX * 100 / (Rate * thongSoTong.vipChot[3])).toFixed(2)} (%)</span></div>
                                     <div className="tenpk">Tổng lợi nhuận: <span className="hhhg">{((thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(2)} ($)</span></div>
                                     <div className="tenpk">% Lợi nhuận: <span className="hhhg">{(((thongSoTong.vipChot[3]) - TongTienSX / Rate) * 100 / thongSoTong.vipChot[3]).toFixed(2)} (%)</span></div>
-                                    <div className="tenpk">Lợi nhuận sản xuất: <span className="hhhg">{(0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate)).toFixed(2)} ($)</span></div>
+                                    {STATUS_ADMIN == 1 && <div className="tenpk">Lợi nhuận sản xuất: <span className="hhhg">{(0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate)).toFixed(2)} ($)</span></div>}
                                     <div className="tenpk">giá bán FullFill: <span className="hhhg ">{((TongTienSX / (Rate)) + (0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate))).toFixed(2)} ($)</span></div>
                                 </div>
                             </div>
