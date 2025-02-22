@@ -150,14 +150,18 @@ export default function ThemSanPham(props) {
 
 
     useEffect(() => {
+        console.log(thongSoTong.phuKien);
         if (lop.length > 0) {
 
 
-            if (thongSoTong.canChageTST) setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong)) })
+            if (thongSoTong.canChageTST) setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong, phuKien)) })
         }
 
-    }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.chieuNgang, thongSoTong.phuKien]);
+    }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.chieuNgang, thongSoTong.phuKien.length]);
 
+
+    console.log(thongSoTong.phuKien);
+    console.log(thongSoTong.phuKien);
 
     function handleAddLayer() {
         var item = {
@@ -385,7 +389,7 @@ export default function ThemSanPham(props) {
                                 <div className="container">
                                     <div className="row">
                                         {initialWHZ.map((item, key) => <div className="col-3" key={key}>
-                                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
+                                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
                                                 <TextField id="outlined-basic" label={item.nameSTT} variant="outlined" type="number" size="small"
                                                     value={thongSoTong[item.valueSTT]}
                                                     onChange={(e) => handleChangeThongSoTong(item.valueSTT, e.target.value)}
@@ -651,24 +655,24 @@ export default function ThemSanPham(props) {
 
                             </div>
                             {STATUS_ADMIN == 1 && <div className="col-12 mtcontainer mt-2">
-                                <div className="tenpk">Tiền vật liệu: <span className="hhhg">{isNaN(tienVL.tienVatLieu) ? "0" : (tienVL.tienVatLieu).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền phụ kiện: <span className="hhhg">{isNaN(tienVL.tienPhuKien) ? "0" : (tienVL.tienPhuKien).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền vỏ hộp: <span className="hhhg">{isNaN(tienVL.tienHop) ? "0" : (tienVL.tienHop).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền thùng hàng: <span className="hhhg">{isNaN(tienVL.tienThungDongHang) ? "0" : (tienVL.tienThungDongHang).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền mực: <span className="hhhg">{isNaN(tienVL.tienMuc) ? "0" : (tienVL.tienMuc).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền công in: <span className="hhhg">{isNaN(tienVL.tienIn) ? "0" : (tienVL.tienIn).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền công cắt: <span className="hhhg">{isNaN(tienVL.tienCat) ? "0" : (tienVL.tienCat).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền thiết kế: <span className="hhhg">{isNaN(tienVL.tienThietke) ? "0" : (tienVL.tienThietke).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền đóng gói: <span className="hhhg">{isNaN(tienVL.tienDongGoi) ? "0" : (tienVL.tienDongGoi).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền điện: <span className="hhhg">{isNaN(tienVL.tienDien) ? "0" : (tienVL.tienDien).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền băng dính: <span className="hhhg">{isNaN(tienVL.tienBangDinh) ? "0" : (tienVL.tienBangDinh).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền keo dán: <span className="hhhg">{isNaN(tienVL.tienKeoDan) ? "0" : (tienVL.tienKeoDan).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền màng bọc: <span className="hhhg">{isNaN(tienVL.tienMangBoc) ? "0" : (tienVL.tienMangBoc).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền xốp: <span className="hhhg">{isNaN(tienVL.tienXop) ? "0" : (tienVL.tienXop).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Tiền chiết khấu máy: <span className="hhhg">{isNaN(tienVL.tienChietKhauMay) ? "0" : (tienVL.tienChietKhauMay).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền vật liệu: <span className="hhhg">{isNaN(tienVL.tienVatLieu) ? "0" : Math.floor(tienVL.tienVatLieu).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền phụ kiện: <span className="hhhg">{isNaN(tienVL.tienPhuKien) ? "0" : Math.floor(tienVL.tienPhuKien).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền vỏ hộp: <span className="hhhg">{isNaN(tienVL.tienHop) ? "0" : Math.floor(tienVL.tienHop).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền thùng hàng: <span className="hhhg">{isNaN(tienVL.tienThungDongHang) ? "0" : Math.floor(tienVL.tienThungDongHang).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền mực: <span className="hhhg">{isNaN(tienVL.tienMuc) ? "0" : Math.floor(tienVL.tienMuc).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền công in: <span className="hhhg">{isNaN(tienVL.tienIn) ? "0" : Math.floor(tienVL.tienIn).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền công cắt: <span className="hhhg">{isNaN(tienVL.tienCat) ? "0" : Math.floor(tienVL.tienCat).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền thiết kế: <span className="hhhg">{isNaN(tienVL.tienThietke) ? "0" : Math.floor(tienVL.tienThietke).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền đóng gói: <span className="hhhg">{isNaN(tienVL.tienDongGoi) ? "0" : Math.floor(tienVL.tienDongGoi).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền điện: <span className="hhhg">{isNaN(tienVL.tienDien) ? "0" : Math.floor(tienVL.tienDien).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền băng dính: <span className="hhhg">{isNaN(tienVL.tienBangDinh) ? "0" : Math.floor(tienVL.tienBangDinh).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền keo dán: <span className="hhhg">{isNaN(tienVL.tienKeoDan) ? "0" : Math.floor(tienVL.tienKeoDan).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền màng bọc: <span className="hhhg">{isNaN(tienVL.tienMangBoc) ? "0" : Math.floor(tienVL.tienMangBoc).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền xốp: <span className="hhhg">{isNaN(tienVL.tienXop) ? "0" : Math.floor(tienVL.tienXop).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền chiết khấu máy: <span className="hhhg">{isNaN(tienVL.tienChietKhauMay) ? "0" : Math.floor(tienVL.tienChietKhauMay).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền Phụ Phí: <span className="hhhg">{(TongTienSX / 10).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">
-                                    Tổng chi phí:    {TongTienSX.toLocaleString("en-US")} (đ)
+                                    Tổng chi phí:    {Math.floor(TongTienSX).toLocaleString("en-US")} (đ)
                                 </div>
 
                             </div>}
