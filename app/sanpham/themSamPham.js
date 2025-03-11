@@ -662,6 +662,7 @@ export default function ThemSanPham(props) {
                                 <div className="tenpk">Tiền mực: <span className="hhhg">{isNaN(tienVL.tienMuc) ? "0" : Math.floor(tienVL.tienMuc).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền công in: <span className="hhhg">{isNaN(tienVL.tienIn) ? "0" : Math.floor(tienVL.tienIn).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền công cắt: <span className="hhhg">{isNaN(tienVL.tienCat) ? "0" : Math.floor(tienVL.tienCat).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Tiền công khắc: <span className="hhhg">{isNaN(tienVL.tienKhac) ? "0" : Math.floor(tienVL.tienKhac).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền thiết kế: <span className="hhhg">{isNaN(tienVL.tienThietke) ? "0" : Math.floor(tienVL.tienThietke).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền đóng gói: <span className="hhhg">{isNaN(tienVL.tienDongGoi) ? "0" : Math.floor(tienVL.tienDongGoi).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền điện: <span className="hhhg">{isNaN(tienVL.tienDien) ? "0" : Math.floor(tienVL.tienDien).toLocaleString("en-US")} (đ)</span></div>
