@@ -86,12 +86,13 @@ function page(props) {
 
 
 
-    if (loading) {
-        return <AllLoading />;
-    }
+    // if (loading) {
+    //     return <AllLoading />;
+    // }
 
 
-    return (
+    return (<>
+        {loading ? <AllLoading /> : ""}
         <div className='vdsdvs'>
             <div className="timkiemheh">
                 <TextField
@@ -119,6 +120,7 @@ function page(props) {
             <ShowSanPham listSP={searchResult} phuKien={phuKien} vatLieu={vatLieu} setLoading={(param) => setLoading(param)} getItemsAll={getItemsAll} Rate={Rate} ShippingCost={ShippingCost} />
 
         </div>
+    </>
     );
 
 }

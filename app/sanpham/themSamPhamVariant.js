@@ -57,7 +57,9 @@ export default function ThemSanPham(props) {
 
     const [thongSoTong, setThongSoTong] = useState(defaultThongSoTong);
 
-    const [image, setImage] = useState(null);
+    const [ImageUrlPC, setImageUrlPC] = useState(null);
+    const [ImageBase64, setImageBase64] = useState();
+    const [ImageCloudiaryUrl, setImageCloudiaryUrl] = useState(undefined);
 
 
 
@@ -67,7 +69,9 @@ export default function ThemSanPham(props) {
     }
     function CloseSelectPKTong(item) {
         setisOpenSelectPKTong(false);
-        setPhuKienTong([...PhuKienTong, item])
+        console.log([...PhuKienTong, ...item]);
+
+        setPhuKienTong([...PhuKienTong, ...item])
     }
 
     function handleDeletePhuKien(key) {
@@ -87,17 +91,17 @@ export default function ThemSanPham(props) {
         const file = event.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
-            setImage(imageUrl);
+            setImageUrlPC(imageUrl);
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result;
-                setThongSoTong({ ...thongSoTong, anh: base64String }); // Cần định nghĩa setBase64Image trước
+                setImageBase64(base64String); // Cần định nghĩa setBase64Image trước
             };
             reader.readAsDataURL(file); // Đọc file dưới dạng Data URL (Base64)
         }
         else {
-            setImage(null);
-            setThongSoTong({ ...thongSoTong, anh: "" }); // Cần định nghĩa setBase64Image trước
+            setImageUrlPC(null);
+            setImageBase64(undefined)
         }
     };
 
@@ -110,70 +114,21 @@ export default function ThemSanPham(props) {
 
 
     const HandlethemSanPham = async () => {
-        let DataPost = {
-            thongSoTong: thongSoTong,
-            lop: lop,
-            name: thongSoTong.product,
-            namecode: thongSoTong.product.normalize("NFD") // Chuyển các ký tự có dấu thành dạng kết hợp (e.g., 'Hiếu' -> 'Hiếu')
-                .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
-                .replace(/[^a-zA-Z]/g, "") // Giữ lại các ký tự a-z, A-Z
-                .toLowerCase(),
-        }
-
         props.setLoading(true);
-
-        if (styleSP == "new") {
-            if (image == null && DataPost.thongSoTong.anh == "") { alert("thiếu ảnh..."); props.setLoading(false); return false }
-            let imageUrl
-            try {
-
-                // kiểm tra xem up ảnh chưa, chưa up thì up
-                if (!DataPost.thongSoTong.anh.startsWith("https")) {
-                    imageUrl = await URL_upload_cloudinary(thongSoTong.anh);
-                    if (!imageUrl) {
-                        alert("lỗi up ảnh");
-                        return false;
-                    }
-                    DataPost.thongSoTong.anh = imageUrl;
-                }
-
-                // nếu chưa tạo tin nhắn, thì giờ tạo
-                if (checkNewMessenger(DataPost)) {
-                    let ID_Messenger = await createChatLark((imageUrl) ? imageUrl : DataPost.thongSoTong.anh, DataPost.thongSoTong.type, thongSoTong.product);
-                    DataPost.thongSoTong.idChat = ID_Messenger;
-                } else {
-                    const StatusTagUserType = await tagUserType(DataPost.thongSoTong);
-                }
-
-                let statusPostSanPham = await postSanPham(DataPost);
-
-
-
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Không thể thêm phụ kiện!");
-            } finally {
-
-            }
-        }
-        else if (styleSP == "old") {
-            if (DataPost.namecode !== ItemSua.namecode) {
-                // đổi product và 
-            }
-            if (DataPost.thongSoTong.variant !== ItemSua.thongSoTong.variant) {
-                // đổi product và 
-            }
-            if (DataPost.thongSoTong.type !== ItemSua.thongSoTong.type) {
-                const StatusTagUserType = await tagUserType(DataPost.thongSoTong);
-            }
-
-            let statusPutSanPham = await putSanPham(ItemSua._id, DataPost)
+        for (let i = 0; i < TongTatCa.length; i++) {
+            let DataPost = TongTatCa[i];
+            console.log(DataPost);
+            let statusPostSanPham = await postSanPham(DataPost);
+            console.log(statusPostSanPham);
 
         }
+
+
+
 
 
         props.getItemsAll("sanpham");
-        // props.setLoading(false)
+        props.setLoading(false)
     };
 
 
@@ -252,11 +207,12 @@ export default function ThemSanPham(props) {
         kt.splice(key, 1);
         setKichThuocVariant(kt)
     }
-    function tinhToanTongTatCa(lop, phuKienVariant, PhuKienTong, KichThuocVariant) {
+    function tinhToanTongTatCa(lop, phuKienVariant, PhuKienTong, KichThuocVariant, vatLieu, phuKien) {
 
 
-        function mixData(lop, phuKienVariant, PhuKienTong, KichThuocVariant) {
+        function mixData(lop, phuKienVariant, PhuKienTong, KichThuocVariant, vatLieu, phuKien) {
             let result = [];
+
 
             // Nếu bất kỳ mảng nào rỗng, thay thế bằng mảng có một phần tử trống
             if (lop.length === 0) lop = [{ name: "", value: [] }];
@@ -267,23 +223,62 @@ export default function ThemSanPham(props) {
             lop.forEach(l => {
                 phuKienVariant.forEach(p => {
                     KichThuocVariant.forEach(k => {
+                        let thongSoTong = {
+                            doCao: "1.5",
+                            chieuNgang: (+k.value[0]) + 1.5,
+                            chieuDoc: (+k.value[1]) + 1.5,
+                            xop: "xop5mm",
+                            anh: ImageCloudiaryUrl,
+                            product: Product,
+                            variant: `${k.name}/${l.name}/${p.name}`.trim(),
+                            note: "không",
+                            type: "demo",
+                            canNang: "",
+                            phuKien: [...phuKienVariant.map(itemx => itemx.value[0]), ...PhuKienTong].filter(itemp => itemp !== undefined),
+                            canChageTST: true,
+                            idChat: "",
+                            dateCreate: Date.now(),
+                            vipaTuan: [0, 0, 0, 0, 0],
+                            vipChot: [0, 0, 0, 0, 0],
+                            vipSale: [[0, 0, 0, 0, 0]],
+                            noteVipSale: [""],
+
+                        }
+                        let lop = l.value.map(item => ({ ...item, chieuDai: k.value[0], chieuRong: k.value[1] }));
+
                         result.push({
-                            name: `${l.name} ${p.name} ${k.name}`.trim(),
-                            value: {
-                                lop: l.value.map(item => ({ ...item, chieuDai: k.value[0], chieuRong: k.value[1] })),
-                                // lop: { ...l.value, lop: lop.map(item => ({ ...item, chieuDai: k.value[0], chieuRong: k.value[1] })) },
-                                phukienVariant: p.value,
-                                kichthuoc: k.value
-                            }
+                            lop: lop,
+                            name: Product,
+                            nameCode: Product.normalize("NFD") // Chuyển các ký tự có dấu thành dạng kết hợp (e.g., 'Hiếu' -> 'Hiếu')
+                                .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
+                                .replace(/[^a-zA-Z]/g, "") // Giữ lại các ký tự a-z, A-Z
+                                .toLowerCase(),
+                            thongSoTong: { ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong, phuKien)) }
+
+
                         });
                     });
                 });
             });
             return result;
         }
-        const mixedData = mixData(lop, phuKienVariant, PhuKienTong, KichThuocVariant);
+        const mixedData = mixData(lop, phuKienVariant, PhuKienTong, KichThuocVariant, vatLieu, phuKien);
         console.log(mixedData);
+
+        setTongTatCa(mixedData)
+
     }
+    async function handleUpAnh() {
+        // kiểm tra xem up ảnh chưa, chưa up thì up
+        props.setLoading(true);
+        let images = await URL_upload_cloudinary(ImageBase64);
+        if (!images) {
+            setImageCloudiaryUrl(undefined)
+        }
+        else setImageCloudiaryUrl(images)
+        props.setLoading(false);
+    }
+    console.log(ImageCloudiaryUrl);
 
     return (
         <div className="cngjgfh svdvs">
@@ -294,12 +289,76 @@ export default function ThemSanPham(props) {
                             <Button variant="contained" onClick={props.dongCTN} className="btn btn-danger btvrrr"  >X </Button>
                             <div className="container">
                                 <div className="col-12">
-                                    <button onClick={() => tinhToanTongTatCa([...lop], [...phuKienVariant], [...PhuKienTong], [...KichThuocVariant])}>Tính Toán Variant</button>
+                                    <button onClick={() => tinhToanTongTatCa([...lop], [...phuKienVariant], [...PhuKienTong], [...KichThuocVariant], vatLieu, phuKien)}>Tính Toán Variant</button>
+                                    {TongTatCa.map((item, key) => <div className="svvsdvtg" key={key}>
+                                        <span className="sttttt">{key + 1}) </span> <span className="prooducttongg">{item.thongSoTong.product}</span> <span className="prooducttongggfgg">{item.thongSoTong.variant}</span>
+                                    </div>
+                                    )}
+                                </div>
+                                <div className="row">
+                                    <div className="col-6">
+                                        <div className="row">
+
+                                            <div className="col-12">
+                                                <TextField
+                                                    label="Product"
+                                                    variant="standard"
+                                                    color="warning"
+                                                    focused
+                                                    value={Product || ''}
+                                                    onChange={(e) => setProduct(e.target.value)}
+                                                    placeholder="Nhập Product Name"
+                                                    fullWidth
+                                                />
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div className="col-6">
+
+                                        <Box>
+                                            <Typography variant="h6" gutterBottom>
+                                                Tải lên ảnh:
+                                            </Typography>
+                                            <Button
+                                                variant="contained"
+                                                component="label"
+                                                startIcon={<PhotoCamera />}
+                                                color="primary"
+                                            >
+                                                Chọn ảnh
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={handleChonAnh}
+                                                    hidden
+                                                />
+                                            </Button>
+
+                                            <div className="anhtailen">
+                                                <img src={(ImageUrlPC) ? ImageUrlPC : (thongSoTong.anh !== "") ? thongSoTong.anh : null} alt="Uploaded" className='amttt' />
+                                            </div>
+                                            <Button
+                                                variant="contained"
+                                                color={(ImageCloudiaryUrl == undefined) ? "primary" : "secondary"}
+                                                onClick={handleUpAnh}
+                                            >
+                                                UpLoad
+
+                                            </Button>
+
+                                        </Box>
+
+                                    </div>
+
+
                                 </div>
                                 <div className="col-12">
                                     <Button variant="contained" onClick={() => handleAddKichThuocVariant()} >Thêm Kích Thước </Button>
                                     {KichThuocVariant.map((itemk, keyk) => <div className="vsdv sdvdsvds" key={keyk}  >
-                                        {itemk.value.map((itemSTT, keySTT) => <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
+                                        {itemk.value.map((itemSTT, keySTT) => <Box key={keySTT} component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
                                             <TextField id="outlined-basic" label={keySTT == 0 ? "Chiều dài" : "chiều Rộng"} variant="outlined" type="number" size="small"
                                                 value={itemSTT || ''}
                                                 onChange={(e) => changeKichThuocVariant(keyk, _.toNumber(e.target.value), keySTT)}
@@ -482,75 +541,7 @@ export default function ThemSanPham(props) {
                                     </div>
 
 
-                                    <div className="row">
-                                        <div className="col-6">
-                                            <div className="row">
 
-                                                <div className="col-12">
-                                                    <TextField
-                                                        label="Product"
-                                                        variant="standard"
-                                                        color="warning"
-                                                        focused
-                                                        value={Product || ''}
-                                                        onChange={(e) => setProduct(e.target.value)}
-                                                        placeholder="Nhập Product Name"
-                                                        fullWidth
-                                                    />
-                                                    <TextField
-                                                        label="Variant"
-                                                        variant="standard"
-                                                        color="warning"
-                                                        focused
-                                                        value={variant || ''}
-                                                        onChange={(e) => setvariant(e.target.value)}
-                                                        placeholder="Nhập Variant Name"
-                                                        fullWidth
-                                                    />
-                                                </div>
-
-
-
-
-
-                                            </div>
-
-
-
-
-                                        </div>
-                                        <div className="col-6">
-
-                                            <Box>
-                                                <Typography variant="h6" gutterBottom>
-                                                    Tải lên ảnh:
-                                                </Typography>
-                                                <Button
-                                                    variant="contained"
-                                                    component="label"
-                                                    startIcon={<PhotoCamera />}
-                                                    color="primary"
-                                                >
-                                                    Chọn ảnh
-                                                    <input
-                                                        type="file"
-                                                        accept="image/*"
-                                                        onChange={handleChonAnh}
-                                                        hidden
-                                                    />
-                                                </Button>
-
-                                                <div className="anhtailen">
-                                                    <img src={(image) ? image : (thongSoTong.anh !== "") ? thongSoTong.anh : null} alt="Uploaded" className='amttt' />
-                                                </div>
-
-
-                                            </Box>
-
-                                        </div>
-
-
-                                    </div>
                                 </div>
 
 
@@ -574,7 +565,7 @@ export default function ThemSanPham(props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
 
 
 

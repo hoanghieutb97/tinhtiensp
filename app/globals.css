@@ -11,10 +11,14 @@
 
 .sdvdsvsdvsdlaoding {
   width: 100%;
-  height: 80vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  z-index: 999999;
+  background: #fff;
+  top: 0;
 }
 
 .pnampt {
@@ -58,10 +62,11 @@
   padding: 10px;
   border-radius: 11px;
 }
+
 .vsdv.sdvdsvds {
-  display: flex
-;
+  display: flex;
 }
+
 .vvdvssdvsdvsdv {
   position: sticky;
   top: 0;
