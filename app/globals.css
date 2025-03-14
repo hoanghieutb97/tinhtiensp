@@ -44,6 +44,10 @@
   position: relative;
 }
 
+.activekety {
+  border: 2px solid;
+}
+
 .timkiemheh {
   width: 500px !important;
   margin: 20px;
@@ -54,7 +58,10 @@
   padding: 10px;
   border-radius: 11px;
 }
-
+.vsdv.sdvdsvds {
+  display: flex
+;
+}
 .vvdvssdvsdvsdv {
   position: sticky;
   top: 0;

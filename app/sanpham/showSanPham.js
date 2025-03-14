@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Image from "next/image";
 import ShowVariant from './showVariant';
 import ThemSanPham from './themSamPham';
+import ThemSanPhamVariant from './themSamPhamVariant';
 
 import { Box, Modal, Button, IconButton, Badge } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -91,6 +92,11 @@ function ShowSanPham(props) {
         sethandleAddSP(false)
     }
 
+    const [handleAddMapVariant, sethandleAddMapVariant] = useState(false);
+    function dongCTNVariant(params) {
+        sethandleAddMapVariant(false)
+    }
+
 
     const [open, setOpen] = useState(false);
 
@@ -147,12 +153,15 @@ function ShowSanPham(props) {
             </div>
 
             {handleAddSP && <ThemSanPham dongCTN={dongCTN} styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />}
+            {handleAddMapVariant && <ThemSanPhamVariant dongCTN={dongCTNVariant} styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />}
 
             {!handleAddSP && <>
                 <Button variant="contained" color="success" onClick={() => sethandleAddSP(true)}>
                     Thêm Sản Phẩm
                 </Button>
-
+                <Button variant="contained" color="success" onClick={() => sethandleAddMapVariant(true)}>
+                    Thêm Map Variant
+                </Button>
                 <div className="row mt-3">
                     <div className="dbtongluachon">
 

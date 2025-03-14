@@ -243,6 +243,8 @@ export default function ThemSanPham(props) {
 
 
     }
+    console.log(thongSoTong.phuKien);
+
 
     let ListPhuKien = thongSoTong.phuKien.map(item => {
         let arrPK = phuKien.filter(itemF => itemF._id == item)
