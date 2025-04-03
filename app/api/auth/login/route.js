@@ -38,7 +38,7 @@ export async function POST(req) {
 
     // 🛠 Fix lỗi HTTP: Nếu không phải HTTPS, bỏ `secure: true`
     const cookieStore = cookies();
-    await cookieStore.set({
+     cookieStore.set({
       name: "authToken",
       value: token,
       httpOnly: true,

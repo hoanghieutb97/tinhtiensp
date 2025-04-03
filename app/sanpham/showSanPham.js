@@ -159,9 +159,9 @@ function ShowSanPham(props) {
                 <Button variant="contained" color="success" onClick={() => sethandleAddSP(true)}>
                     Thêm Sản Phẩm
                 </Button>
-                <Button variant="contained" color="success" onClick={() => sethandleAddMapVariant(true)}>
+                {/* <Button variant="contained" color="success" onClick={() => sethandleAddMapVariant(true)}>
                     Thêm Map Variant
-                </Button>
+                </Button> */}
                 <div className="row mt-3">
                     <div className="dbtongluachon">
 

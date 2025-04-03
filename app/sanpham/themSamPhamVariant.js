@@ -223,18 +223,39 @@ export default function ThemSanPham(props) {
             lop.forEach(l => {
                 phuKienVariant.forEach(p => {
                     KichThuocVariant.forEach(k => {
+
+
+                        // let tenVariant = `${k.name}/${l.name}${p.name == "" ? "" : "/"}${p.name}`.trim();
+
+                        let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${k.name}${p.name == "" ? "" : ("/"+ p.name)}`.trim(); // ACRYLIC/8X8 INCHES
+                        // let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${p.name}${k.name == "" ? "" : ( k.name)}`.trim(); // ACRYLIC/8X8 INCHES
+                        // let tenVariant = `${p.name == "" ? "" : (p.name + "/")}${k.name}${p.name == "" ? "" : ("/" + l.name)}`.trim(); // ACRYLIC/8X8 INCHES
+
+                        // let tenVariant = `${k.name == "" ? "" : (k.name + "/")}${l.name}${p.name == "" ? "" : ("/" + p.name)}`.trim(); // 8X8 INCHES/ACRYLIC
+                        // let tenVariant = `${k.name == "" ? "" : (k.name + "/")}${p.name == "" ? "" : p.name}${l.name}`.trim(); // 8X8 INCHES/ACRYLIC
+
+                        // let nameDao = l.name.split("/");
+                        // let tenVariant = `${nameDao[0]}/${k.name}${p.name == "" ? "" : (" " + p.name)}/${nameDao[1]}`.trim();  //ACRYLIC/7X7 INCHES/TWO SIDES
+
+
+                        // console.log(k.name);
+                        // console.log(l.name);
+                        console.log(p);
+
+                        let chieuNX = ((+k.value[0]) * 2.54 + 1.5) < 10 ? 10 : ((+k.value[0]) * 2.54 + 1.5);
+                        let chieuDX = ((+k.value[1]) * 2.54 + 1.5) < 11.5 ? 11.5 : ((+k.value[0]) * 2.54 + 1.5);
                         let thongSoTong = {
                             doCao: "1.5",
-                            chieuNgang: (+k.value[0]) + 1.5,
-                            chieuDoc: (+k.value[1]) + 1.5,
+                            chieuNgang: chieuNX,
+                            chieuDoc: chieuDX,
                             xop: "xop5mm",
                             anh: ImageCloudiaryUrl,
                             product: Product,
-                            variant: `${k.name}/${l.name}/${p.name}`.trim(),
+                            variant: tenVariant,
                             note: "không",
                             type: "demo",
                             canNang: "",
-                            phuKien: [...phuKienVariant.map(itemx => itemx.value[0]), ...PhuKienTong].filter(itemp => itemp !== undefined),
+                            phuKien: [p.value[0], ...PhuKienTong].filter(itemp => itemp !== undefined),
                             canChageTST: true,
                             idChat: "",
                             dateCreate: Date.now(),
@@ -367,7 +388,7 @@ export default function ThemSanPham(props) {
                                             />
                                         </Box>)}
 
-                                        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
+                                        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '40ch' } }} noValidate autoComplete="off">
                                             <TextField id="outlined-basic" label="nhập tên" variant="outlined" type="text" size="small"
                                                 value={itemk.name || ''}
                                                 onChange={(e) => changeNameKichThuocVariant(keyk, e.target.value)}
@@ -388,7 +409,7 @@ export default function ThemSanPham(props) {
                                                 <Button variant="contained" onClick={() => handleDeleteLopVariant(key)} >Xóa Variant </Button>
                                             </div>
 
-                                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
+                                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '70ch' } }} noValidate autoComplete="off">
                                                 <TextField id="outlined-basic" label="nhập tên" variant="outlined" type="text" size="small"
                                                     value={item.name || ''}
                                                     onChange={(e) => changeNameLopVariant(key, e.target.value)}
