@@ -21,7 +21,7 @@ export async function POST(req) {
       return NextResponse.json({ message: "Email không tồn tại!" }, { status: 401 });
     }
 
-    const isMatch = await bcrypt.compare(passWord, user.passWord); 
+    const isMatch = await bcrypt.compare(passWord, user.passWord);
     if (!isMatch) {
       return NextResponse.json({ message: "Mật khẩu không đúng!" }, { status: 401 });
     }
@@ -37,8 +37,8 @@ export async function POST(req) {
     const isSecure = req.headers.get("x-forwarded-proto") === "https";
 
     // 🛠 Fix lỗi HTTP: Nếu không phải HTTPS, bỏ `secure: true`
-    const cookieStore = cookies();
-     cookieStore.set({
+    const cookieStore = await cookies();
+    cookieStore.set({
       name: "authToken",
       value: token,
       httpOnly: true,
