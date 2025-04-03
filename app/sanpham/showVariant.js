@@ -50,6 +50,7 @@ function ShowVariant(props) {
         props.setLoading(true)
         const response = await fetch(`/api/sanpham?id=${item._id}`, {
             method: 'DELETE',
+            credentials: "include",
         });
         let result = await response.json();
 
@@ -60,6 +61,7 @@ function ShowVariant(props) {
     async function addDuplicate(item) {
         const res = await fetch('/api/sanpham/duplicate', {
             method: 'POST',
+            credentials: "include",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: item._id })
         });

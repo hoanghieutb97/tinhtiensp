@@ -18,6 +18,7 @@ export default function CreateUserForm() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ name, email, passWord, status }),
     });
 
@@ -34,7 +35,10 @@ export default function CreateUserForm() {
     }
 
 
-    const res2 = await fetch("/api/user/getAll");
+    const res2 = await fetch("/api/user/getAll", {
+      method: "GET",
+      credentials: "include", // ✅ gửi kèm cookie để xác thực
+    });
     const dat2a = await res2.json();
     setUsers(dat2a);
 
@@ -43,7 +47,10 @@ export default function CreateUserForm() {
   // Lấy danh sách user từ API
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("/api/user/getAll");
+      const res = await fetch("/api/user/getAll", {
+        method: "GET",
+        credentials: "include", // ✅ gửi kèm cookie để xác thực
+      });
       const data = await res.json();
       setUsers(data);
     };
@@ -74,6 +81,7 @@ export default function CreateUserForm() {
 
       const response = await fetch(`/api/user/update?id=${item._id}`, {
         method: 'DELETE',
+        credentials: "include",
       });
 
       const result = await response.json();
@@ -88,7 +96,11 @@ export default function CreateUserForm() {
       console.error("Lỗi hệ thống:", error);
     }
     finally {
-      const res = await fetch("/api/user/getAll");
+      
+      const res = await fetch("/api/user/getAll", {
+        method: "GET",
+        credentials: "include", // ✅ gửi kèm cookie để xác thực
+      });
       const data = await res.json();
       setUsers(data);
 
@@ -100,10 +112,14 @@ export default function CreateUserForm() {
     const res = await fetch("/api/user/update", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ id: _id, updateData: updateFields }),
     });
 
-    const res2 = await fetch("/api/user/getAll");
+    const res2 = await fetch("/api/user/getAll", {
+      method: "GET",
+      credentials: "include", // ✅ gửi kèm cookie để xác thực
+    });
     const data = await res2.json();
     setUsers(data);
   }

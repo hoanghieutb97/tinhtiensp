@@ -26,32 +26,35 @@ export async function POST(req) {
       return NextResponse.json({ message: "Mật khẩu không đúng!" }, { status: 401 });
     }
 
-    // Tạo token JWT
-    const token = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: "100h",
-    });
+    // Tạo JWT
+    const token = jwt.sign(
+      { email: user.email, role: user.role, _id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "100h" }
+    );
 
     console.log("Tạo token:", token);
 
-    // Kiểm tra có đang chạy HTTPS không
+    // ✅ Ép secure = false khi chạy HTTP + IP local
     const isSecure = req.headers.get("x-forwarded-proto") === "https";
+    console.log("isSecure:", isSecure);
 
-    // 🛠 Fix lỗi HTTP: Nếu không phải HTTPS, bỏ `secure: true`
-    const cookieStore = await cookies();
+    // Ghi cookie
+    const cookieStore = cookies();
     cookieStore.set({
       name: "authToken",
       value: token,
       httpOnly: true,
-      secure: isSecure, // Chỉ bật secure nếu đang chạy HTTPS
-      sameSite: "lax", // Fix lỗi cookie bị chặn trên IP
+      secure: false, //  TẮT SECURE nếu dùng HTTP
+      sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60, // 1h
+      maxAge: 100 * 60 * 60, // 100h
     });
 
     return NextResponse.json({ message: "Đăng nhập thành công!", status: user.status }, { status: 200 });
 
   } catch (error) {
     console.error("Lỗi đăng nhập:", error);
-    return NextResponse.json({ message: "Lỗi khi đăng nhập", error }, { status: 500 });
+    return NextResponse.json({ message: "Đăng nhập thất bại, thử lại sau!" }, { status: 500 });
   }
 }

@@ -20,7 +20,9 @@ function page(props) {
 
   const [selectedValue, setSelectedValue] = useState(""); // Giá trị được chọn
   useEffect(() => {
-    axios.get("/api/lark/getUserChat")
+    axios.get("/api/lark/getUserChat", {
+      withCredentials: true, // ✅ tương đương "credentials: include"
+    })
       .then(response => {
         // Xử lý kết quả thành công
         let items = response.data.data.map(item => ({ member_id: item.member_id, nameUser: item.name }));
@@ -31,7 +33,10 @@ function page(props) {
         console.error('Lỗi:', error.response?.data || error.message);
       });
 
-    axios.get("/api/larkUser")
+
+    axios.get("/api/larkUser", {
+      withCredentials: true, // ✅ tương đương "credentials: include"
+    })
       .then(response => {
         // Xử lý kết quả thành công
         let items = response.data.data[0].data
@@ -48,6 +53,7 @@ function page(props) {
   async function Put_MongoDB_UserCongDoan(items) {
     let response = await fetch("/api/larkUser", {
       method: "PUT",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -62,7 +68,10 @@ function page(props) {
   }
 
   async function Get_MongoDB_UserCongDoan() {
-    let items = await axios.get("/api/larkUser")
+
+    let items = axios.get("/api/larkUser", {
+      withCredentials: true, // ✅ tương đương "credentials: include"
+    })
       .then(response => {
         setUserCongDoan(response.data.data[0].data)
       })
@@ -108,7 +117,7 @@ function page(props) {
 
   };
 
-  
+
 
   return (
     <div>

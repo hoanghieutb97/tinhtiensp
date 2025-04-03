@@ -17,7 +17,11 @@ export const PhukienProvider = ({ children }) => {
 
         try {
             setLoading(true); // Bắt đầu trạng thái loading
-            const response = await fetch("/api/larkUser", { cache: "no-store" });
+            const response = await fetch("/api/larkUser", {
+                method: "GET",
+                credentials: "include", // ✅ gửi kèm cookie
+                cache: "no-store",      // ✅ không cache, vẫn giữ lại
+            });
 
 
             const data = await response.json();

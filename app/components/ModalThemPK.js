@@ -28,6 +28,7 @@ function ModalThemPK(props) {
             const response = await fetch("/api/cloudinary", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify({ base64File: item.image }),
             });
 
@@ -97,6 +98,7 @@ function ModalThemPK(props) {
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    credentials: "include",
                     body: JSON.stringify({
                         ...updateFields,
                         imageUrl: imageUrl,
@@ -114,6 +116,7 @@ function ModalThemPK(props) {
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    credentials: "include",
                     body: JSON.stringify({
                         id: item._id, // ID tài liệu bạn muốn sửa
                         updateData: {
@@ -152,6 +155,7 @@ function ModalThemPK(props) {
             props.setLoadingALL(true);
             const response = await fetch(`/api/${typeLink}?id=${item._id}`, {
                 method: 'DELETE',
+                credentials: "include",
             });
 
             const result = await response.json();

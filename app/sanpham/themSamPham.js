@@ -564,7 +564,7 @@ export default function ThemSanPham(props) {
                                     <div className="row dpnam">
                                         {thongSoTong.vipChot.map((item, key) => <div className="pnampt" key={key}>
                                             <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '100%' } }} noValidate autoComplete="off">
-                                                <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="text" size="small"
+                                                <TextField id="outlined-basic" label={key == 0 ? "Titanium" : (key == 1 ? "Platinum" : (key == 2 ? "Diamond" : (key == 3 ? "E 1" : "E 2")))} variant="outlined" type="text" size="small"
                                                     value={item}
                                                     onChange={(e) => changeVipAll(e.target.value, key, "vipChot")}
                                                     placeholder="Nhập số"
@@ -589,7 +589,7 @@ export default function ThemSanPham(props) {
                                     <div className="row dpnam">
                                         {thongSoTong.vipaTuan.map((item, key) => <div className="pnampt" key={key}>
                                             <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '100%' } }} noValidate autoComplete="off">
-                                                <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="text" size="small"
+                                                <TextField id="outlined-basic" label={key == 0 ? "Titanium" : (key == 1 ? "Platinum" : (key == 2 ? "Diamond" : (key == 3 ? "E 1" : "E 2")))} variant="outlined" type="text" size="small"
                                                     value={item}
                                                     onChange={(e) => changeVipAll(e.target.value, key, "vipaTuan")}
                                                     placeholder="Nhập số"
@@ -617,7 +617,7 @@ export default function ThemSanPham(props) {
 
                                         {itemxx.map((item, key) => <div className="pnampt" key={key}>
                                             <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '100%' } }} noValidate autoComplete="off">
-                                                <TextField id="outlined-basic" label={"VIP " + (key + 1)} variant="outlined" type="text" size="small"
+                                                <TextField id="outlined-basic" label={key == 0 ? "Titanium" : (key == 1 ? "Platinum" : (key == 2 ? "Diamond" : (key == 3 ? "E 1" : "E 2")))} variant="outlined" type="text" size="small"
                                                     value={item}
                                                     onChange={(e) => changeVipAll(e.target.value, key, "vipSale", keyxx)}
                                                     placeholder="Nhập số"
@@ -673,7 +673,7 @@ export default function ThemSanPham(props) {
                                 <div className="tenpk">Tiền màng bọc: <span className="hhhg">{isNaN(tienVL.tienMangBoc) ? "0" : Math.floor(tienVL.tienMangBoc).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền xốp: <span className="hhhg">{isNaN(tienVL.tienXop) ? "0" : Math.floor(tienVL.tienXop).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">Tiền chiết khấu máy: <span className="hhhg">{isNaN(tienVL.tienChietKhauMay) ? "0" : Math.floor(tienVL.tienChietKhauMay).toLocaleString("en-US")} (đ)</span></div>
-                                <div className="tenpk">Phí vận Hành 25%: <span className="hhhg">{Math.floor(TongTienSX*25 / 100).toLocaleString("en-US")} (đ)</span></div>
+                                <div className="tenpk">Phí vận Hành 25%: <span className="hhhg">{Math.floor(TongTienSX * 25 / 100).toLocaleString("en-US")} (đ)</span></div>
                                 <div className="tenpk">
                                     Tổng chi phí:    {Math.floor(TongTienSX).toLocaleString("en-US")} (đ)
                                 </div>

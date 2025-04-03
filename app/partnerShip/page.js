@@ -6,7 +6,7 @@ import { Box, TextField, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import InputAdornment from '@mui/material/InputAdornment';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {  get_ShipingCost } from "@/lib/utils";
+import { get_ShipingCost } from "@/lib/utils";
 
 const _id = process.env.NEXT_PUBLIC_ID_PARTNERSHIP;
 
@@ -36,9 +36,10 @@ function page(props) {
       }, {
         headers: {
           "Content-Type": "application/json",
-        }
+        },
+        withCredentials: true,
       });
-      
+
       let items = await get_ShipingCost();
       setItemsCost(items)
 
