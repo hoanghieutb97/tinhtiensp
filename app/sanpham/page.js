@@ -86,13 +86,13 @@ function page(props) {
 
 
 
-    // if (loading) {
-    //     return <AllLoading />;
-    // }
+    if (loading) {
+        return <AllLoading />;
+    }
 
 
     return (<>
-        {loading ? <AllLoading /> : ""}
+        {/* {loading ? <AllLoading /> : ""} */}
         <div className='vdsdvs'>
             <div className="timkiemheh">
                 <TextField
