@@ -26,6 +26,8 @@ export default function ThemSanPham(props) {
         note: "",
         type: "demo",
         canNang: 0,
+        canHop: 0,
+        canVl: 0,
         phuKien: [],
         vipaTuan: [0, 0, 0, 0, 0],
         vipChot: [0, 0, 0, 0, 0],
@@ -150,18 +152,17 @@ export default function ThemSanPham(props) {
 
 
     useEffect(() => {
-        console.log(thongSoTong.phuKien);
+
         if (lop.length > 0) {
 
 
             if (thongSoTong.canChageTST) setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong, phuKien)) })
         }
 
-    }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.chieuNgang, thongSoTong.phuKien.length]);
+    }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.canHop, thongSoTong.canVl, thongSoTong.chieuNgang, thongSoTong.phuKien.length]);
 
 
-    console.log(thongSoTong.phuKien);
-    console.log(thongSoTong.phuKien);
+
 
     function handleAddLayer() {
         var item = {
@@ -243,7 +244,7 @@ export default function ThemSanPham(props) {
 
 
     }
-    console.log(thongSoTong.phuKien);
+
 
 
     let ListPhuKien = thongSoTong.phuKien.map(item => {
@@ -390,7 +391,7 @@ export default function ThemSanPham(props) {
 
                                 <div className="container">
                                     <div className="row">
-                                        {initialWHZ.map((item, key) => <div className="col-3" key={key}>
+                                        {initialWHZ.map((item, key) => <div className="col-2" key={key}>
                                             <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
                                                 <TextField id="outlined-basic" label={item.nameSTT} variant="outlined" type="number" size="small"
                                                     value={thongSoTong[item.valueSTT]}
@@ -401,6 +402,18 @@ export default function ThemSanPham(props) {
                                                 />
                                             </Box>
                                         </div>)}
+
+                                        <div className="col-2" >
+                                            <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
+                                                <TextField id="outlined-basic" label={"Tổng Cân"} variant="outlined" type="number" size="small"
+                                                    value={thongSoTong.canNang}
+                                                    onChange={(e) => handleChangeThongSoTong("canNang", e.target.value)}
+                                                    placeholder="Nhập số"
+                                                    disabled={true}
+                                                    slotProps={{ input: { endAdornment: <InputAdornment position="end">{"gam"}</InputAdornment>, }, }}
+                                                />
+                                            </Box>
+                                        </div>
 
                                     </div>
 
