@@ -227,7 +227,7 @@ export default function ThemSanPham(props) {
 
                         // let tenVariant = `${k.name}/${l.name}${p.name == "" ? "" : "/"}${p.name}`.trim();
 
-                        let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${k.name}${p.name == "" ? "" : ("/"+ p.name)}`.trim(); // ACRYLIC/8X8 INCHES
+                        let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${k.name}${p.name == "" ? "" : ("/" + p.name)}`.trim(); // ACRYLIC/8X8 INCHES
                         // let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${p.name}${k.name == "" ? "" : ( k.name)}`.trim(); // ACRYLIC/8X8 INCHES
                         // let tenVariant = `${p.name == "" ? "" : (p.name + "/")}${k.name}${p.name == "" ? "" : ("/" + l.name)}`.trim(); // ACRYLIC/8X8 INCHES
 
@@ -242,8 +242,8 @@ export default function ThemSanPham(props) {
                         // console.log(l.name);
                         console.log(p);
 
-                        let chieuNX = ((+k.value[0]) * 2.54 + 1.5) < 10 ? 10 : ((+k.value[0]) * 2.54 + 1.5);
-                        let chieuDX = ((+k.value[1]) * 2.54 + 1.5) < 11.5 ? 11.5 : ((+k.value[0]) * 2.54 + 1.5);
+                        let chieuNX = ((+k.value[0]) * 2.54 + 1) < 10 ? 10 : ((+k.value[0]) * 2.54 + 1);
+                        let chieuDX = ((+k.value[1]) * 2.54 + 0.5) < 11.5 ? 11.5 : ((+k.value[0]) * 2.54 + 0.5);
                         let thongSoTong = {
                             doCao: "1.5",
                             chieuNgang: chieuNX,
