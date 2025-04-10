@@ -82,7 +82,7 @@ function page(props) {
     const fuse = new Fuse(activeItems, options);
     // const searchResult = fuse.search(textSearch);
     const searchResult = query ? fuse.search(query).map(result => result.item) : activeItems; // Nếu textSearch rỗng, trả về toàn bộ mảng
-    console.log(searchResult);
+  
 
 
 

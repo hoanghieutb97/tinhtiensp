@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import LayerThemVL from './layerThemVL';
-import { caculator_ShipingCost, tongTienLop, tinhCanNang, cal_Status, tinhTienVL, createChatLark, URL_upload_cloudinary, initialWHZ, tagUserType, postSanPham, putSanPham } from '@/lib/utils';
+import { caculator_ShipingCost, tongTienLop, tinhCanNang, tinhCanNangUocLuong, cal_Status, tinhTienVL, createChatLark, URL_upload_cloudinary, initialWHZ, tagUserType, postSanPham, putSanPham } from '@/lib/utils';
 import { Box, InputLabel, MenuItem, FormControl, Select, TextField, InputAdornment, Button, Typography, IconButton, FormControlLabel, FormGroup, Switch, Modal } from '@mui/material';
 import { Send as SendIcon, PhotoCamera, Add, Close as CloseIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Image from 'next/image';
@@ -14,7 +14,7 @@ export default function ThemSanPham(props) {
     let Rate = props.Rate;
     let ShippingCost = props.ShippingCost;
     const STATUS_ADMIN = cal_Status(localStorage.getItem("userStatus"))
-
+    const [CanNang_UocLuong, setCanNang_UocLuong] = useState(0);
     const defaultThongSoTong = {
         doCao: 2.5,
         chieuNgang: 0,
@@ -156,7 +156,10 @@ export default function ThemSanPham(props) {
         if (lop.length > 0) {
 
 
-            if (thongSoTong.canChageTST) setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong, phuKien)) })
+            if (thongSoTong.canChageTST) {
+                setCanNang_UocLuong(Math.floor(tinhCanNangUocLuong(lop, vatLieu, thongSoTong, phuKien)))
+                if ((+thongSoTong.canVl + thongSoTong.canHop) > 0) setThongSoTong({ ...thongSoTong, canNang: Math.floor(tinhCanNang(lop, vatLieu, thongSoTong, phuKien)) })
+            }
         }
 
     }, [lop, thongSoTong.xop, thongSoTong.doCao, thongSoTong.chieuDoc, thongSoTong.canHop, thongSoTong.canVl, thongSoTong.chieuNgang, thongSoTong.phuKien.length]);
@@ -307,6 +310,7 @@ export default function ThemSanPham(props) {
     let TongTienSX = tongTienLop(lop, vatLieu, thongSoTong, phuKien);
     let canTien = (thongSoTong.canNang > canNangTheTich) ? thongSoTong.canNang : canNangTheTich;
 
+    console.log(ItemSua);
 
 
     return (
@@ -391,6 +395,9 @@ export default function ThemSanPham(props) {
 
                                 <div className="container">
                                     <div className="row">
+                                        <div className="col-12">
+                                            <h4>cân nặng ước tính: <span className="vdf">{CanNang_UocLuong}</span></h4>
+                                        </div>
                                         {initialWHZ.map((item, key) => <div className="col-2" key={key}>
                                             <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">
                                                 <TextField id="outlined-basic" label={item.nameSTT} variant="outlined" type="number" size="small"
@@ -409,7 +416,7 @@ export default function ThemSanPham(props) {
                                                     value={thongSoTong.canNang}
                                                     onChange={(e) => handleChangeThongSoTong("canNang", e.target.value)}
                                                     placeholder="Nhập số"
-                                                    disabled={true}
+                                                    disabled={!statuscanChageTST}
                                                     slotProps={{ input: { endAdornment: <InputAdornment position="end">{"gam"}</InputAdornment>, }, }}
                                                 />
                                             </Box>

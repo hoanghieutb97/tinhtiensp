@@ -106,10 +106,10 @@ function ShowSanPham(props) {
         settypeSanPham(params);
     }
     function handleShowItem(item) {
-        console.log(item);
+
         setACtiveItem(item)
     }
-    console.log("showProduct......................................");
+    
 
     return (
         <div className="container-fluid">
