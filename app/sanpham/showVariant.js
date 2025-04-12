@@ -79,6 +79,7 @@ function ShowVariant(props) {
 
 
     }
+console.log(listItems);
 
     return (
 

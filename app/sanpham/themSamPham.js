@@ -251,10 +251,13 @@ export default function ThemSanPham(props) {
 
 
     let ListPhuKien = thongSoTong.phuKien.map(item => {
+
+
         let arrPK = phuKien.filter(itemF => itemF._id == item)
+
         if (arrPK.length > 0) return arrPK[0]
 
-    });
+    }).filter(itemx => itemx != undefined);
     let canNangTheTich = thongSoTong.chieuDoc * thongSoTong.chieuNgang * thongSoTong.doCao / 5
     function changeVipAll(param, key, type, keyxx) {
         if (type !== "vipSale") {
@@ -311,6 +314,7 @@ export default function ThemSanPham(props) {
     let canTien = (thongSoTong.canNang > canNangTheTich) ? thongSoTong.canNang : canNangTheTich;
 
     console.log(ItemSua);
+    console.log(ListPhuKien);
 
 
     return (
