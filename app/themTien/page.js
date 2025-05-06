@@ -79,8 +79,8 @@ export default function UploadPage() {
     reader.readAsArrayBuffer(file);
   };
 
-  const [ItemSuaVip, setItemSuaVip] = useState([]);
-  const [ItemSuaVariant, setItemSuaVariant] = useState([]);
+  // const [items_Map_Vip, setitems_Map_Vip] = useState([]);
+
   useEffect(() => {
     fetchSanPham();
   }, []);
@@ -101,16 +101,15 @@ export default function UploadPage() {
     setLoading(false); // Bắt đầu trạng thái loading
 
   }
-  console.log(ItemSuaVip);
-  console.log(activeItems);
+
+  var items_Map_Vip = [] // items khớp nhưng không trùng vip
+
+  var items_Map_Variant = [] // items khớp variant với nhau
+  var items_False_Variant = [] // items sai variant với nhau
 
   if (jsonData.length > 0 && activeItems.length > 0) {
     let itemsAPP = [...activeItems]
     let arrLoc = [];
-    let items_Map_Vip = [] // items khớp nhưng không trùng vip
-
-    let items_Map_Variant = [] // items khớp variant
-    let items_False_Variant = [] // items khớp variant
 
     for (let i = 0; i < activeItems.length; i++) {
       arrLoc = jsonData.filter(item => {
@@ -125,12 +124,13 @@ export default function UploadPage() {
           let itemABC = { ...activeItems[i] };
           items_Map_Variant.push({ ...activeItems[i] })
           if (itemABC.thongSoTong.vipChot == undefined) itemABC.thongSoTong.vipChot = [0, 0, 0, 0, 0]
-          if (!(itemABC.thongSoTong.vipChot[0] == arrLoc[k].VIP1 && itemABC.thongSoTong.vipChot[3] == arrLoc[k].VIP4)) {
-            // console.log("vdssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+          if (!((itemABC.thongSoTong.vipChot[0] == arrLoc[k].VIP1 && itemABC.thongSoTong.vipChot[3] == arrLoc[k].VIP4) && (itemABC.thongSoTong.vipChot[1] == arrLoc[k].VIP2 && itemABC.thongSoTong.vipChot[2] == arrLoc[k].VIP3))) {
+
 
             itemABC.thongSoTong.vipChot = [arrLoc[k].VIP1, arrLoc[k].VIP2, arrLoc[k].VIP3, arrLoc[k].VIP4, 0];
+            itemABC.thongSoTong.type = "publish";
             items_Map_Vip.push({ ...itemABC });
-            // console.log("items_Map_Vip!!!!!!!!!!!!!!!!!!!!!!!!", items_Map_Vip);
+
           }
           break;
 
@@ -138,30 +138,26 @@ export default function UploadPage() {
 
       }
       if (canMatch == false) items_False_Variant.push(activeItems[i])
-      // console.log("*****************************************************************************", items_Map_Vip);
 
     }
-    // console.log("items_Map_Vip!!!!!!!!!!!!!!!!!!!!!!!!", items_Map_Vip);
-    if (items_False_Variant.length != ItemSuaVariant.length) setItemSuaVariant(items_False_Variant);
-    if (items_Map_Vip.length >= ItemSuaVip.length) setItemSuaVip(items_Map_Vip);
-
 
 
 
 
   }
   async function suaVIpApp() {
-    console.log(ItemSuaVip);
 
-    for (let i = 0; i < ItemSuaVip.length; i++) {
+
+    for (let i = 0; i < items_Map_Vip.length; i++) {
       let DataPost = {
-        thongSoTong: ItemSuaVip[i].thongSoTong,
-        lop: ItemSuaVip[i].lop,
-        name: ItemSuaVip[i].name,
-        namecode: ItemSuaVip[i].namecode
+        thongSoTong: items_Map_Vip[i].thongSoTong,
+        lop: items_Map_Vip[i].lop,
+        name: items_Map_Vip[i].name,
+        namecode: items_Map_Vip[i].namecode
       }
-      let xxx = await putSanPham(ItemSuaVip[i]._id, DataPost);
-      console.log(xxx);
+      let xxx = await putSanPham(items_Map_Vip[i]._id, DataPost);
+
+      if (i == (items_Map_Vip.length - 1)) alert(" đã sửa xong !!!!")
 
 
     }
@@ -182,18 +178,12 @@ export default function UploadPage() {
     copy(params);
     setactiveKey(index);
   }
-  // console.log(ItemSuaVip);
-  // console.log(ItemSuaVariant);
+  console.log(items_Map_Vip);
+  // console.log(items_False_Variant);
 
   return (
     <>
-      {/* <div className="p-6 flex flex-col items-center gap-4">
-        <div {...getRootProps()} className="border-dashed border-2 p-6 cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
-          <input {...getInputProps()} />
-          <p className="text-gray-600">Kéo & thả file Excel vào đây hoặc nhấp để chọn file</p>
-        </div>
-        {error && <p className="text-red-500">{error}</p>}
-      </div> */}
+
 
       <div className="p-6 flex flex-col items-center gap-4">
         {/* Ẩn input file, dùng button trigger */}
@@ -216,7 +206,7 @@ export default function UploadPage() {
       </div>
 
 
-      <h4 className="khongtrungvp">khớp variant- sai VIP {ItemSuaVip.length}</h4>
+      <h4 className="khongtrungvp">Số lượng sản phẩm thay đổi VIP: <span className="gsjdgnsduv">{items_Map_Vip.length}</span> </h4>
       <TableContainer component={Paper} className='sdjnsdksdjvnsdk'>
         <Table>
           <TableHead>
@@ -226,7 +216,7 @@ export default function UploadPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {ItemSuaVip.map((item, index) => (
+            {items_Map_Vip.map((item, index) => (
               <TableRow key={index} hover className={index == activeKey ? "activekety" : ""}>
                 <TableCell onClick={() => hangClickItem(item.thongSoTong.product, index)}>{item.thongSoTong.product}</TableCell>
                 <TableCell onClick={() => hangClickItem(item.thongSoTong.variant, index)}>{item.thongSoTong.variant}</TableCell>
@@ -235,12 +225,11 @@ export default function UploadPage() {
           </TableBody>
         </Table>
       </TableContainer>
-      <button onClick={suaVIpApp}> sửa VIP trên app </button>
+      <div className="col-12">
+        <button onClick={suaVIpApp} type="button" className="btn btn-primary btn-lg btn-block w-100">sửa VIP trên app</button>
+      </div>
 
-      <hr />
-      <hr />
-      <hr />
-      <h4 className="khongtrungvp">sai Variant trên app tính tiền  {ItemSuaVariant.length}</h4>
+      <h4 className="khongtrungvp">sai Variant trên app tính tiền  {items_False_Variant.length}</h4>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -250,7 +239,7 @@ export default function UploadPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {ItemSuaVariant.map((item, index) => (
+            {items_False_Variant.map((item, index) => (
               <TableRow key={index} hover className={index == activeKey ? "activekety" : ""}>
                 <TableCell onClick={() => hangClickItem(item.thongSoTong.product, index)}>{item.thongSoTong.product}</TableCell>
                 <TableCell onClick={() => hangClickItem(item.thongSoTong.variant, index)}>{item.thongSoTong.variant}</TableCell>
