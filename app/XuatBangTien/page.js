@@ -52,6 +52,7 @@ export default function UploadPage() {
   useEffect(() => {
     fetchSanPham();
   }, []);
+  console.log(activeItems);
 
   var fetchSanPham = async () => {
     setLoading(true); // Bắt đầu trạng thái loading
@@ -94,8 +95,21 @@ export default function UploadPage() {
         if (isMatch(jsonData[i].Variant.trim().toLowerCase(), arrLoc[k].thongSoTong.variant.trim().toLowerCase())) {
 
           khop = true;
+          let TongTienSX = tongTienLop(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong, phuKien);
+          let Rate = 23000;
+          listN.push({
+            ...jsonData[i],
+            vip1: arrLoc[k].thongSoTong.vipChot[0],
+            vip2: arrLoc[k].thongSoTong.vipChot[1],
+            vip3: arrLoc[k].thongSoTong.vipChot[2],
+            vip4: arrLoc[k].thongSoTong.vipChot[3],
+            tienBaseCost: TongTienSX,
+            chiPhi_GiaBan: (TongTienSX * 100 / (Rate * arrLoc[k].thongSoTong.vipChot[3])).toFixed(2),
+            tongLoiNhuan: ((arrLoc[k].thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(2),
+            phanTramLoiNhuan: (((arrLoc[k].thongSoTong.vipChot[3]) - TongTienSX / Rate) * 100 / arrLoc[k].thongSoTong.vipChot[3]).toFixed(2),
+            giaBanFullFill: ((TongTienSX / (Rate)) + (0.4 * ((arrLoc[k].thongSoTong.vipChot[3]) - TongTienSX / Rate))).toFixed(2)
 
-          listN.push({ ...jsonData[i], tienBaseCost: tongTienLop(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong, phuKien) });
+          });
 
 
           break;
@@ -125,7 +139,30 @@ export default function UploadPage() {
 
 
   function exportToExcelAll(params) {
-    var listAllX = activeItems.map(item => ({ ProductName: item.thongSoTong.product, Variant: item.thongSoTong.variant, tienBaseCost: tongTienLop(item.lop, vatLieu, item.thongSoTong, phuKien) }));
+
+    var listAllX = activeItems.map(item => {
+
+
+      let Rate = 23000;
+      let TongTienSX = tongTienLop(item.lop, vatLieu, item.thongSoTong, phuKien);
+      if (item.thongSoTong.vipChot == undefined) item.thongSoTong.vipChot = [0, 0, 0, 0, 0]
+
+
+      return {
+        ProductName: item.thongSoTong.product,
+        Variant: item.thongSoTong.variant,
+        vip1: item.thongSoTong.vipChot[0],
+        vip2: item.thongSoTong.vipChot[1],
+        vip3: item.thongSoTong.vipChot[2],
+        vip4: item.thongSoTong.vipChot[3],
+        tienBaseCost: TongTienSX,
+        chiPhi_GiaBan: (TongTienSX * 100 / (Rate * item.thongSoTong.vipChot[3])).toFixed(2),
+        tongLoiNhuan: ((item.thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(2),
+        phanTramLoiNhuan: (((item.thongSoTong.vipChot[3]) - TongTienSX / Rate) * 100 / item.thongSoTong.vipChot[3]).toFixed(2),
+        giaBanFullFill: ((TongTienSX / (Rate)) + (0.4 * ((item.thongSoTong.vipChot[3]) - TongTienSX / Rate))).toFixed(2)
+
+      }
+    });
     exportToExcel(listAllX)
 
 
