@@ -103,7 +103,7 @@ export default function UploadPage() {
             vip2: arrLoc[k].thongSoTong.vipChot[1],
             vip3: arrLoc[k].thongSoTong.vipChot[2],
             vip4: arrLoc[k].thongSoTong.vipChot[3],
-            tienBaseCost: TongTienSX,
+            tienBaseCost: (TongTienSX / Rate).toFixed(2),
             chiPhi_GiaBan: (TongTienSX * 100 / (Rate * arrLoc[k].thongSoTong.vipChot[3])).toFixed(2),
             tongLoiNhuan: ((arrLoc[k].thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(2),
             phanTramLoiNhuan: (((arrLoc[k].thongSoTong.vipChot[3]) - TongTienSX / Rate) * 100 / arrLoc[k].thongSoTong.vipChot[3]).toFixed(2),
