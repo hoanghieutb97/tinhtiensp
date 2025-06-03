@@ -75,6 +75,7 @@ export default function LayerThemVL(props) {
                                 <MenuItem value="go2mm">Gỗ 2mm</MenuItem>
                                 <MenuItem value="go3mm">Gỗ 3mm</MenuItem>
                                 <MenuItem value="go5mm">Gỗ 5mm</MenuItem>
+                                <MenuItem value="go6mm">Gỗ 5mm</MenuItem>
                                 <MenuItem value="custom" onClick={handleChonValLieu}>Phôi sẵn</MenuItem>
                             </Select>
 
