@@ -91,6 +91,7 @@ export default function UploadPage() {
       var khop = false;
 
       for (let k = 0; k < arrLoc.length; k++) {
+        
 
         if (isMatch(jsonData[i].Variant.trim().toLowerCase(), arrLoc[k].thongSoTong.variant.trim().toLowerCase())) {
 
@@ -107,7 +108,11 @@ export default function UploadPage() {
             chiPhi_GiaBan: (TongTienSX * 100 / (Rate * arrLoc[k].thongSoTong.vipChot[3])).toFixed(2),
             tongLoiNhuan: ((arrLoc[k].thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(2),
             phanTramLoiNhuan: (((arrLoc[k].thongSoTong.vipChot[3]) - TongTienSX / Rate) * 100 / arrLoc[k].thongSoTong.vipChot[3]).toFixed(2),
-            giaBanFullFill: ((TongTienSX / (Rate)) + (0.4 * ((arrLoc[k].thongSoTong.vipChot[3]) - TongTienSX / Rate))).toFixed(2)
+            giaBanFullFill: ((TongTienSX / (Rate)) + (0.4 * ((arrLoc[k].thongSoTong.vipChot[3]) - TongTienSX / Rate))).toFixed(2),
+            chieuNgan: arrLoc[k].thongSoTong.chieuNgang,
+            chieuDai: arrLoc[k].thongSoTong.chieuDoc,
+            doCao: arrLoc[k].thongSoTong.doCao,
+            tongCan: arrLoc[k].thongSoTong.canNang,
 
           });
 
@@ -159,7 +164,11 @@ export default function UploadPage() {
         chiPhi_GiaBan: (TongTienSX * 100 / (Rate * item.thongSoTong.vipChot[3])).toFixed(2),
         tongLoiNhuan: ((item.thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(2),
         phanTramLoiNhuan: (((item.thongSoTong.vipChot[3]) - TongTienSX / Rate) * 100 / item.thongSoTong.vipChot[3]).toFixed(2),
-        giaBanFullFill: ((TongTienSX / (Rate)) + (0.4 * ((item.thongSoTong.vipChot[3]) - TongTienSX / Rate))).toFixed(2)
+        giaBanFullFill: ((TongTienSX / (Rate)) + (0.4 * ((item.thongSoTong.vipChot[3]) - TongTienSX / Rate))).toFixed(2),
+        chieuNgan: item.thongSoTong.chieuNgang,
+        chieuDai: item.thongSoTong.chieuDoc,
+        doCao: item.thongSoTong.doCao,
+        tongCan: item.thongSoTong.canNang,
 
       }
     });

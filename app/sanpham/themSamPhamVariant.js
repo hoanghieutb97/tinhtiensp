@@ -227,9 +227,9 @@ export default function ThemSanPham(props) {
 
                         // let tenVariant = `${k.name}/${l.name}${p.name == "" ? "" : "/"}${p.name}`.trim();
 
-                        let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${k.name}${p.name == "" ? "" : ("/" + p.name)}`.trim(); // ACRYLIC/8X8 INCHES
+                        // let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${k.name}${p.name == "" ? "" : ("/" + p.name)}`.trim(); // ACRYLIC/8X8 INCHES
                         // let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${p.name}${k.name == "" ? "" : ( k.name)}`.trim(); // ACRYLIC/8X8 INCHES
-                        // let tenVariant = `${p.name == "" ? "" : (p.name + "/")}${k.name}${p.name == "" ? "" : ("/" + l.name)}`.trim(); // ACRYLIC/8X8 INCHES
+                        let tenVariant = `${p.name == "" ? "" : (p.name + "/")}${k.name}${p.name == "" ? "" : ("/" + l.name)}`.trim(); // ACRYLIC/8X8 INCHES
 
                         // let tenVariant = `${k.name == "" ? "" : (k.name + "/")}${l.name}${p.name == "" ? "" : ("/" + p.name)}`.trim(); // 8X8 INCHES/ACRYLIC
                         // let tenVariant = `${k.name == "" ? "" : (k.name + "/")}${p.name == "" ? "" : p.name}${l.name}`.trim(); // 8X8 INCHES/ACRYLIC
