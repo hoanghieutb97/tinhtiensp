@@ -33,6 +33,10 @@ export default function PrimarySearchAppBar() {
             typeLink: 'sanpham',
             nameLink: "Sản Phẩm"
         },
+        {
+            typeLink: 'checkNhanh',
+            nameLink: "check nhanh"
+        },
         STATUS_ADMIN != 4 && {
             typeLink: 'vatlieu',
             nameLink: "Vật Liệu"

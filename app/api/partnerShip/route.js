@@ -21,7 +21,7 @@ export async function POST(req) {
   try {
 
     const data = await req.json(); // Lấy dữ liệu từ body request
-    console.log(data);
+    
 
     const client = await clientPromise; // Sử dụng kết nối đã tái sử dụng
     const db = client.db("test"); // Tên database
@@ -40,7 +40,7 @@ export async function PUT(req) {
 
   try {
     const { id, updateData } = await req.json(); // Lấy ID và dữ liệu cần cập nhật từ body
-    console.log(id, updateData);
+    
 
 
     if (!id || !updateData) {
