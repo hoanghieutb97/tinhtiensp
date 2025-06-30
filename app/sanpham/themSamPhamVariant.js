@@ -17,6 +17,7 @@ export default function ThemSanPham(props) {
     const [phuKienVariant, setphuKienVariant] = useState([]);
     const [PhuKienTong, setPhuKienTong] = useState([]);
     const [TongTatCa, setTongTatCa] = useState([]);
+    const [tenVariantType, setTenVariantType] = useState(0);
     const defaultThongSoTong = {
         doCao: 2.5,
         chieuNgang: 0,
@@ -61,7 +62,12 @@ export default function ThemSanPham(props) {
     const [ImageBase64, setImageBase64] = useState();
     const [ImageCloudiaryUrl, setImageCloudiaryUrl] = useState(undefined);
 
-
+    // Tự động tính toán tenVariant khi tenVariantType thay đổi
+    useEffect(() => {
+        if (lop.length > 0 || phuKienVariant.length > 0 || KichThuocVariant.length > 0) {
+            tinhToanTongTatCa([...lop], [...phuKienVariant], [...PhuKienTong], [...KichThuocVariant], vatLieu, phuKien);
+        }
+    }, [tenVariantType]);
 
     function CloseSelectPK(item) {
         setisOpenSelectPK(false);
@@ -114,21 +120,25 @@ export default function ThemSanPham(props) {
 
 
     const HandlethemSanPham = async () => {
-        props.setLoading(true);
-        for (let i = 0; i < TongTatCa.length; i++) {
-            let DataPost = TongTatCa[i];
-            console.log(DataPost);
-            let statusPostSanPham = await postSanPham(DataPost);
-            console.log(statusPostSanPham);
-
+        if (ImageCloudiaryUrl == undefined) {
+            alert("Vui lòng tải ảnh lên")
+            return
         }
+        else {
 
 
+            props.setLoading(true);
+            for (let i = 0; i < TongTatCa.length; i++) {
+                let DataPost = TongTatCa[i];
+                console.log(DataPost);
+                let statusPostSanPham = await postSanPham(DataPost);
+                console.log(statusPostSanPham);
 
+            }
 
-
-        props.getItemsAll("sanpham");
-        props.setLoading(false)
+            props.getItemsAll("sanpham");
+            props.setLoading(false)
+        }
     };
 
 
@@ -207,6 +217,27 @@ export default function ThemSanPham(props) {
         kt.splice(key, 1);
         setKichThuocVariant(kt)
     }
+
+    // Hàm tạo tenVariant dựa trên loại được chọn
+    function createTenVariant(k, l, p) {
+        switch (tenVariantType) {
+            case 0:
+                return `${k.name}/${l.name}${p.name == "" ? "" : "/"}${p.name}`.trim();
+            case 1:
+                return `${l.name == "" ? "" : (l.name + "/")}${k.name}${p.name == "" ? "" : ("/" + p.name)}`.trim(); // ACRYLIC/8X8 INCHES
+            case 2:
+                return `${l.name == "" ? "" : (l.name + "/")}${p.name}${k.name == " " ? " " : (k.name)}`.trim(); // ACRYLIC/8X8 INCHES
+            case 3:
+                return `${p.name == "" ? "" : (p.name + "/")}${k.name}${p.name == "" ? "" : ("/" + l.name)}`.trim(); // ACRYLIC/8X8 INCHES
+      
+            case 5:
+                return `${k.name == "" ? "" : (k.name + "/")}${p.name == "" ? "" : p.name}${l.name}`.trim(); // 8X8 INCHES/ACRYLIC
+     
+            default:
+                return `${p.name == "" ? "" : (p.name + "/")}${k.name}${p.name == "" ? "" : ("/" + l.name)}`.trim();
+        }
+    }
+
     function tinhToanTongTatCa(lop, phuKienVariant, PhuKienTong, KichThuocVariant, vatLieu, phuKien) {
 
 
@@ -224,24 +255,7 @@ export default function ThemSanPham(props) {
                 phuKienVariant.forEach(p => {
                     KichThuocVariant.forEach(k => {
 
-
-                        // let tenVariant = `${k.name}/${l.name}${p.name == "" ? "" : "/"}${p.name}`.trim();
-
-                        // let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${k.name}${p.name == "" ? "" : ("/" + p.name)}`.trim(); // ACRYLIC/8X8 INCHES
-                        // let tenVariant = `${l.name == "" ? "" : (l.name + "/")}${p.name}${k.name == "" ? "" : ( k.name)}`.trim(); // ACRYLIC/8X8 INCHES
-                        let tenVariant = `${p.name == "" ? "" : (p.name + "/")}${k.name}${p.name == "" ? "" : ("/" + l.name)}`.trim(); // ACRYLIC/8X8 INCHES
-
-                        // let tenVariant = `${k.name == "" ? "" : (k.name + "/")}${l.name}${p.name == "" ? "" : ("/" + p.name)}`.trim(); // 8X8 INCHES/ACRYLIC
-                        // let tenVariant = `${k.name == "" ? "" : (k.name + "/")}${p.name == "" ? "" : p.name}${l.name}`.trim(); // 8X8 INCHES/ACRYLIC
-
-                        // let nameDao = l.name.split("/");
-                        // let tenVariant = `${nameDao[0]}/${k.name}${p.name == "" ? "" : (" " + p.name)}/${nameDao[1]}`.trim();  //ACRYLIC/7X7 INCHES/TWO SIDES
-
-
-                        // console.log(k.name);
-                        // console.log(l.name);
-                        console.log(p);
-
+                        let tenVariant = createTenVariant(k, l, p);
                         let chieuNX = ((+k.value[0]) * 2.54 + 1) < 10 ? 10 : ((+k.value[0]) * 2.54 + 1);
                         let chieuDX = ((+k.value[1]) * 2.54 + 0.5) < 11.5 ? 11.5 : ((+k.value[0]) * 2.54 + 0.5);
                         let thongSoTong = {
@@ -291,13 +305,15 @@ export default function ThemSanPham(props) {
     }
     async function handleUpAnh() {
         // kiểm tra xem up ảnh chưa, chưa up thì up
-        props.setLoading(true);
+
         let images = await URL_upload_cloudinary(ImageBase64);
         if (!images) {
-            setImageCloudiaryUrl(undefined)
+            alert("Lỗi khi up ảnh")
+            setImageCloudiaryUrl(undefined);
+           
         }
         else setImageCloudiaryUrl(images)
-        props.setLoading(false);
+
     }
     console.log(ImageCloudiaryUrl);
 
@@ -312,7 +328,8 @@ export default function ThemSanPham(props) {
                                 <div className="col-12">
                                     <button onClick={() => tinhToanTongTatCa([...lop], [...phuKienVariant], [...PhuKienTong], [...KichThuocVariant], vatLieu, phuKien)}>Tính Toán Variant</button>
                                     {TongTatCa.map((item, key) => <div className="svvsdvtg" key={key}>
-                                        <span className="sttttt">{key + 1}) </span> <span className="prooducttongg">{item.thongSoTong.product}</span> <span className="prooducttongggfgg">{item.thongSoTong.variant}</span>
+                                       
+                                        <p className='p-0 m-0'><span className="prooducttongggfgg">{item.thongSoTong.variant}</span></p>
                                     </div>
                                     )}
                                 </div>
@@ -332,6 +349,26 @@ export default function ThemSanPham(props) {
                                                     fullWidth
                                                 />
 
+                                            </div>
+
+                                            <div className="col-12 mt-3">
+                                                <FormControl fullWidth>
+                                                    <InputLabel id="ten-variant-type-label">Loại tên Variant</InputLabel>
+                                                    <Select
+                                                        labelId="ten-variant-type-label"
+                                                        id="ten-variant-type-select"
+                                                        value={tenVariantType}
+                                                        label="Loại tên Variant"
+                                                        onChange={(e) => setTenVariantType(e.target.value)}
+                                                    >
+                                                        <MenuItem value={0}>Kích thước/Lớp/Phụ kiện</MenuItem>
+                                                        <MenuItem value={1}>Lớp/Kích thước/Phụ kiện</MenuItem>
+                                                        <MenuItem value={2}>Lớp/Phụ kiện Kích thước</MenuItem>
+                                                        <MenuItem value={3}>Phụ kiện/Kích thước/Lớp</MenuItem>
+                                                        <MenuItem value={5}>Kích thước/Phụ kiện/Lớp</MenuItem>
+                                                        
+                                                    </Select>
+                                                </FormControl>
                                             </div>
 
                                         </div>
