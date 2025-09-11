@@ -8,7 +8,6 @@ import ThemSanPhamVariant from './themSamPhamVariant';
 
 import { Box, Modal, Button, IconButton, Badge } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { filter, functions } from 'lodash';
 import { tongTienLop } from "@/lib/utils";
 import { cal_Status } from "@/lib/utils";
@@ -102,10 +101,6 @@ function ShowSanPham(props) {
 
 
     const [open, setOpen] = useState(false);
-    const [openAddDelete, setOpenAddDelete] = useState(0);
-    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-    const [pendingAction, setPendingAction] = useState(null);
-    const [dialogTitle, setDialogTitle] = useState("");
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -117,128 +112,9 @@ function ShowSanPham(props) {
         setACtiveItem(item)
     }
 
-    async function handleDeleteItem(item) {
-        // Đợi 5 giây trước khi gửi request
-        await new Promise(resolve => setTimeout(resolve, 200));
-
-        const response = await fetch(`/api/sanpham?id=${item._id}`, {
-            method: 'DELETE',
-            credentials: "include",
-        });
-
-
-    }
-    async function handleDuplicateProduct(item) {
-        await new Promise(resolve => setTimeout(resolve, 200));
-        const res = await fetch('/api/sanpham/duplicateProduct', {
-            method: 'POST',
-            credentials: "include",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: item._id })
-        });
-
-    }
-    function showConfirmDialogAction(title, action) {
-        setDialogTitle(title);
-        setPendingAction(() => action);
-        setShowConfirmDialog(true);
-    }
-
-    async function nhanDoiAllProduct(items) {
-        setShowConfirmDialog(false);
-        setOpenAddDelete(items.data.length);
-
-        for (let i = 0; i < items.data.length; i++) {
-            setOpenAddDelete(items.data.length - (i + 1));
-            await handleDuplicateProduct(items.data[i])
-        }
-
-        props.getItemsAll("sanpham");
-    }
-    async function handleDeleteAllProduct(items) {
-        setShowConfirmDialog(false);
-        setOpenAddDelete(items.data.length);
-
-        for (let i = 0; i < items.data.length; i++) {
-            setOpenAddDelete(items.data.length - (i + 1));
-            await handleDeleteItem(items.data[i])
-        }
-
-        props.getItemsAll("sanpham");
-        console.log(items);
-    }
-    if (openAddDelete > 0) {
-        return (
-            <div className="zoahoacthemhehehe">
-                <h1 className="modal-title" style={{ color: "white" }} id="addAccessoryModalLabel">đang xử lý sản phẩm, đợi 1 tý</h1>
-                <h1 className="modal-title" style={{ color: "white" }} id="addAccessoryModalLabel">Số lượng còn lại: {openAddDelete}</h1>
-            </div>
-        )
-    }
 
     return (
         <div className="container-fluid">
-            {/* Dialog xác nhận chung */}
-            <Modal
-                open={showConfirmDialog}
-                onClose={() => setShowConfirmDialog(false)}
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            >
-                <Box
-                    sx={{
-                        width: 1500,
-                        bgcolor: 'background.paper',
-                        boxShadow: 24,
-                        p: 4,
-                        borderRadius: 2,
-                    }}
-                >
-                    <h3>{dialogTitle}</h3>
-                    <p>Bạn có chắc chắn muốn thực hiện thao tác này không?</p>
-                    <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginTop: '20px' }}>
-                        {(() => {
-                            // Tạo mảng 100 button "Hủy" và 1 button "OK"
-                            const buttons = [
-                                ...Array.from({ length: 399 }, (_, index) => (
-                                    <Button 
-                                        key={`huy-${index}`}
-                                        variant="outlined" 
-                                        size="small"
-                                        onClick={() => setShowConfirmDialog(false)}
-                                    >
-                                        không
-                                    </Button>
-                                )),
-                                <Button 
-                                    key="ok"
-                                    variant="outlined" 
-                                    color="primary"
-                                    onClick={() => {
-                                        if (pendingAction) {
-                                            pendingAction();
-                                        }
-                                    }}
-                                >
-                                    Có...
-                                </Button>
-                            ];
-                            
-                            // Xáo trộn mảng ngẫu nhiên
-                            for (let i = buttons.length - 1; i > 0; i--) {
-                                const j = Math.floor(Math.random() * (i + 1));
-                                [buttons[i], buttons[j]] = [buttons[j], buttons[i]];
-                            }
-                            
-                            return buttons;
-                        })()}
-                    </div>
-                </Box>
-            </Modal>
-
             <div className="row hienthispsp">
 
                 <Modal
@@ -279,17 +155,17 @@ function ShowSanPham(props) {
             </div>
 
             {handleAddSP && <ThemSanPham dongCTN={dongCTN} styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />}
-            {handleAddMapVariant && <ThemSanPhamVariant dongCTN={dongCTNVariant} styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />}
-
+            {/* {handleAddMapVariant && <ThemSanPhamVariant dongCTN={dongCTNVariant} styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />} */}
+           
 
             {!handleAddSP && <>
                 <Button variant="contained" color="success" onClick={() => sethandleAddSP(true)}>
                     Thêm Sản Phẩm
                 </Button>
-                <Button variant="contained" color="success" onClick={() => sethandleAddMapVariant(true)}>
+                {/* <Button variant="contained" color="success" onClick={() => sethandleAddMapVariant(true)}>
                     Thêm Map Variant
-                </Button>
-
+                </Button> */}
+          
                 <div className="row mt-3">
                     <div className="dbtongluachon">
 
@@ -315,12 +191,7 @@ function ShowSanPham(props) {
                                         <div className="tenpk">Số lượng:<span className="hhhg">{item.data.length}</span></div>
                                         <div className="anhpk"> <Image priority src={item.image} alt="My GIF" width={500} height={300} className="anhpk" /></div>
                                     </div>
-                                     <IconButton color="error" className='bthgggg' onClick={() => showConfirmDialogAction("Xóa sản phẩm", () => handleDeleteAllProduct(item))}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                    <Button variant="contained" className='nhandoihehe' onClick={() => showConfirmDialogAction("Nhân đôi sản phẩm", () => nhanDoiAllProduct(item))}>
-                                        Nhân đôi
-                                    </Button>
+
                                     <div className="ctnbthgjf">
                                         <Button variant="contained" color="success" className=' w-100 dvsdv' onClick={() => handleClickProduct(item)}>
                                             Xem thêm

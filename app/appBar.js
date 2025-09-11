@@ -30,6 +30,10 @@ export default function PrimarySearchAppBar() {
 
     let pages = [
         {
+            typeLink: 'theu',
+            nameLink: "thêu"
+        },
+        {
             typeLink: 'sanpham',
             nameLink: "Sản Phẩm"
         },

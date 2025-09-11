@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import * as XLSX from 'xlsx';
-import { getItemsByQuery, tongTienLop } from "@/lib/utils";
+import { getItemsByQuery, tongTienLop, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDongGoi } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import copy from 'copy-to-clipboard';
 import { fetchPhuKien, fetchVatLieu } from "@/lib/utils";
@@ -91,13 +91,16 @@ export default function UploadPage() {
       var khop = false;
 
       for (let k = 0; k < arrLoc.length; k++) {
-        
+
 
         if (isMatch(jsonData[i].Variant.trim().toLowerCase(), arrLoc[k].thongSoTong.variant.trim().toLowerCase())) {
 
           khop = true;
           let TongTienSX = tongTienLop(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong, phuKien);
           let Rate = 23000;
+
+          let luongcongnhan = vatLieu.filter(itemxx => itemxx.nameCode == "luongcongnhan")[0];
+
           listN.push({
             ...jsonData[i],
             vip1: arrLoc[k].thongSoTong.vipChot[0],
@@ -113,6 +116,10 @@ export default function UploadPage() {
             chieuDai: arrLoc[k].thongSoTong.chieuDoc,
             doCao: arrLoc[k].thongSoTong.doCao,
             tongCan: arrLoc[k].thongSoTong.canNang,
+            tinhTienTK: tinhTienTK(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+            tinhTienIn: tinhTienIn(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+            tinhTienCat: tinhTienCat(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+            tinhTienDongGoi: tinhTienDongGoi(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
 
           });
 
@@ -151,6 +158,7 @@ export default function UploadPage() {
       let Rate = 23000;
       let TongTienSX = tongTienLop(item.lop, vatLieu, item.thongSoTong, phuKien);
       if (item.thongSoTong.vipChot == undefined) item.thongSoTong.vipChot = [0, 0, 0, 0, 0]
+      let luongcongnhan = vatLieu.filter(itemxx => itemxx.nameCode == "luongcongnhan")[0];
 
 
       return {
@@ -169,7 +177,10 @@ export default function UploadPage() {
         chieuDai: item.thongSoTong.chieuDoc,
         doCao: item.thongSoTong.doCao,
         tongCan: item.thongSoTong.canNang,
-
+        tinhTienTK: tinhTienTK(item.lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+        tinhTienIn: tinhTienIn(item.lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+        tinhTienCat: tinhTienCat(item.lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+        tinhTienDongGoi: tinhTienDongGoi(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
       }
     });
     exportToExcel(listAllX)

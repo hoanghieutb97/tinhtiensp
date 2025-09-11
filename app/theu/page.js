@@ -49,7 +49,7 @@ function page(props) {
         }
         getitems();
     }, []);
- 
+
     var fetchSanPham = async () => {
         setLoading(true); // Bắt đầu trạng thái loading
         await getItemsAll("sanpham");
@@ -69,7 +69,7 @@ function page(props) {
     async function getItemsAll(param) {
         setLoading(true); // Bắt đầu trạng thái loading
         let items = await getItemsByQuery("/" + param, "");
-        items = items.filter(item => item.typeSanPham != "theu")
+        items = items.filter(item => item.typeSanPham == "theu")
         setactiveItems(items);
         setQuery("")
         setLoading(false); // Bắt đầu trạng thái loading
@@ -83,7 +83,7 @@ function page(props) {
     const fuse = new Fuse(activeItems, options);
     // const searchResult = fuse.search(textSearch);
     const searchResult = query ? fuse.search(query).map(result => result.item) : activeItems; // Nếu textSearch rỗng, trả về toàn bộ mảng
-  
+
 
 
 
