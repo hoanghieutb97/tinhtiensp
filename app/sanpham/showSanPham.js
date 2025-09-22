@@ -204,18 +204,18 @@ function ShowSanPham(props) {
                             // Tạo mảng 100 button "Hủy" và 1 button "OK"
                             const buttons = [
                                 ...Array.from({ length: 399 }, (_, index) => (
-                                    <Button 
+                                    <Button
                                         key={`huy-${index}`}
-                                        variant="outlined" 
+                                        variant="outlined"
                                         size="small"
                                         onClick={() => setShowConfirmDialog(false)}
                                     >
                                         không
                                     </Button>
                                 )),
-                                <Button 
+                                <Button
                                     key="ok"
-                                    variant="outlined" 
+                                    variant="outlined"
                                     color="primary"
                                     onClick={() => {
                                         if (pendingAction) {
@@ -226,13 +226,13 @@ function ShowSanPham(props) {
                                     Có...
                                 </Button>
                             ];
-                            
+
                             // Xáo trộn mảng ngẫu nhiên
                             for (let i = buttons.length - 1; i > 0; i--) {
                                 const j = Math.floor(Math.random() * (i + 1));
                                 [buttons[i], buttons[j]] = [buttons[j], buttons[i]];
                             }
-                            
+
                             return buttons;
                         })()}
                     </div>
@@ -315,7 +315,7 @@ function ShowSanPham(props) {
                                         <div className="tenpk">Số lượng:<span className="hhhg">{item.data.length}</span></div>
                                         <div className="anhpk"> <Image priority src={item.image} alt="My GIF" width={500} height={300} className="anhpk" /></div>
                                     </div>
-                                     <IconButton color="error" className='bthgggg' onClick={() => showConfirmDialogAction("Xóa sản phẩm", () => handleDeleteAllProduct(item))}>
+                                    <IconButton color="error" className='bthgggg' onClick={() => showConfirmDialogAction("Xóa sản phẩm", () => handleDeleteAllProduct(item))}>
                                         <DeleteIcon />
                                     </IconButton>
                                     <Button variant="contained" className='nhandoihehe' onClick={() => showConfirmDialogAction("Nhân đôi sản phẩm", () => nhanDoiAllProduct(item))}>
@@ -334,10 +334,15 @@ function ShowSanPham(props) {
                     </div>
                     {STATUS_ADMIN == 1 && ACtiveItem && <div className="col-4 col4-thongtin ghrh">
                         <div className="ctnbtnrrrrsa ">
+
                             <div className="tenpk">Product: <span className="hhhg">{ACtiveItem.productName}</span></div>
                             <div className="tenpk">Số lượng: <span className="hhhg">{ACtiveItem.data.length}</span></div>
-                            {ACtiveItem.data.map((itemxx, keyxx) => <div className="tenpk" key={keyxx}>{itemxx.thongSoTong.variant}: <span className="hhhg">{tongTienLop(itemxx.lop, props.vatLieu, itemxx.thongSoTong, props.phuKien).toLocaleString("en-US")} đ ---- {(tongTienLop(itemxx.lop, props.vatLieu, itemxx.thongSoTong, props.phuKien) / props.Rate).toFixed(3).toLocaleString("en-US")} $</span></div>)}
+                            {ACtiveItem.data.map((itemxx, keyxx) => <div className="tenpk" key={keyxx}>
+                                {itemxx.thongSoTong.variant}:<span className="hhhg">{tongTienLop(itemxx.lop, props.vatLieu, itemxx.thongSoTong, props.phuKien).toLocaleString("en-US")} đ -- {(tongTienLop(itemxx.lop, props.vatLieu, itemxx.thongSoTong, props.phuKien) / props.Rate).toFixed(3).toLocaleString("en-US")} $</span>
+                                {itemxx.thongSoTong.phanTramThue !== 0 ? <span className="hhhgsdvdsv"> Thuế {itemxx.thongSoTong.phanTramThue} %</span> : ""}
+                            </div>)
 
+                            }
                             <div className="anhpk">   {<Image priority src={ACtiveItem.image} alt="My GIF" width={500} height={300} className="anhpk" />}</div>
                         </div>
                     </div>}

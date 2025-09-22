@@ -47,6 +47,7 @@ export default function ThemSanPham(props) {
     const [thongSoTong, setThongSoTong] = useState((typeCPN != "editProduct") ? defaultThongSoTong : { ...defaultThongSoTong, ...ItemSua.thongSoTong });
     // const [thongSoTong, setThongSoTong] = useState((typeCPN != "editProduct") ? defaultThongSoTong : { ...defaultThongSoTong, ...ItemSua.thongSoTong, canChageTST: (typeCPN == "editProduct" && styleSP == "new") ? true : false });
     const [image, setImage] = useState(null);
+    const [thueInput, setThueInput] = useState(thongSoTong.phanTramThue || 0);
 
     const tienVL = tinhTienVL(lop, vatLieu, thongSoTong, phuKien)
 
@@ -312,10 +313,31 @@ export default function ThemSanPham(props) {
     }
     let TongTienSX = tongTienLop(lop, vatLieu, thongSoTong, phuKien);
     let canTien = (thongSoTong.canNang > canNangTheTich) ? thongSoTong.canNang : canNangTheTich;
+    async function suaThue() {
+        props.setLoading(true);
+        let DataPost = {
+            thongSoTong: { ...thongSoTong, phanTramThue: thueInput },
+            lop: lop,
+            name: thongSoTong.product,
+            namecode: thongSoTong.product.normalize("NFD") // Chuyển các ký tự có dấu thành dạng kết hợp (e.g., 'Hiếu' -> 'Hiếu')
+                .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu kết hợp
+                .replace(/[^a-zA-Z]/g, "") // Giữ lại các ký tự a-z, A-Z
+                .toLowerCase(),
+        }
 
+        let xxx = await putSanPham(ItemSua._id, DataPost);
+
+
+
+
+
+        props.getItemsAll("sanpham");
+
+    }
     console.log(ItemSua);
     console.log(ListPhuKien);
-
+    let baseValue = ((TongTienSX / (Rate)) + (0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate))) * 0.7;
+    let giaThue = Math.max(2, Math.min(8, Math.round(baseValue))) * (0.2 + thongSoTong.phanTramThue / 100)
 
     return (
         <div className="cngjgfh svdvs">
@@ -669,6 +691,26 @@ export default function ThemSanPham(props) {
                                     <div className="tenpk">% Lợi nhuận: <span className="hhhg">{(((thongSoTong.vipChot[3]) - TongTienSX / Rate) * 100 / thongSoTong.vipChot[3]).toFixed(2)} (%)</span></div>
                                     {STATUS_ADMIN == 1 && <div className="tenpk">Lợi nhuận sản xuất: <span className="hhhg">{(0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate)).toFixed(2)} ($)</span></div>}
                                     <div className="tenpk">giá bán FullFill: <span className="hhhg ">{((TongTienSX / (Rate)) + (0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate))).toFixed(2)} ($)</span></div>
+                                    <div className="tenpk d-flex align-items-center gap-2">
+                                        <span>thuế:</span>
+                                        <input
+                                            type="number"
+                                            value={thueInput}
+                                            onChange={(e) => setThueInput(e.target.value)}
+                                            className="form-control"
+                                            style={{ width: '60px', display: 'inline-block' }}
+                                        />
+                                        <span>(%)</span>
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            onClick={suaThue}
+                                        >
+                                            sửa
+                                        </Button>
+                                        ===={giaThue} USDT
+
+                                    </div>
                                 </div>
                             </div>
                             }

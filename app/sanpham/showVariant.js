@@ -6,6 +6,8 @@ import { Box, Modal, IconButton, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { functions } from 'lodash';
 import { usePhukien } from "../context/PhukienContext";
+import { putSanPham } from "@/lib/utils";
+
 import AddIcon from '@mui/icons-material/Add';
 function ShowVariant(props) {
     const { getItemsByQuery } = usePhukien();
@@ -15,6 +17,7 @@ function ShowVariant(props) {
     const [activeSuaSP, setactiveSuaSP] = useState([]);
     const [addNewStatus, setaddNewStatus] = useState(false);
     const [styleSP, setstyleSP] = useState("new");
+    const [inputValue, setInputValue] = useState("");
 
 
     function dongCTN(params) {
@@ -75,11 +78,25 @@ function ShowVariant(props) {
         }
         props.getItemsAll("sanpham");
     }
-    async function chuyen(id) {
+    async function themThue() {
+        props.setLoading(true);
+        for (let i = 0; i < listItems.length; i++) {
+            let DataPost = {
+                thongSoTong: { ...listItems[i].thongSoTong, phanTramThue: inputValue },
+                lop: listItems[i].lop,
+                name: listItems[i].name,
+                namecode: listItems[i].namecode
+            }
+            let xxx = await putSanPham(listItems[i]._id, DataPost);
 
+
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        props.getItemsAll("sanpham");
 
     }
-console.log(listItems);
+    console.log(listItems);
 
     return (
 
@@ -91,10 +108,20 @@ console.log(listItems);
                 <Button variant="contained" color="success" onClick={themSPMoi}>
                     Thêm Sản Phẩm variant
                 </Button>
+                <div className="col-12">
+                    <input
+                        type="number"
+                        placeholder="Nhập số"
+                        className="form-control"
+                        style={{ marginBottom: '10px' }}
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                    />
+                    <Button variant="contained" color="success" onClick={themThue} >
+                        thêm thuế
+                    </Button>
+                </div>
 
-                <Button variant="contained" color="success" onClick={chuyen} >
-                    Chuyển
-                </Button>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-12">

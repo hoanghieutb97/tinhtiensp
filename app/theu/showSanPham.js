@@ -156,7 +156,7 @@ function ShowSanPham(props) {
 
             {handleAddSP && <ThemSanPham dongCTN={dongCTN} styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />}
             {/* {handleAddMapVariant && <ThemSanPhamVariant dongCTN={dongCTNVariant} styleSP="new" phuKien={props.phuKien} vatLieu={props.vatLieu} setLoading={props.setLoading} getItemsAll={props.getItemsAll} Rate={props.Rate} ShippingCost={props.ShippingCost} />} */}
-           
+
 
             {!handleAddSP && <>
                 <Button variant="contained" color="success" onClick={() => sethandleAddSP(true)}>
@@ -165,7 +165,7 @@ function ShowSanPham(props) {
                 {/* <Button variant="contained" color="success" onClick={() => sethandleAddMapVariant(true)}>
                     Thêm Map Variant
                 </Button> */}
-          
+
                 <div className="row mt-3">
                     <div className="dbtongluachon">
 
@@ -207,8 +207,12 @@ function ShowSanPham(props) {
                         <div className="ctnbtnrrrrsa ">
                             <div className="tenpk">Product: <span className="hhhg">{ACtiveItem.productName}</span></div>
                             <div className="tenpk">Số lượng: <span className="hhhg">{ACtiveItem.data.length}</span></div>
-                            {ACtiveItem.data.map((itemxx, keyxx) => <div className="tenpk" key={keyxx}>{itemxx.thongSoTong.variant}: <span className="hhhg">{tongTienLop(itemxx.lop, props.vatLieu, itemxx.thongSoTong, props.phuKien).toLocaleString("en-US")} đ ---- {(tongTienLop(itemxx.lop, props.vatLieu, itemxx.thongSoTong, props.phuKien) / props.Rate).toFixed(3).toLocaleString("en-US")} $</span></div>)}
+                            {ACtiveItem.data.map((itemxx, keyxx) => <div className="tenpk" key={keyxx}>
+                                {itemxx.thongSoTong.variant}:<span className="hhhg">{tongTienLop(itemxx.lop, props.vatLieu, itemxx.thongSoTong, props.phuKien).toLocaleString("en-US")} đ -- {(tongTienLop(itemxx.lop, props.vatLieu, itemxx.thongSoTong, props.phuKien) / props.Rate).toFixed(3).toLocaleString("en-US")} $</span>
+                                {itemxx.thongSoTong.phanTramThue !== 0 ? <span className="hhhgsdvdsv"> Thuế {itemxx.thongSoTong.phanTramThue} %</span> : ""}
+                            </div>)
 
+                            }
                             <div className="anhpk">   {<Image priority src={ACtiveItem.image} alt="My GIF" width={500} height={300} className="anhpk" />}</div>
                         </div>
                     </div>}
