@@ -337,7 +337,7 @@ export default function ThemSanPham(props) {
     console.log(ItemSua);
     console.log(ListPhuKien);
     let baseValue = ((TongTienSX / (Rate)) + (0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate))) * 0.7;
-    let giaThue = Math.max(2, Math.min(8, Math.ceil(baseValue))) * (0.2 + thongSoTong.phanTramThue / 100)
+    let giaThue = (Math.max(2, Math.min(8, Math.ceil(baseValue))) * (0.2 + thongSoTong.phanTramThue / 100)).toFixed(2)
 
     return (
         <div className="cngjgfh svdvs">
