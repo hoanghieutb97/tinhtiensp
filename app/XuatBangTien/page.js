@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import * as XLSX from 'xlsx';
-import { getItemsByQuery, tongTienLop, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDongGoi } from "@/lib/utils";
+import { getItemsByQuery, tongTienLop, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDongGoi,tinhTienVatLieu,tinhTienPhuKien ,tinhTienMuc,tinhTienMangBoc,tinhTienXop,tinhTienThungDongHang,tinhTienHop,tinhTienKeoDan,tinhTienBangDinh} from "@/lib/utils";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import copy from 'copy-to-clipboard';
 import { fetchPhuKien, fetchVatLieu } from "@/lib/utils";
@@ -100,6 +100,7 @@ export default function UploadPage() {
           let Rate = 23000;
 
           let luongcongnhan = vatLieu.filter(itemxx => itemxx.nameCode == "luongcongnhan")[0];
+         
 
           listN.push({
             ...jsonData[i],
@@ -116,10 +117,23 @@ export default function UploadPage() {
             chieuDai: arrLoc[k].thongSoTong.chieuDoc,
             doCao: arrLoc[k].thongSoTong.doCao,
             tongCan: arrLoc[k].thongSoTong.canNang,
-            tinhTienTK: tinhTienTK(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
-            tinhTienIn: tinhTienIn(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
-            tinhTienCat: tinhTienCat(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
-            tinhTienDongGoi: tinhTienDongGoi(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+            tinhTienTK: tinhTienTK(arrLoc[k].lop, vatLieu),
+            tinhTienIn: tinhTienIn(arrLoc[k].lop, vatLieu),
+            tinhTienCat: tinhTienCat(arrLoc[k].lop, vatLieu),
+            tinhTienDongGoi: tinhTienDongGoi(arrLoc[k].lop, vatLieu),
+            tienNguyenVL: tinhTienVatLieu(arrLoc[k].lop, vatLieu) +
+              tinhTienPhuKien(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong, phuKien) +
+              tinhTienXop(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong) +
+              tinhTienThungDongHang(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong) +
+              tinhTienHop(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong)+
+              tinhTienMuc(arrLoc[k].lop, vatLieu)+
+              tinhTienKeoDan(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong)+
+              tinhTienBangDinh(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong)+
+              tinhTienMangBoc(arrLoc[k].lop, vatLieu, arrLoc[k].thongSoTong)
+            // tinhTienTK: tinhTienTK(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+            // tinhTienIn: tinhTienIn(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+            // tinhTienCat: tinhTienCat(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+            // tinhTienDongGoi: tinhTienDongGoi(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
 
           });
 
@@ -177,10 +191,19 @@ export default function UploadPage() {
         chieuDai: item.thongSoTong.chieuDoc,
         doCao: item.thongSoTong.doCao,
         tongCan: item.thongSoTong.canNang,
-        tinhTienTK: tinhTienTK(item.lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
-        tinhTienIn: tinhTienIn(item.lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
-        tinhTienCat: tinhTienCat(item.lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
-        tinhTienDongGoi: tinhTienDongGoi(arrLoc[k].lop, vatLieu) * 26 * 8 * 60 / luongcongnhan.price,
+        tinhTienTK: tinhTienTK(item.lop, vatLieu),
+        tinhTienIn: tinhTienIn(item.lop, vatLieu),
+        tinhTienCat: tinhTienCat(item.lop, vatLieu),
+        tinhTienDongGoi: tinhTienDongGoi(item.lop, vatLieu),
+        tienNguyenVL: tinhTienVatLieu(item.lop, vatLieu) +
+        tinhTienPhuKien(item.lop, vatLieu, item.thongSoTong, phuKien) +
+        tinhTienXop(item.lop, vatLieu, item.thongSoTong) +
+        tinhTienThungDongHang(item.lop, vatLieu, item.thongSoTong) +
+        tinhTienHop(item.lop, vatLieu, item.thongSoTong)+
+        tinhTienMuc(item.lop, vatLieu)+
+        tinhTienKeoDan(item.lop, vatLieu, item.thongSoTong)+
+        tinhTienBangDinh(item.lop, vatLieu, item.thongSoTong)+
+        tinhTienMangBoc(item.lop, vatLieu, item.thongSoTong)
       }
     });
     exportToExcel(listAllX)

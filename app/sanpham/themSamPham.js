@@ -338,7 +338,9 @@ export default function ThemSanPham(props) {
     console.log(ListPhuKien);
     let baseValue = ((TongTienSX / (Rate)) + (0.4 * ((thongSoTong.vipChot[3]) - TongTienSX / Rate))) * 0.7;
     let giaThue = (Math.max(2, Math.min(8, Math.ceil(baseValue))) * (0.2 + thongSoTong.phanTramThue / 100)).toFixed(2)
-
+console.log(Math.max(2, Math.min(8, Math.ceil(baseValue))) );
+console.log(baseValue);
+console.log(giaThue);
     return (
         <div className="cngjgfh svdvs">
             <div className="container-fluid">
