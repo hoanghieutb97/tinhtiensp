@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import Image from "next/image";
 import ShowVariant from './showVariant';
 import ThemSanPham from './themSamPham';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import _ from 'lodash';
 
 import ThemSanPhamVariant from './themSamPhamVariant';
 
@@ -10,8 +13,9 @@ import { Box, Modal, Button, IconButton, Badge } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { filter, functions } from 'lodash';
-import { tongTienLop } from "@/lib/utils";
+// import { tongTienLop } from "@/lib/utils";
 import { cal_Status } from "@/lib/utils";
+import { tinhCanNangUocLuong, tongTienLop, tinhTienTK, tinhTienIn, tinhTienCat, tinhTienDongGoi, tinhTienVatLieu, tinhTienPhuKien, tinhTienMuc, tinhTienMangBoc, tinhTienXop, tinhTienThungDongHang, tinhTienHop, tinhTienKeoDan, tinhTienBangDinh } from "@/lib/utils";
 
 function ShowSanPham(props) {
     const [activeProduct, setactiveProduct] = useState();
@@ -29,6 +33,75 @@ function ShowSanPham(props) {
         }
     }, []);
 
+    function handleExValue(activeItemsGoc, phuKien, vatLieu) {
+
+        let activeItems = _.sortBy(
+            activeItemsGoc,
+            itemxxxxxxx =>
+                Number(itemxxxxxxx.thongSoTong.chieuDoc) *
+                Number(itemxxxxxxx.thongSoTong.chieuNgang)
+        );
+        console.log(activeItems, phuKien, vatLieu);
+
+        let listAllX = activeItems.map(item => {
+
+
+            let Rate = 23000;
+            let TongTienSX = tongTienLop(item.lop, vatLieu, item.thongSoTong, phuKien);
+            if (item.thongSoTong.vipChot == undefined) item.thongSoTong.vipChot = [0, 0, 0, 0, 0]
+            let luongcongnhan = vatLieu.filter(itemxx => itemxx.nameCode == "luongcongnhan")[0];
+
+
+            return {
+                ProductName: item.thongSoTong.product,
+                Variant: item.thongSoTong.variant,
+                tienBaseCost: (TongTienSX / Rate).toFixed(2),
+
+                vip4: item.thongSoTong.vipChot[3],
+                loiNhuanPW: item.thongSoTong.vipChot[3] - (TongTienSX / Rate).toFixed(2),
+                // chiPhi_GiaBan: (TongTienSX * 100 / (Rate * item.thongSoTong.vipChot[3])).toFixed(2),
+                // tongLoiNhuan: ((item.thongSoTong.vipChot[3]) - TongTienSX / Rate).toFixed(2),
+                // phanTramLoiNhuan: (((item.thongSoTong.vipChot[3]) - TongTienSX / Rate) * 100 / item.thongSoTong.vipChot[3]).toFixed(2),
+                // giaBanFullFill: ((TongTienSX / (Rate)) + (0.4 * ((item.thongSoTong.vipChot[3]) - TongTienSX / Rate))).toFixed(2),
+                chieuNgan: item.thongSoTong.chieuNgang,
+                chieuDai: item.thongSoTong.chieuDoc,
+                doCao: item.thongSoTong.doCao,
+                tongCan: item.thongSoTong.canNang,
+                CanNang_UocLuong: Math.floor(tinhCanNangUocLuong(item.lop, vatLieu, item.thongSoTong, phuKien))*0.79,
+                tinhTienTK: tinhTienTK(item.lop, vatLieu),
+                tinhTienIn: tinhTienIn(item.lop, vatLieu),
+                tinhTienCat: tinhTienCat(item.lop, vatLieu),
+                tinhTienDongGoi: tinhTienDongGoi(item.lop, vatLieu),
+                tienNguyenVL: tinhTienVatLieu(item.lop, vatLieu) +
+                    tinhTienPhuKien(item.lop, vatLieu, item.thongSoTong, phuKien) +
+                    tinhTienXop(item.lop, vatLieu, item.thongSoTong) +
+                    tinhTienThungDongHang(item.lop, vatLieu, item.thongSoTong) +
+                    tinhTienHop(item.lop, vatLieu, item.thongSoTong) +
+                    tinhTienMuc(item.lop, vatLieu) +
+                    tinhTienKeoDan(item.lop, vatLieu, item.thongSoTong) +
+                    tinhTienBangDinh(item.lop, vatLieu, item.thongSoTong) +
+                    tinhTienMangBoc(item.lop, vatLieu, item.thongSoTong)
+            }
+        });
+        const exportToExcel = (jsonData, nameE) => {
+
+            const ws = XLSX.utils.json_to_sheet(jsonData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+            // Xuất file
+            const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+            const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+
+            saveAs(data, nameE + ".xlsx");
+        };
+        // console.log(activeItems[0]);
+
+        exportToExcel(listAllX, activeItems[0].thongSoTong.product)
+
+        // console.log(listAllX);
+
+    }
     // const STATUS_ADMIN = cal_Status(localStorage.getItem("userStatus"))
     const groupByProduct = (list) => {
         const grouped = {};
@@ -75,6 +148,7 @@ function ShowSanPham(props) {
         setshowProduct(true);
         setactiveProduct(item)
     }
+
     const spMapping = {
         test: props.listSP.filter(item => item.thongSoTong.type === "test").length,
         all: props.listSP.filter(item => item).length,
@@ -326,7 +400,9 @@ function ShowSanPham(props) {
                                             Xem thêm
                                         </Button>
                                     </div>
-
+                                    <div className="ctnbthgjfaasa" onClick={() => handleExValue(item.data, props.phuKien, props.vatLieu)}>
+                                        e
+                                    </div>
                                 </div>
                             </div>)}
                         </div>

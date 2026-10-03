@@ -425,6 +425,7 @@ console.log(giaThue);
                                     <div className="row">
                                         <div className="col-12">
                                             <h4>cân nặng ước tính: <span className="vdf">{CanNang_UocLuong}</span></h4>
+                                            <h4>cân nặng 75%: <span className="vdf">{CanNang_UocLuong*0.8}</span></h4>
                                         </div>
                                         {initialWHZ.map((item, key) => <div className="col-2" key={key}>
                                             <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '20ch' } }} noValidate autoComplete="off">

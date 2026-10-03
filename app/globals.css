@@ -37,6 +37,18 @@
   flex-flow: column;
   justify-content: center;
 }
+.ctnbthgjfaasa {
+    position: absolute;
+    top: 0;
+    width: 15px;
+    margin: 0;
+    padding: 0;
+    background: #a3a3a3;
+    text-align: center;
+    border-radius: 8px;
+    z-index: 99999;
+    right: -10px;
+}
 
 span.hhhgsdvdsv {
   color: red;
